@@ -58,7 +58,7 @@ onMounted(() => {
 
 <template>
   <!-- 主应用模板 -->
-  <div id="app">
+  <div class="app">
     <!-- 应用头部 -->
     <header class="app-header">
       <div class="header-content">
@@ -82,8 +82,8 @@ onMounted(() => {
          <!-- 表单操作工具栏 -->
          <div class="form-toolbar">
            <el-button-group>
-             <el-button 
-               type="info" 
+             <el-button
+               type="info"
                :icon="showTemplateManager ? Hide : Collection"
                @click="toggleTemplateManager"
              >
@@ -128,28 +128,29 @@ onMounted(() => {
 </template>
 
 <style scoped>
-/* 全局样式，确保 html 和 body 充满视口并设置背景色 */
+/* 全局样式 */
 :global(html, body) {
   height: 100%;
   margin: 0;
   padding: 0;
-  background-color: #f0f2f5; /* 将背景色应用到 body */
+  background-color: #FFFFFF; /* Figma 背景色 */
+  font-family: 'Inter', sans-serif; /* Figma 字体 */
 }
 
 /* 主应用样式 */
-#app {
+.app {
   min-height: 100vh;
   display: flex;
   flex-direction: column;
-  /* background: #f0f2f5; */ /* 移除这里的背景色，让 body 的背景色显示出来 */
+  background: #FFFFFF;
 }
 
 /* 应用头部样式 */
 .app-header {
-  background: #ffffff; /* 纯白背景 */
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06); /* 调整阴影效果 */
-  padding: 24px 0; /* 调整内边距 */
-  border-bottom: 1px solid #e8e8e8; /* 添加底部边框 */
+  background: #FFFFFF;
+  color: #1E1E1E;
+  padding: 24px 0;
+  border-bottom: 1px solid #D9D9D9;
 }
 
 .header-content {
@@ -160,24 +161,24 @@ onMounted(() => {
 }
 
 .app-title {
-  font-size: 2.2rem; /* 调整字体大小 */
-  font-weight: 600; /* 调整字重 */
-  color: #1f2d3d; /* 深色标题 */
-  margin: 0 0 8px 0; /* 调整外边距 */
+  font-size: 2rem;
+  font-weight: 700;
+  color: #1E1E1E;
+  margin: 0 0 8px 0;
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 12px; /* 调整间距 */
+  gap: 12px;
 }
 
 .title-icon {
-  font-size: 2.2rem; /* 调整图标大小 */
-  color: #3a8ee6; /* Element Plus 主题蓝 */
+  font-size: 2rem;
+  color: #1E1E1E;
 }
 
 .app-subtitle {
-  font-size: 1rem; /* 调整字体大小 */
-  color: #5a5e66; /* 调整字体颜色 */
+  font-size: 1rem;
+  color: #606266;
   margin: 0;
   font-weight: 400;
 }
@@ -205,10 +206,10 @@ onMounted(() => {
 
 .form-container {
   width: 100%;
-  max-width: 960px; /* 调整最大宽度 */
+  max-width: 960px;
   background: #ffffff;
-  border-radius: 8px; /* 调整圆角 */
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08); /* 调整阴影 */
+  border-radius: 8px; /* Figma 圆角 */
+  border: 1px solid #D9D9D9; /* Figma 边框 */
   overflow: hidden;
   margin: 0 auto;
   box-sizing: border-box;
@@ -216,11 +217,12 @@ onMounted(() => {
 
 /* 应用底部样式 */
 .app-footer {
-  background: #304156; /* 深色背景 */
-  color: #a7b1c2; /* 调整字体颜色 */
+  background: #FFFFFF;
+  color: #B3B3B3;
   text-align: center;
-  padding: 24px; /* 调整内边距 */
+  padding: 24px;
   margin-top: auto;
+  border-top: 1px solid #D9D9D9;
 }
 
 .app-footer p {
@@ -235,29 +237,29 @@ onMounted(() => {
     flex-direction: column;
     gap: 8px; /* 调整间距 */
   }
-  
+
   .title-icon {
     font-size: 1.8rem; /* 调整图标大小 */
   }
-  
+
   .app-subtitle {
     font-size: 0.9rem; /* 调整字体大小 */
   }
-  
+
   .app-main {
     padding: 24px 16px; /* 调整内边距 */
   }
-  
+
   .form-container {
     margin: 0;
     border-radius: 6px; /* 调整圆角 */
     max-width: 100%;
   }
-  
+
   .app-header {
     padding: 16px 0; /* 调整内边距 */
   }
-  
+
   .header-content {
     padding: 0 16px; /* 调整内边距 */
   }
@@ -267,23 +269,23 @@ onMounted(() => {
   .app-title {
     font-size: 1.6rem; /* 调整字体大小 */
   }
-  
+
   .header-content {
     padding: 0 12px; /* 调整内边距 */
   }
-  
+
   .app-main {
     padding: 16px 8px; /* 调整内边距 */
   }
-  
+
   .form-container {
     border-radius: 4px; /* 调整圆角 */
   }
-  
+
   .app-footer {
     padding: 16px 12px; /* 调整内边距 */
   }
-  
+
   .app-footer p {
     font-size: 0.75rem; /* 调整字体大小 */
   }
@@ -293,15 +295,15 @@ onMounted(() => {
   .app-title {
     font-size: 1.4rem; /* 调整字体大小 */
   }
-  
+
   .app-subtitle {
     font-size: 0.8rem; /* 调整字体大小 */
   }
-  
+
   .app-main {
     padding: 12px 4px; /* 调整内边距 */
   }
-  
+
   .header-content {
     padding: 0 8px; /* 调整内边距 */
   }
@@ -330,24 +332,24 @@ onMounted(() => {
     padding: 10px 15px;
     border-radius: 6px;
   }
-  
+
   .template-manager-section {
      margin: 0 0 20px 0;
      padding: 0 15px;
    }
  }
- 
+
  @media (max-width: 480px) {
    .form-toolbar {
      padding: 8px 12px;
      margin-bottom: 15px;
    }
-   
+
    .template-manager-section {
      padding: 0 12px;
      margin-bottom: 15px;
    }
-   
+
    .form-toolbar .el-button-group .el-button {
      font-size: 13px;
      padding: 6px 12px;

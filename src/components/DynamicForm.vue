@@ -58,11 +58,24 @@
             </el-button>
           </div>
           <!-- 单个文本输入 -->
-          <el-input
-            v-else
-            v-model="formData[field.id]"
-            :placeholder="field.placeholder"
-          />
+          <div v-else>
+            <el-input
+              v-model="formData[field.id]"
+              :placeholder="field.placeholder"
+            />
+            <!-- 特殊逻辑：当被告是公司时显示州选择器 -->
+            <el-select
+              v-if="field.id === 'defendantName' && isCompany(formData[field.id])"
+              v-model="formData[field.id + '_state']"
+              placeholder="选择州"
+              style="margin-top: 10px; width: 100%;"
+            >
+              <el-option label="California" value="CA"></el-option>
+              <el-option label="New York" value="NY"></el-option>
+              <el-option label="Texas" value="TX"></el-option>
+              <!-- 在此添加更多州 -->
+            </el-select>
+          </div>
           <!-- 字段描述 -->
           <div v-if="field.description" class="field-description">
             {{ field.description }}
@@ -170,10 +183,12 @@
       </template>
 
       <!-- 表单操作按钮 -->
-      <el-form-item class="form-actions">
-        <el-button type="primary" @click="handleSubmit">提交表单</el-button>
-        <el-button @click="handleReset">重置表单</el-button>
-        <el-button type="info" @click="handlePreview">预览数据</el-button>
+      <el-form-item>
+        <div class="form-actions">
+          <el-button @click="handleReset">重置表单</el-button>
+          <el-button type="info" @click="handlePreview">预览数据</el-button>
+          <el-button type="primary" @click="handleSubmit">提交表单</el-button>
+        </div>
       </el-form-item>
     </el-form>
 
@@ -183,7 +198,7 @@
         <el-icon><Download /></el-icon>
         数据导出
       </el-divider>
-      <FormDataExporter 
+      <FormDataExporter
         :form-data="{ ...formData, ...computedValues }"
         :form-config="config"
         :file-name-prefix="'complaint-form'"
@@ -206,10 +221,10 @@ import { ref, reactive, computed, watch, onMounted } from 'vue'
 import { ElMessage } from 'element-plus'
 import { Plus, Delete, Download } from '@element-plus/icons-vue'
 import FormDataExporter from './FormDataExporter.vue'
-import { 
-  calculateAllComputedFields, 
-  formatDate, 
-  validateFieldValue 
+import {
+  calculateAllComputedFields,
+  formatDate,
+  validateFieldValue
 } from '../utils/formCalculations.js'
 
 // 组件属性定义
@@ -257,12 +272,12 @@ const initFormData = () => {
   props.config.fields?.forEach(field => {
     if (field.multiple) {
       // 多值字段初始化为数组
-      formData[field.id] = props.initialData[field.id] || ['']
+      formData[field.id] = props.initialData[field.id] || []
       // 确保至少有一个空值
-      if (formData[field.id].length === 0) {
-        formData[field.id].push('')
-      }
-      return
+      // if (formData[field.id].length === 0) {
+      //   formData[field.id].push('')
+      // }
+      // return
     } else if (field.type === 'computed') {
       // 计算字段不需要初始化
       return
@@ -275,7 +290,7 @@ const initFormData = () => {
 
 // 获取多值字段的值数组
 const getMultipleValues = (fieldId) => {
-  return formData[fieldId] || ['']
+  return formData[fieldId] || []
 }
 
 // 更新多值字段的特定索引值
@@ -309,17 +324,17 @@ const computedValues = computed(() => {
 // 获取计算字段值
 const getComputedValue = (field) => {
   const value = computedValues.value[field.id]
-  
+
   // 如果是日期相关的计算，进行格式化
   if (field.computeRule && field.computeRule.includes('Date')) {
     return formatDate(value, 'legal')
   }
-  
+
   // 如果是数字，保留两位小数
   if (typeof value === 'number' && !Number.isInteger(value)) {
     return value.toFixed(2)
   }
-  
+
   return value || ''
 }
 
@@ -328,10 +343,10 @@ const handleSubmit = async () => {
   try {
     // 验证表单
     await formRef.value.validate()
-    
+
     // 发送提交事件
     emit('submit', { ...formData })
-    
+
     ElMessage.success('表单提交成功！')
   } catch (error) {
     ElMessage.error('表单验证失败，请检查输入内容')
@@ -378,6 +393,14 @@ watch(
   { deep: true }
 )
 
+// 判断是否为公司
+const isCompany = (name) => {
+  if (!name) return false;
+  const companyKeywords = ['corporation', 'inc.', 'llc', 'ltd.'];
+  const lowerCaseName = name.toLowerCase();
+  return companyKeywords.some(keyword => lowerCaseName.includes(keyword));
+};
+
 // 组件挂载时初始化
 onMounted(() => {
   initFormData()
@@ -387,40 +410,80 @@ onMounted(() => {
 <style scoped>
 /* 动态表单样式 */
 .dynamic-form {
-  max-width: 100%; /* 移除固定最大宽度，由父容器控制 */
-  margin: 0 auto;
-  padding: 24px; /* 调整内边距 */
+  padding: 24px; /* Figma padding */
   width: 100%;
   box-sizing: border-box;
 }
 
 .form-header {
-  text-align: left; /* 标题左对齐 */
-  margin-bottom: 24px; /* 调整外边距 */
-  padding-bottom: 16px; /* 增加底部内边距 */
-  border-bottom: 1px solid #f0f0f0; /* 添加分隔线 */
+  text-align: left;
+  margin-bottom: 24px;
+  padding-bottom: 16px;
+  border-bottom: 1px solid #D9D9D9;
 }
 
 .form-header h2 {
-  color: #1f2d3d; /* 深色标题 */
-  margin-bottom: 8px; /* 调整外边距 */
-  font-size: 1.6rem; /* 调整字体大小 */
-  font-weight: 600; /* 调整字重 */
+  color: #1E1E1E;
+  margin-bottom: 8px;
+  font-size: 1.5rem; /* 调整以匹配 Figma 层次结构 */
+  font-weight: 700;
 }
 
 .form-description {
-  color: #5a5e66; /* 调整字体颜色 */
-  font-size: 0.9rem; /* 调整字体大小 */
-  line-height: 1.6;
+  color: #606266;
+  font-size: 1rem;
+  line-height: 1.5;
 }
 
 .dynamic-form-content {
-  background: #ffffff; /* 保持白色背景 */
-  padding: 24px; /* 调整内边距 */
-  border-radius: 6px; /* 调整圆角 */
-  /* 移除独立阴影，由父容器 .form-container 控制 */
+  background: #ffffff;
   width: 100%;
   box-sizing: border-box;
+}
+
+/* 应用 Figma 样式到 Element Plus 组件 */
+:deep(.el-form-item__label) {
+  color: #1E1E1E;
+  font-family: 'Inter', sans-serif;
+  font-size: 16px;
+  font-weight: 400;
+  line-height: 1.4;
+}
+
+:deep(.el-input__wrapper) {
+  background-color: #FFFFFF !important;
+  border: 1px solid #D9D9D9 !important;
+  border-radius: 8px !important;
+  padding: 11px 15px !important; /* 调整以匹配 12px padding 和 1px border */
+  box-shadow: none !important;
+}
+
+:deep(.el-input__inner) {
+  color: #1E1E1E !important;
+  font-family: 'Inter', sans-serif !important;
+  font-size: 16px !important;
+  font-weight: 400 !important;
+}
+
+:deep(.el-input__inner::placeholder) {
+  color: #B3B3B3 !important;
+}
+
+:deep(.form-actions .el-button--primary) {
+  background-color: #2C2C2C !important;
+  border-color: #2C2C2C !important;
+  color: #F5F5F5 !important;
+  border-radius: 8px !important;
+  padding: 12px 20px !important;
+  font-size: 16px !important;
+  font-weight: 400 !important;
+}
+
+:deep(.form-actions .el-button) {
+  border-radius: 8px !important;
+  padding: 12px 20px !important;
+  font-size: 16px !important;
+  font-weight: 400 !important;
 }
 
 .multiple-input-container {
@@ -457,10 +520,13 @@ onMounted(() => {
 }
 
 .form-actions {
-  text-align: right; /* 操作按钮右对齐 */
-  margin-top: 32px; /* 调整外边距 */
-  padding-top: 24px; /* 增加顶部内边距 */
-  border-top: 1px solid #f0f0f0; /* 添加分隔线 */
+  display: flex;
+  justify-content: flex-end;
+  gap: 16px;
+  width: 100%;
+  margin-top: 24px; /* Figma gap */
+  padding-top: 24px;
+  border-top: 1px solid #D9D9D9;
 }
 
 .data-preview {
@@ -475,11 +541,11 @@ onMounted(() => {
 }
 
 .export-section {
-  margin-top: 32px; /* 调整外边距 */
-  padding: 24px; /* 调整内边距 */
-  background: #f7f8fa; /* 调整背景色 */
-  border-radius: 6px; /* 调整圆角 */
-  border: 1px solid #e4e7ed; /* 添加边框 */
+  margin-top: 36px;
+  padding: 28px;
+  background: #fcfcfc;
+  border-radius: 8px;
+  border: 1px solid #e4e7ed;
 }
 
 /* 响应式设计 */
@@ -487,25 +553,25 @@ onMounted(() => {
   .dynamic-form {
     padding: 16px; /* 调整内边距 */
   }
-  
+
   .form-header h2 {
     font-size: 1.4rem; /* 调整字体大小 */
   }
-  
+
   .form-description {
     font-size: 0.85rem; /* 调整字体大小 */
   }
-  
+
   .dynamic-form-content {
     padding: 16px; /* 调整内边距 */
   }
-  
+
   .multiple-input-item {
     flex-direction: column;
     align-items: stretch;
     gap: 10px; /* 调整间距 */
   }
-  
+
   .form-actions {
     text-align: center; /* 中小屏幕操作按钮居中 */
   }
@@ -548,20 +614,20 @@ onMounted(() => {
   :deep(.el-form-item) {
     margin-bottom: 18px;
   }
-  
+
   :deep(.el-form-item__label) {
     font-size: 14px;
     line-height: 1.4;
   }
-  
+
   :deep(.el-input__inner) {
     font-size: 14px;
   }
-  
+
   :deep(.el-select) {
     width: 100%;
   }
-  
+
   :deep(.el-date-editor) {
     width: 100%;
   }
@@ -572,17 +638,17 @@ onMounted(() => {
     font-size: 13px;
     margin-bottom: 5px;
   }
-  
+
   :deep(.el-input__inner) {
     font-size: 13px;
     padding: 8px 12px;
   }
-  
+
   :deep(.el-button) {
     padding: 8px 15px;
     font-size: 13px;
   }
-  
+
   :deep(.el-button--small) {
     padding: 6px 10px;
     font-size: 12px;

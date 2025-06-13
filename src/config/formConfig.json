@@ -101,7 +101,7 @@
       },
       {
         "id": "defendantPlurality2",
-        "label": "Defendant Plurality 2",
+        "label": "Choose Causes of Action",
         "type": "computed",
         "variable": "d.DefendantPlurality2",
         "computeRule": "defendantCount",

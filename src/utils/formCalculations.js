@@ -228,23 +228,27 @@ export const calculateAllComputedFields = (formData, fieldConfigs) => {
           break
           
         case 'overtimeCalculation':
+          // 注意：此计算依赖于 formData.overtimeHours15 和 formData.overtimeHours20
+          // 这些字段当前未在表单中定义。
           const overtimeResult = calculateOvertimePay(
             formData.hourlyRate,
-            formData.regularHours || 0,
+            0, // regularHours 未定义
             formData.overtimeHours15 || 0,
             formData.overtimeHours20 || 0
-          )
-          computedValues[field.id] = overtimeResult.totalOvertimeHours
-          break
+          );
+          // 根据 requirements.md，此字段是总加班时间
+          computedValues[field.id] = overtimeResult.totalOvertimeHours;
+          break;
           
         case 'wageStatementPenaltyCalculation':
           const weeks = calculateEmploymentWeeks(
             formData.employmentStartDate,
             formData.employmentEndDate
-          )
-          // 假设每周一个支付周期
-          computedValues[field.id] = calculateWageStatementPenalty(weeks)
-          break
+          );
+          // 假设每周一个支付周期 (PayPeriods)
+          const payPeriods = weeks;
+          computedValues[field.id] = calculateWageStatementPenalty(payPeriods);
+          break;
           
         default:
           computedValues[field.id] = '未知计算规则'
