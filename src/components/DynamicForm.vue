@@ -16,171 +16,41 @@
       label-position="left"
       class="dynamic-form-content"
     >
-      <!-- 动态渲染表单字段 -->
-      <template v-for="field in config.fields" :key="field.id">
-        <!-- 普通文本输入框 -->
-        <el-form-item
-          v-if="field.type === 'text'"
-          :label="field.label"
-          :prop="field.id"
-          :required="field.required"
-        >
-          <!-- 支持多个值的文本输入 -->
-          <div v-if="field.multiple" class="multiple-input-container">
-            <div
-              v-for="(value, index) in getMultipleValues(field.id)"
-              :key="index"
-              class="multiple-input-item"
-              v-if="getMultipleValues(field.id) && getMultipleValues(field.id).length > 0"
-            >
-              <el-input
-                :model-value="formData[field.id] ? formData[field.id][index] : ''"
-                @update:model-value="(val) => updateMultipleValue(field.id, index, val)"
-                :placeholder="field.placeholder"
-                class="multiple-input"
-              />
-              <el-button
-                type="danger"
-                :icon="Delete"
-                circle
-                size="small"
-                @click="removeMultipleValue(field.id, index)"
-                v-if="getMultipleValues(field.id).length > 1"
-              />
-            </div>
-            <el-button
-              type="primary"
-              :icon="Plus"
-              @click="addMultipleValue(field.id)"
-              class="add-button"
-            >
-              添加{{ field.label }}
-            </el-button>
-          </div>
-          <!-- 单个文本输入 -->
-          <div v-else>
-            <el-input
-              v-model="formData[field.id]"
-              :placeholder="field.placeholder"
+      <!-- 支持分组和非分组两种配置方式 -->
+      <template v-if="config.sections">
+        <!-- 分组表单渲染 -->
+        <div v-for="section in config.sections" :key="section.id" class="form-section">
+          <el-divider content-position="left">
+            <h3 class="section-title">{{ section.title }}</h3>
+          </el-divider>
+          
+          <!-- 渲染分组内的字段 -->
+          <template v-for="field in section.fields" :key="field.id">
+            <FormField 
+              :field="field" 
+              :formData="formData" 
+              :computedValues="computedValues"
+              @update-field="updateField"
+              @add-multiple="addMultipleValue"
+              @remove-multiple="removeMultipleValue"
             />
-            <!-- 特殊逻辑：当被告是公司时显示州选择器 -->
-            <el-select
-              v-if="field.id === 'defendantName' && isCompany(formData[field.id])"
-              v-model="formData[field.id + '_state']"
-              placeholder="选择州"
-              style="margin-top: 10px; width: 100%;"
-            >
-              <el-option label="California" value="CA"></el-option>
-              <el-option label="New York" value="NY"></el-option>
-              <el-option label="Texas" value="TX"></el-option>
-              <!-- 在此添加更多州 -->
-            </el-select>
-          </div>
-          <!-- 字段描述 -->
-          <div v-if="field.description" class="field-description">
-            {{ field.description }}
-          </div>
-        </el-form-item>
-
-        <!-- 多行文本输入框 -->
-        <el-form-item
-          v-else-if="field.type === 'textarea'"
-          :label="field.label"
-          :prop="field.id"
-          :required="field.required"
-        >
-          <el-input
-            v-model="formData[field.id]"
-            type="textarea"
-            :placeholder="field.placeholder"
-            :rows="3"
-          />
-          <div v-if="field.description" class="field-description">
-            {{ field.description }}
-          </div>
-        </el-form-item>
-
-        <!-- 数字输入框 -->
-        <el-form-item
-          v-else-if="field.type === 'number'"
-          :label="field.label"
-          :prop="field.id"
-          :required="field.required"
-        >
-          <el-input-number
-            v-model="formData[field.id]"
-            :min="field.min || 0"
-            :max="field.max"
-            :step="field.step || 1"
-            :placeholder="field.placeholder"
-            style="width: 100%"
-          />
-          <div v-if="field.description" class="field-description">
-            {{ field.description }}
-          </div>
-        </el-form-item>
-
-        <!-- 日期选择器 -->
-        <el-form-item
-          v-else-if="field.type === 'date'"
-          :label="field.label"
-          :prop="field.id"
-          :required="field.required"
-        >
-          <el-date-picker
-            v-model="formData[field.id]"
-            type="date"
-            :placeholder="field.placeholder"
-            format="MMMM DD, YYYY"
-            value-format="YYYY-MM-DD"
-            style="width: 100%"
-          />
-          <div v-if="field.description" class="field-description">
-            {{ field.description }}
-          </div>
-        </el-form-item>
-
-        <!-- 选择器 -->
-        <el-form-item
-          v-else-if="field.type === 'select'"
-          :label="field.label"
-          :prop="field.id"
-          :required="field.required"
-        >
-          <el-select
-            v-model="formData[field.id]"
-            :placeholder="field.placeholder"
-            :multiple="field.multiple"
-            style="width: 100%"
-          >
-            <el-option
-              v-for="option in field.options"
-              :key="option.value"
-              :label="option.label"
-              :value="option.value"
-            />
-          </el-select>
-          <div v-if="field.description" class="field-description">
-            {{ field.description }}
-          </div>
-        </el-form-item>
-
-        <!-- 计算字段（只读显示） -->
-        <el-form-item
-          v-else-if="field.type === 'computed'"
-          :label="field.label"
-          :prop="field.id"
-        >
-          <el-input
-            :model-value="getComputedValue(field)"
-            readonly
-            class="computed-field"
-          />
-          <div v-if="field.description" class="field-description">
-            {{ field.description }}
-          </div>
-        </el-form-item>
+          </template>
+        </div>
       </template>
+      
+      <template v-else>
+        <!-- 传统单列表字段渲染（向后兼容） -->
+        <template v-for="field in config.fields" :key="field.id">
+          <FormField 
+            :field="field" 
+            :formData="formData" 
+            :computedValues="computedValues"
+            @update-field="updateField"
+            @add-multiple="addMultipleValue"
+            @remove-multiple="removeMultipleValue"
+          />
+        </template>
+               </template>
 
       <!-- 表单操作按钮 -->
       <el-form-item>
@@ -221,6 +91,7 @@ import { ref, reactive, computed, watch, onMounted } from 'vue'
 import { ElMessage } from 'element-plus'
 import { Plus, Delete, Download } from '@element-plus/icons-vue'
 import FormDataExporter from './FormDataExporter.vue'
+import FormField from './FormField.vue'
 import {
   calculateAllComputedFields,
   formatDate,
@@ -253,7 +124,8 @@ const previewVisible = ref(false) // 预览对话框显示状态
 // 表单验证规则
 const formRules = computed(() => {
   const rules = {}
-  props.config.fields?.forEach(field => {
+  const allFields = getAllFields()
+  allFields.forEach(field => {
     if (field.required) {
       rules[field.id] = [
         {
@@ -267,17 +139,25 @@ const formRules = computed(() => {
   return rules
 })
 
+// 获取所有字段（支持分组和非分组配置）
+const getAllFields = () => {
+  if (props.config.sections) {
+    return props.config.sections.flatMap(section => section.fields || [])
+  }
+  return props.config.fields || []
+}
+
 // 初始化表单数据
 const initFormData = () => {
-  props.config.fields?.forEach(field => {
+  const allFields = getAllFields()
+  allFields.forEach(field => {
     if (field.multiple) {
       // 多值字段初始化为数组
       formData[field.id] = props.initialData[field.id] || []
-      // 确保至少有一个空值
-      // if (formData[field.id].length === 0) {
-      //   formData[field.id].push('')
-      // }
-      // return
+      // 确保至少有一个空值供编辑
+      if (formData[field.id].length === 0) {
+        formData[field.id].push('')
+      }
     } else if (field.type === 'computed') {
       // 计算字段不需要初始化
       return
@@ -318,7 +198,8 @@ const removeMultipleValue = (fieldId, index) => {
 
 // 计算字段的响应式值
 const computedValues = computed(() => {
-  return calculateAllComputedFields(formData, props.config.fields || [])
+  const allFields = getAllFields()
+  return calculateAllComputedFields(formData, allFields)
 })
 
 // 获取计算字段值
@@ -336,6 +217,11 @@ const getComputedValue = (field) => {
   }
 
   return value || ''
+}
+
+// 更新字段值（由FormField组件调用）
+const updateField = (fieldId, value) => {
+  formData[fieldId] = value
 }
 
 // 表单提交处理
@@ -653,6 +539,43 @@ onMounted(() => {
     padding: 6px 10px;
     font-size: 12px;
   }
+}
+
+/* 表单分组样式 */
+.form-section {
+  margin-bottom: 32px;
+}
+
+.section-title {
+  color: #1E1E1E;
+  font-size: 1.25rem;
+  font-weight: 600;
+  margin: 0;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+:deep(.el-divider--horizontal) {
+  margin: 24px 0;
+}
+
+:deep(.el-divider__text) {
+  background-color: #FFFFFF;
+  padding: 0 16px;
+}
+
+/* 计算字段样式增强 */
+:deep(.computed-field .el-input__wrapper) {
+  background-color: #F5F5F5 !important;
+  border-color: #E4E7ED !important;
+  cursor: not-allowed;
+}
+
+:deep(.computed-field .el-input__inner) {
+  color: #606266 !important;
+  background-color: transparent !important;
+  cursor: not-allowed;
 }
 
 </style>

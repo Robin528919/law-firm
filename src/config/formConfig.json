@@ -1,189 +1,414 @@
 {
   "formConfig": {
-    "title": "Complaint Form",
-    "description": "法律诉讼表单 - 动态生成",
-    "fields": [
+    "title": "Legal Form System - Enhanced with Formula Engine",
+    "description": "法律诉讼表单系统 - 支持配置化公式计算",
+    "sections": [
       {
-        "id": "plaintiffName",
-        "label": "Plaintiff Name",
-        "type": "text",
-        "variable": "d.PlaintiffName",
-        "multiple": true,
-        "required": true,
-        "placeholder": "请输入原告姓名",
-        "description": "可添加多个原告"
+        "id": "complainantInfo",
+        "title": "当事人信息",
+        "fields": [
+          {
+            "id": "plaintiffName",
+            "label": "Plaintiff Name",
+            "type": "text",
+            "variable": "d.PlaintiffName",
+            "multiple": true,
+            "required": true,
+            "placeholder": "请输入原告姓名",
+            "description": "可添加多个原告，自动添加 ', an individual,' 后缀",
+            "autoSuffix": ", an individual,"
+          },
+          {
+            "id": "plaintiffJob",
+            "label": "Plaintiff's Job",
+            "type": "text",
+            "variable": "d.PlaintiffJob",
+            "placeholder": "请输入原告职业"
+          },
+          {
+            "id": "defendantName",
+            "label": "Defendant Name",
+            "type": "text",
+            "variable": "d.DefendantName",
+            "multiple": true,
+            "required": true,
+            "placeholder": "请输入被告姓名",
+            "description": "可添加多个被告。如果是公司，需要选择州。例如：'a California corporation.'"
+          },
+          {
+            "id": "plaintiffResidence",
+            "label": "Plaintiff Residence (County, State)",
+            "type": "text",
+            "variable": "d.PlaintiffResidence",
+            "placeholder": "请输入原告居住地（县，州）"
+          }
+        ]
       },
       {
-        "id": "defendantName",
-        "label": "Defendant Name",
-        "type": "text",
-        "variable": "d.DefendantName",
-        "multiple": true,
-        "required": true,
-        "placeholder": "请输入被告姓名",
-        "description": "可添加多个被告。如果是公司，需要选择州。例如：'a California corporation.'"
+        "id": "caseInfo",
+        "title": "案件信息",
+        "fields": [
+          {
+            "id": "caseNumber",
+            "label": "Case Number",
+            "type": "text",
+            "variable": "d.CaseNumber",
+            "defaultValue": " ",
+            "placeholder": "请输入案件编号",
+            "description": "默认值设置为空格"
+          },
+          {
+            "id": "judgeName",
+            "label": "Judge Name",
+            "type": "text",
+            "variable": "d.JudgeName",
+            "placeholder": "请输入法官姓名"
+          },
+          {
+            "id": "complaintFilingDate",
+            "label": "Complaint Filing Date",
+            "type": "date",
+            "variable": "d.ComplaintFilingDate",
+            "required": true,
+            "format": "MMMM DD, YYYY",
+            "placeholder": "选择起诉日期",
+            "description": "格式需要为 'June 10, 2025'"
+          },
+          {
+            "id": "selectedCauses",
+            "label": "Choose Causes of Action",
+            "type": "select",
+            "variable": "d.SelectedCauses",
+            "multiple": true,
+            "options": [
+              { "value": "breach_of_contract", "label": "Breach of Contract" },
+              { "value": "wage_theft", "label": "Wage Theft" },
+              { "value": "overtime_violation", "label": "Overtime Violation" },
+              { "value": "discrimination", "label": "Discrimination" },
+              { "value": "meal_break_violation", "label": "Meal Break Violation" },
+              { "value": "rest_break_violation", "label": "Rest Break Violation" }
+            ],
+            "placeholder": "选择诉讼原因"
+          }
+        ]
       },
       {
-        "id": "caseNumber",
-        "label": "Case Number",
-        "type": "text",
-        "variable": "d.CaseNumber",
-        "defaultValue": " ",
-        "placeholder": "请输入案件编号",
-        "description": "默认值设置为空格"
+        "id": "employmentInfo",
+        "title": "雇佣信息",
+        "fields": [
+          {
+            "id": "employmentStartDate",
+            "label": "Start Date of the Employment",
+            "type": "date",
+            "variable": "d.EmploymentStartDate",
+            "required": true,
+            "placeholder": "选择雇佣开始日期",
+            "description": "用于计算雇佣周数"
+          },
+          {
+            "id": "employmentEndDate",
+            "label": "End Date of the Employment",
+            "type": "date",
+            "variable": "d.EmploymentEndDate",
+            "required": true,
+            "placeholder": "选择雇佣结束日期",
+            "description": "用于计算雇佣周数"
+          },
+          {
+            "id": "hourlyRate",
+            "label": "Plaintiff's Hourly Rate",
+            "type": "number",
+            "variable": "d.HourlyRate",
+            "required": true,
+            "min": 0,
+            "step": 0.01,
+            "placeholder": "请输入小时工资率",
+            "description": "用于计算未付工资、加班费等"
+          },
+          {
+            "id": "weeklyHours",
+            "label": "How many actual hours did the Plaintiff work per week",
+            "type": "number",
+            "variable": "d.WeeklyHours",
+            "min": 0,
+            "step": 0.1,
+            "placeholder": "请输入每周实际工作小时数"
+          },
+          {
+            "id": "2OvertimeHours",
+            "label": "How many 2x overtime hours did the plaintiff work per week",
+            "type": "number",
+            "variable": "d.2OvertimeHours",
+            "min": 0,
+            "step": 0.1,
+            "placeholder": "请输入每周2倍加班小时数"
+          },
+          {
+            "id": "defendantBusinessType",
+            "label": "Defendant Business Type (e.g. restaurant)",
+            "type": "text",
+            "variable": "d.DefendantBusinessType",
+            "placeholder": "请输入被告企业类型"
+          },
+          {
+            "id": "defendantBusinessAddress",
+            "label": "Defendant's Detailed Business Address",
+            "type": "textarea",
+            "variable": "d.DefendantBusinessAddress",
+            "placeholder": "请输入被告企业详细地址（原告工作地点）"
+          }
+        ]
       },
       {
-        "id": "judgeName",
-        "label": "Judge Name",
-        "type": "text",
-        "variable": "d.JudgeName",
-        "placeholder": "请输入法官姓名"
+        "id": "wageInfo",
+        "title": "工资和时间信息",
+        "fields": [
+          {
+            "id": "unpaidHours",
+            "label": "Unpaid Hours",
+            "type": "number",
+            "variable": "d.UnpaidHours",
+            "min": 0,
+            "step": 0.1,
+            "placeholder": "请输入未付工作小时数"
+          },
+          {
+            "id": "missedMealBreaks",
+            "label": "How many missed meal breaks per week",
+            "type": "number",
+            "variable": "d.MissedMealBreaks",
+            "min": 0,
+            "step": 1,
+            "placeholder": "请输入每周错过的用餐休息次数"
+          },
+          {
+            "id": "missedRestBreaks",
+            "label": "How many missed rest breaks per week",
+            "type": "number",
+            "variable": "d.MissedRestBreaks",
+            "min": 0,
+            "step": 1,
+            "placeholder": "请输入每周错过的休息时间次数"
+          },
+          {
+            "id": "iwcOrder",
+            "label": "What is the applicable IWC Order (number)",
+            "type": "number",
+            "variable": "d.iwcOrder",
+            "min": 1,
+            "placeholder": "请输入适用的IWC命令编号"
+          },
+          {
+            "id": "payPeriods",
+            "label": "Pay Periods",
+            "type": "number",
+            "variable": "d.PayPeriods",
+            "min": 1,
+            "placeholder": "请输入支付周期数"
+          }
+        ]
       },
       {
-        "id": "complaintFilingDate",
-        "label": "Complaint Filing Date",
-        "type": "date",
-        "variable": "d.ComplaintFilingDate",
-        "required": true,
-        "format": "MMMM DD, YYYY",
-        "placeholder": "选择起诉日期",
-        "description": "格式需要为 'June 10, 2025'"
+        "id": "businessExpense",
+        "title": "商业费用",
+        "fields": [
+          {
+            "id": "businessExpenseType",
+            "label": "What is the type of Unpaid Expense (e.g. gas)",
+            "type": "text",
+            "variable": "d.BusinessExpenseType",
+            "placeholder": "请输入未报销费用类型（如汽油费）"
+          },
+          {
+            "id": "businessExpenseAmount",
+            "label": "What is the amount of unreimbursed business expense",
+            "type": "number",
+            "variable": "d.BusinessExpenseAmount",
+            "min": 0,
+            "step": 0.01,
+            "placeholder": "请输入未报销商业费用金额"
+          }
+        ]
       },
       {
-        "id": "selectedCauses",
-        "label": "Choose Causes of Action",
-        "type": "select",
-        "variable": "d.SelectedCauses",
-        "multiple": true,
-        "options": [
-          { "value": "breach_of_contract", "label": "Breach of Contract" },
-          { "value": "wage_theft", "label": "Wage Theft" },
-          { "value": "overtime_violation", "label": "Overtime Violation" },
-          { "value": "discrimination", "label": "Discrimination" }
-        ],
-        "placeholder": "选择诉讼原因"
+        "id": "computedFields",
+        "title": "自动计算字段",
+        "fields": [
+          {
+            "id": "plaintiffPlurality1",
+            "label": "Plaintiff Plurality 1",
+            "type": "computed",
+            "variable": "d.PlaintiffPlurality1",
+            "formula": "pluralize(count({d.PlaintiffName}), 'Plaintiff', 'Plaintiffs')",
+            "description": "根据原告数量自动计算单复数"
+          },
+          {
+            "id": "plaintiffPlurality2",
+            "label": "Plaintiff Plurality 2",
+            "type": "computed",
+            "variable": "d.PlaintiffPlurality2",
+            "formula": "pluralize(count({d.PlaintiffName}), 'Plaintiff is', 'Plaintiffs are')",
+            "description": "根据原告数量自动计算单复数"
+          },
+          {
+            "id": "defendantPlurality1",
+            "label": "Defendant Plurality 1",
+            "type": "computed",
+            "variable": "d.DefendantPlurality1",
+            "formula": "pluralize(count({d.DefendantName}), 'Defendant', 'Defendants')",
+            "description": "根据被告数量自动计算单复数"
+          },
+          {
+            "id": "defendantPlurality2",
+            "label": "Defendant Plurality 2",
+            "type": "computed",
+            "variable": "d.DefendantPlurality2",
+            "formula": "pluralize(count({d.DefendantName}), 'Defendant is', 'Defendants are')",
+            "description": "根据被告数量自动计算单复数"
+          },
+          {
+            "id": "doe",
+            "label": "DOE (雇佣周数)",
+            "type": "computed",
+            "variable": "d.DOE",
+            "formula": "if(yearsBetween({d.ComplaintFilingDate}, {d.EmploymentStartDate}) < 3, weeksBetween({d.EmploymentEndDate}, {d.EmploymentStartDate}), weeksBetween({d.EmploymentEndDate}, dateSubtract({d.ComplaintFilingDate}, 3, 'years')))",
+            "description": "基于3年诉讼时效的复杂周数计算，向上取整"
+          },
+          {
+            "id": "15OvertimeHours",
+            "label": "1.5x Overtime Hours",
+            "type": "computed",
+            "variable": "d.15OvertimeHours",
+            "formula": "max(0, {d.WeeklyHours} - {d.2OvertimeHours} - 40)",
+            "description": "1.5倍加班时间 = 每周工作时间 - 2倍加班时间 - 40"
+          },
+          {
+            "id": "overtimeHoursTotal",
+            "label": "Total Overtime Hours",
+            "type": "computed",
+            "variable": "d.OvertimeHoursTotal",
+            "formula": "{d.15OvertimeHours} + {d.2OvertimeHours}",
+            "description": "总加班时间 = 1.5倍加班时间 + 2倍加班时间"
+          },
+          {
+            "id": "overtimeStatus",
+            "label": "Overtime Status",
+            "type": "computed",
+            "variable": "d.OvertimeStatus",
+            "formula": "if({d.WeeklyHours} > 40, 'Unpaid', 'N/A')",
+            "description": "加班状态判断"
+          },
+          {
+            "id": "executedDate",
+            "label": "Executed Date",
+            "type": "computed",
+            "variable": "d.ExecutedDate",
+            "formula": "formatDate(today(), 'legal')",
+            "description": "今天日期，格式为 'June 15, 2025'"
+          },
+          {
+            "id": "3SOL",
+            "label": "3年诉讼时效日期",
+            "type": "computed",
+            "variable": "d.3SOL",
+            "formula": "formatDate(dateSubtract({d.ComplaintFilingDate}, 3, 'years'), 'legal')",
+            "description": "起诉日期减去3年"
+          },
+          {
+            "id": "4SOL",
+            "label": "4年诉讼时效日期",
+            "type": "computed",
+            "variable": "d.4SOL",
+            "formula": "formatDate(dateSubtract({d.ComplaintFilingDate}, 4, 'years'), 'legal')",
+            "description": "起诉日期减去4年"
+          }
+        ]
       },
       {
-        "id": "plaintiffPlurality1",
-        "label": "Plaintiff Plurality 1",
-        "type": "computed",
-        "variable": "d.PlaintiffPlurality1",
-        "computeRule": "plaintiffCount",
-        "values": {
-          "single": "Plaintiff",
-          "multiple": "Plaintiffs"
-        },
-        "description": "根据原告数量自动计算"
-      },
-      {
-        "id": "plaintiffPlurality2",
-        "label": "Plaintiff Plurality 2",
-        "type": "computed",
-        "variable": "d.PlaintiffPlurality2",
-        "computeRule": "plaintiffCount",
-        "values": {
-          "single": "Plaintiff is",
-          "multiple": "Plaintiffs are"
-        },
-        "description": "根据原告数量自动计算"
-      },
-      {
-        "id": "defendantPlurality1",
-        "label": "Defendant Plurality 1",
-        "type": "computed",
-        "variable": "d.DefendantPlurality1",
-        "computeRule": "defendantCount",
-        "values": {
-          "single": "Defendant",
-          "multiple": "Defendants"
-        },
-        "description": "根据被告数量自动计算"
-      },
-      {
-        "id": "defendantPlurality2",
-        "label": "Choose Causes of Action",
-        "type": "computed",
-        "variable": "d.DefendantPlurality2",
-        "computeRule": "defendantCount",
-        "values": {
-          "single": "Defendant is",
-          "multiple": "Defendants are"
-        },
-        "description": "根据被告数量自动计算"
-      },
-      {
-        "id": "plaintiffResidence",
-        "label": "Plaintiff Residence (County, State)",
-        "type": "text",
-        "variable": "d.PlaintiffResidence",
-        "placeholder": "请输入原告居住地（县，州）"
-      },
-      {
-        "id": "defendantBusinessType",
-        "label": "Defendant Business Type (e.g. restaurant)",
-        "type": "text",
-        "variable": "d.DefendantBusinessType",
-        "placeholder": "请输入被告企业类型"
-      },
-      {
-        "id": "defendantBusinessAddress",
-        "label": "Defendant's Detailed Business Address (Where the plaintiff worked)",
-        "type": "textarea",
-        "variable": "d.DefendantBusinessAddress",
-        "placeholder": "请输入被告企业详细地址（原告工作地点）"
-      },
-      {
-        "id": "employmentStartDate",
-        "label": "Start Date of the Employment",
-        "type": "date",
-        "variable": "d.EmploymentStartDate",
-        "required": true,
-        "placeholder": "选择雇佣开始日期",
-        "description": "用于计算雇佣周数"
-      },
-      {
-        "id": "employmentEndDate",
-        "label": "End date of the employment",
-        "type": "date",
-        "variable": "d.EmploymentEndDate",
-        "required": true,
-        "placeholder": "选择雇佣结束日期",
-        "description": "用于计算雇佣周数"
-      },
-      {
-        "id": "hourlyRate",
-        "label": "Plaintiff's hourly rate",
-        "type": "number",
-        "variable": "d.HourlyRate",
-        "required": true,
-        "min": 0,
-        "step": 0.01,
-        "placeholder": "请输入小时工资率",
-        "description": "用于计算未付工资、加班费等"
-      },
-      {
-        "id": "overtimeHoursTotal",
-        "label": "Overtime Hours Total",
-        "type": "computed",
-        "variable": "d.OvertimeHoursTotal",
-        "computeRule": "overtimeCalculation",
-        "description": "1.5倍加班时间 + 2倍加班时间"
-      },
-      {
-        "id": "iwcOrder",
-        "label": "What is the applicable IWC Order(number)",
-        "type": "number",
-        "variable": "d.iwcOrder",
-        "min": 1,
-        "placeholder": "请输入适用的IWC命令编号"
-      },
-      {
-        "id": "wageStatementPenalty",
-        "label": "Wage Statement Penalty",
-        "type": "computed",
-        "variable": "d.WageStatementPenalty",
-        "computeRule": "wageStatementPenaltyCalculation",
-        "description": "如果 < 4000，则为 50+(PayPeriods-1)*100，否则为 4000"
+        "id": "damageCalculations",
+        "title": "损害赔偿计算",
+        "fields": [
+          {
+            "id": "wageStatementPenalty",
+            "label": "Wage Statement Penalty",
+            "type": "computed",
+            "variable": "d.WageStatementPenalty",
+            "formula": "min(50 + ({d.PayPeriods} - 1) * 100, 4000)",
+            "description": "工资单罚金：如果 < 4000，则为 50+(PayPeriods-1)*100，否则为 4000"
+          },
+          {
+            "id": "damageUnpaidWages",
+            "label": "Unpaid Wages Damage",
+            "type": "computed",
+            "variable": "d.DamageUnpaidWages",
+            "formula": "{d.UnpaidHours} * {d.HourlyRate}",
+            "description": "未付工资损害 = 未付小时数 × 小时工资率"
+          },
+          {
+            "id": "damageMealBreaks",
+            "label": "Meal Breaks Damage",
+            "type": "computed",
+            "variable": "d.DamageMealBreaks",
+            "formula": "{d.MissedMealBreaks} * {d.DOE} * {d.HourlyRate}",
+            "description": "用餐休息损害 = 每周错过次数 × 雇佣周数 × 小时工资率"
+          },
+          {
+            "id": "damageRestBreaks",
+            "label": "Rest Breaks Damage",
+            "type": "computed",
+            "variable": "d.DamageRestBreaks",
+            "formula": "{d.MissedRestBreaks} * {d.DOE} * {d.HourlyRate}",
+            "description": "休息时间损害 = 每周错过次数 × 雇佣周数 × 小时工资率"
+          },
+          {
+            "id": "damageOvertime",
+            "label": "Overtime Damage",
+            "type": "computed",
+            "variable": "d.DamageOvertime",
+            "formula": "{d.15OvertimeHours} * {d.HourlyRate} * {d.DOE} * 1.5 + {d.2OvertimeHours} * {d.HourlyRate} * {d.DOE} * 2",
+            "description": "加班损害 = 1.5倍加班损害 + 2倍加班损害"
+          },
+          {
+            "id": "damageWaitingTime",
+            "label": "Waiting Time Damage",
+            "type": "computed",
+            "variable": "d.DamageWaitingTime",
+            "formula": "{d.HourlyRate} * 8 * 30",
+            "description": "等待时间损害 = 小时工资率 × 8小时 × 30天"
+          },
+          {
+            "id": "damageTotal",
+            "label": "Total Damage",
+            "type": "computed",
+            "variable": "d.DamageTotal",
+            "formula": "sum({d.DamageUnpaidWages}, {d.DamageMealBreaks}, {d.DamageRestBreaks}, {d.DamageOvertime}, {d.DamageWaitingTime}, {d.BusinessExpenseAmount}, {d.WageStatementPenalty})",
+            "description": "总损害赔偿 = 所有损害项目之和"
+          },
+          {
+            "id": "interestPeriod",
+            "label": "Interest Period (months)",
+            "type": "computed",
+            "variable": "d.InterestPeriod",
+            "formula": "monthsBetween({d.ComplaintFilingDate}, {d.EmploymentEndDate})",
+            "description": "利息期间（月数）= 起诉日期 - 雇佣结束日期"
+          },
+          {
+            "id": "preJudgmentInterest",
+            "label": "Pre-Judgment Interest",
+            "type": "computed",
+            "variable": "d.PreJudgmentInterest",
+            "formula": "{d.DamageTotal} * {d.InterestPeriod} * 0.10 / 12",
+            "description": "判决前利息 = 总损害 × 利息期间 × 10% / 12"
+          },
+          {
+            "id": "damageTotalIncludingInterest",
+            "label": "Total Damage Including Interest",
+            "type": "computed",
+            "variable": "d.DamageTotalIncludingInterest",
+            "formula": "{d.DamageTotal} + {d.PreJudgmentInterest}",
+            "description": "包含利息的总损害 = 总损害 + 判决前利息"
+          }
+        ]
       }
     ]
   }

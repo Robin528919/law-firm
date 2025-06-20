@@ -1,7 +1,10 @@
 /**
  * 表单计算工具类
  * 用于处理动态表单中的各种计算逻辑
+ * 现在集成了公式引擎，支持配置化的计算公式
  */
+
+import { formulaEngine, calculateMultipleFormulas } from './formulaEngine.js'
 
 /**
  * 计算雇佣周数
@@ -201,10 +204,12 @@ export const validateFieldValue = (value, fieldConfig) => {
  * @returns {object} 计算后的字段值
  */
 export const calculateAllComputedFields = (formData, fieldConfigs) => {
-  const computedValues = {}
+  // 使用新的公式引擎进行计算
+  const computedValues = calculateMultipleFormulas(fieldConfigs, formData)
   
+  // 保持向后兼容：如果字段没有 formula 属性，使用旧的计算规则
   fieldConfigs.forEach(field => {
-    if (field.type === 'computed') {
+    if (field.type === 'computed' && !field.formula && field.computeRule) {
       switch (field.computeRule) {
         case 'plaintiffCount':
           computedValues[field.id] = determinePlurality(
@@ -228,15 +233,12 @@ export const calculateAllComputedFields = (formData, fieldConfigs) => {
           break
           
         case 'overtimeCalculation':
-          // 注意：此计算依赖于 formData.overtimeHours15 和 formData.overtimeHours20
-          // 这些字段当前未在表单中定义。
           const overtimeResult = calculateOvertimePay(
             formData.hourlyRate,
             0, // regularHours 未定义
             formData.overtimeHours15 || 0,
             formData.overtimeHours20 || 0
           );
-          // 根据 requirements.md，此字段是总加班时间
           computedValues[field.id] = overtimeResult.totalOvertimeHours;
           break;
           
@@ -245,7 +247,6 @@ export const calculateAllComputedFields = (formData, fieldConfigs) => {
             formData.employmentStartDate,
             formData.employmentEndDate
           );
-          // 假设每周一个支付周期 (PayPeriods)
           const payPeriods = weeks;
           computedValues[field.id] = calculateWageStatementPenalty(payPeriods);
           break;
@@ -257,4 +258,14 @@ export const calculateAllComputedFields = (formData, fieldConfigs) => {
   })
   
   return computedValues
+}
+
+/**
+ * 使用公式引擎计算单个公式
+ * @param {string} formula - 公式字符串
+ * @param {object} data - 数据对象
+ * @returns {any} 计算结果
+ */
+export const calculateFormula = (formula, data) => {
+  return formulaEngine.calculate(formula, data)
 }

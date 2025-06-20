@@ -5,23 +5,35 @@ import { Document, Collection, Hide } from '@element-plus/icons-vue'
 import DynamicForm from './components/DynamicForm.vue'
 import FormTemplateManager from './components/FormTemplateManager.vue'
 import formConfigData from './config/formConfig.json'
+import autoSuffixDemo from './config/autoSuffixDemo.json'
 
 // 响应式数据
 const formConfig = ref({}) // 表单配置
 const loading = ref(true) // 加载状态
 const currentFormData = ref({}) // 当前表单数据
 const showTemplateManager = ref(false) // 是否显示模板管理器
+const configType = ref('main') // 配置类型：'main' 或 'demo'
 
 // 初始化表单配置
 const initFormConfig = () => {
   try {
-    formConfig.value = formConfigData
+    formConfig.value = configType.value === 'main' ? formConfigData : autoSuffixDemo
     loading.value = false
     console.log('表单配置加载成功:', formConfig.value)
   } catch (error) {
     console.error('加载表单配置失败:', error)
     loading.value = false
   }
+}
+
+// 切换配置类型
+const switchConfig = (type) => {
+  configType.value = type
+  loading.value = true
+  currentFormData.value = {} // 清空当前表单数据
+  setTimeout(() => {
+    initFormConfig()
+  }, 100)
 }
 
 // 处理表单提交
@@ -81,15 +93,34 @@ onMounted(() => {
        <div v-else-if="formConfig.formConfig" class="form-container">
          <!-- 表单操作工具栏 -->
          <div class="form-toolbar">
-           <el-button-group>
-             <el-button
-               type="info"
-               :icon="showTemplateManager ? Hide : Collection"
-               @click="toggleTemplateManager"
-             >
-               {{ showTemplateManager ? '隐藏' : '显示' }}模板管理
-             </el-button>
-           </el-button-group>
+           <div class="toolbar-left">
+             <el-button-group>
+               <el-button
+                 :type="configType === 'main' ? 'primary' : ''"
+                 @click="switchConfig('main')"
+               >
+                 主表单配置
+               </el-button>
+               <el-button
+                 :type="configType === 'demo' ? 'primary' : ''"
+                 @click="switchConfig('demo')"
+               >
+                 自动后缀演示
+               </el-button>
+             </el-button-group>
+           </div>
+           
+           <div class="toolbar-right">
+             <el-button-group>
+               <el-button
+                 type="info"
+                 :icon="showTemplateManager ? Hide : Collection"
+                 @click="toggleTemplateManager"
+               >
+                 {{ showTemplateManager ? '隐藏' : '显示' }}模板管理
+               </el-button>
+             </el-button-group>
+           </div>
          </div>
 
          <!-- 模板管理器 -->
@@ -317,6 +348,19 @@ onMounted(() => {
   border-radius: 8px;
   border: 1px solid #e4e7ed;
   backdrop-filter: blur(5px);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.toolbar-left {
+  display: flex;
+  align-items: center;
+}
+
+.toolbar-right {
+  display: flex;
+  align-items: center;
 }
 
 /* 模板管理器区域样式 */
@@ -326,14 +370,22 @@ onMounted(() => {
 }
 
 /* 响应式调整 */
-@media (max-width: 768px) {
-  .form-toolbar {
-    margin: 0 0 20px 0;
-    padding: 10px 15px;
-    border-radius: 6px;
-  }
+ @media (max-width: 768px) {
+   .form-toolbar {
+     margin: 0 0 20px 0;
+     padding: 10px 15px;
+     border-radius: 6px;
+     flex-direction: column;
+     gap: 10px;
+   }
 
-  .template-manager-section {
+   .toolbar-left,
+   .toolbar-right {
+     width: 100%;
+     justify-content: center;
+   }
+
+   .template-manager-section {
      margin: 0 0 20px 0;
      padding: 0 15px;
    }
