@@ -99,13 +99,13 @@ onMounted(() => {
                  :type="configType === 'main' ? 'primary' : ''"
                  @click="switchConfig('main')"
                >
-                 主表单配置
+                 Main Form
                </el-button>
                <el-button
                  :type="configType === 'demo' ? 'primary' : ''"
                  @click="switchConfig('demo')"
                >
-                 自动后缀演示
+                 Auto Suffix Demo
                </el-button>
              </el-button-group>
            </div>
@@ -117,7 +117,7 @@ onMounted(() => {
                  :icon="showTemplateManager ? Hide : Collection"
                  @click="toggleTemplateManager"
                >
-                 {{ showTemplateManager ? '隐藏' : '显示' }}模板管理
+                 {{ showTemplateManager ? 'Hide' : 'Show' }} Template Manager
                </el-button>
              </el-button-group>
            </div>
