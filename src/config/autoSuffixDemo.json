@@ -1,0 +1,119 @@
+{
+  "formConfig": {
+    "title": "Auto Suffix Feature Demo",
+    "description": "Demonstrates automatic suffix functionality for different field types",
+    "sections": [
+      {
+        "id": "textSuffixDemo",
+        "title": "Text Suffix Demonstration",
+        "fields": [
+          {
+            "id": "plaintiffName",
+            "label": "Plaintiff Name (Auto adds ', an individual,')",
+            "type": "text",
+            "variable": "d.PlaintiffName",
+            "multiple": true,
+            "required": true,
+            "placeholder": "Enter plaintiff name",
+            "description": "Automatically adds ', an individual,' suffix when field loses focus",
+            "autoSuffix": ", an individual,"
+          },
+          {
+            "id": "defendantName",
+            "label": "Defendant Name (Auto adds ', a corporation')",
+            "type": "text", 
+            "variable": "d.DefendantName",
+            "multiple": true,
+            "placeholder": "Enter defendant name",
+            "description": "Automatically adds ', a corporation' suffix when field loses focus",
+            "autoSuffix": ", a corporation"
+          },
+          {
+            "id": "witnessName",
+            "label": "Witness Name (Auto adds ' (Witness)')",
+            "type": "text",
+            "variable": "d.WitnessName", 
+            "multiple": true,
+            "placeholder": "Enter witness name",
+            "description": "Automatically adds ' (Witness)' suffix when field loses focus",
+            "autoSuffix": " (Witness)"
+          },
+          {
+            "id": "attorneyName",
+            "label": "Attorney Name (Auto adds ', Esq.')",
+            "type": "text",
+            "variable": "d.AttorneyName",
+            "placeholder": "Enter attorney name",
+            "description": "Automatically adds ', Esq.' suffix when field loses focus",
+            "autoSuffix": ", Esq."
+          },
+          {
+            "id": "companyName",
+            "label": "Company Name (Auto adds ' LLC')",
+            "type": "text",
+            "variable": "d.CompanyName",
+            "placeholder": "Enter company name",
+            "description": "Automatically adds ' LLC' suffix when field loses focus",
+            "autoSuffix": " LLC"
+          },
+          {
+            "id": "addressLine",
+            "label": "Address (Auto adds ', USA')",
+            "type": "text",
+            "variable": "d.AddressLine",
+            "placeholder": "Enter address",
+            "description": "Automatically adds ', USA' suffix when field loses focus",
+            "autoSuffix": ", USA"
+          }
+        ]
+      },
+      {
+        "id": "noSuffixDemo", 
+        "title": "No Suffix Fields Comparison",
+        "fields": [
+          {
+            "id": "normalText",
+            "label": "Normal Text (No Auto Suffix)",
+            "type": "text",
+            "variable": "d.NormalText",
+            "placeholder": "This field will not add any suffix automatically",
+            "description": "Regular text field with no automatic suffix added"
+          },
+          {
+            "id": "caseNumber",
+            "label": "Case Number (No Auto Suffix)",
+            "type": "text", 
+            "variable": "d.CaseNumber",
+            "placeholder": "Enter case number",
+            "description": "Case number field maintains original input"
+          }
+        ]
+      },
+      {
+        "id": "complexDemo",
+        "title": "Complex Suffix Demonstration",
+        "fields": [
+          {
+            "id": "customEntity",
+            "label": "Custom Entity (Complex Auto Suffix)",
+            "type": "text",
+            "variable": "d.CustomEntity",
+            "multiple": true,
+            "placeholder": "Enter entity name",
+            "description": "Demonstrates complex automatic suffix functionality",
+            "autoSuffix": ", a Delaware corporation authorized to do business in California"
+          },
+          {
+            "id": "propertyDescription",
+            "label": "Property Description (Auto adds location info)",
+            "type": "textarea",
+            "variable": "d.PropertyDescription", 
+            "placeholder": "Enter property description",
+            "description": "Automatically adds location information suffix when field loses focus",
+            "autoSuffix": ", located in Los Angeles County, California"
+          }
+        ]
+      }
+    ]
+  }
+} 
