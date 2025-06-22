@@ -81,92 +81,12 @@
             "variable": "d.SelectedCauses",
             "multiple": true,
             "options": [
-              [
-                {
-                  "value": "FAILURE TO PAY ALL WAGES [California Labor Code §§ 201-202, 218, 218.5, 1194, 1194.2]",
-                  "label": "FAILURE TO PAY ALL WAGES [California Labor Code §§ 201-202, 218, 218.5, 1194, 1194.2]"
-                },
-                {
-                  "value": "FAILURE TO PROVIDE MEAL PERIODS [Labor Code §§ 226.7(a), 512]",
-                  "label": "FAILURE TO PROVIDE MEAL PERIODS [Labor Code §§ 226.7(a), 512]"
-                },
-                {
-                  "value": "rest_break_violation",
-                  "label": "Failure to Provide Rest Periods"
-                },
-                {
-                  "value": "overtime_violation",
-                  "label": "Failure to Pay Overtime Wages"
-                },
-                {
-                  "value": "waiting_time_penalty",
-                  "label": "Failure to Pay Wages Upon Termination (Waiting Time Penalties)"
-                },
-                {
-                  "value": "wage_statement_violation",
-                  "label": "Failure to Issue Accurate Wage Statements"
-                },
-                {
-                  "value": "unfair_business_practice",
-                  "label": "Unlawful/Unfair Business Practices"
-                },
-                {
-                  "value": "expense_reimbursement",
-                  "label": "Failure to Reimburse Work-Related Expenses"
-                },
-                {
-                  "value": "retaliation_workers_comp",
-                  "label": "Retaliation for Filing Workers’ Compensation Claim"
-                },
-                {
-                  "value": "disability_discrimination",
-                  "label": "Disability or Medical Condition Discrimination"
-                },
-                {
-                  "value": "failure_accommodation",
-                  "label": "Failure to Provide Reasonable Accommodation"
-                },
-                {
-                  "value": "failure_interactive_process",
-                  "label": "Failure to Enter Into Interactive Process"
-                },
-                {
-                  "value": "retaliation_medical_leave",
-                  "label": "Retaliation for Medical Leave or Accommodation Request"
-                },
-                {
-                  "value": "sex_race_discrimination",
-                  "label": "Discrimination Based on Sex and/or Race/Ethnicity"
-                },
-                {
-                  "value": "failure_prevent_discrimination",
-                  "label": "Failure to Prevent Discrimination and Harassment"
-                },
-                {
-                  "value": "whistleblower_retaliation",
-                  "label": "Whistleblower Retaliation"
-                },
-                {
-                  "value": "wrongful_termination",
-                  "label": "Wrongful Termination in Violation of Public Policy"
-                },
-                {
-                  "value": "sexual_harassment",
-                  "label": "Sexual Harassment (Hostile Work Environment)"
-                },
-                {
-                  "value": "feha_retaliation",
-                  "label": "Retaliation in Violation of FEHA"
-                },
-                {
-                  "value": "emotional_distress_intentional",
-                  "label": "Intentional Infliction of Emotional Distress"
-                },
-                {
-                  "value": "emotional_distress_negligent",
-                  "label": "Negligent Infliction of Emotional Distress"
-                }
-              ]
+              { "value": "FAILURE TO PAY ALL WAGES [California Labor Code §§ 201-202, 218, 218.5, 1194, 1194.2]", "label": "FAILURE TO PAY ALL WAGES [California Labor Code §§ 201-202, 218, 218.5, 1194, 1194.2]" },
+              { "value": "wage_theft", "label": "Wage Theft" },
+              { "value": "overtime_violation", "label": "Overtime Violation" },
+              { "value": "discrimination", "label": "Discrimination" },
+              { "value": "RETALIATION: UNLAWFUL DISCHARGE FOR TAKING MEDICAL LEAVE AND REQUEST FOR ACCOMMODATION [Govt. Code § 12940 et seq.]", "label": "RETALIATION: UNLAWFUL DISCHARGE FOR TAKING MEDICAL LEAVE AND REQUEST FOR ACCOMMODATION [Govt. Code § 12940 et seq.]" },
+              { "value": "rest_break_violation", "label": "Rest Break Violation" }
             ],
             "placeholder": "Select causes of action"
           }

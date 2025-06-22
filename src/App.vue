@@ -6,18 +6,39 @@ import DynamicForm from './components/DynamicForm.vue'
 import FormTemplateManager from './components/FormTemplateManager.vue'
 import formConfigData from './config/formConfig.json'
 import autoSuffixDemo from './config/autoSuffixDemo.json'
+import allFormsConfig from './config/allFormsConfig.json'
 
 // 响应式数据
 const formConfig = ref({}) // 表单配置
 const loading = ref(true) // 加载状态
 const currentFormData = ref({}) // 当前表单数据
 const showTemplateManager = ref(false) // 是否显示模板管理器
-const configType = ref('main') // 配置类型：'main' 或 'demo'
+const configType = ref('main') // 配置类型：'main'、'demo' 或 'forms'
+const selectedFormType = ref('complaintDamages') // 选中的表单类型，默认为投诉/损害赔偿
+
+// 表单选项
+const formOptions = [
+  { value: 'complaintDamages', label: 'Complaint/Damages (投诉/损害赔偿)' },
+  { value: 'mcReAnswer', label: 'M&C RE Answer (关于答辩的动议和会议)' },
+  { value: 'settlementAgreement', label: 'Settlement Agreement (Payments) (和解协议-付款)' }
+]
 
 // 初始化表单配置
 const initFormConfig = () => {
   try {
-    formConfig.value = configType.value === 'main' ? formConfigData : autoSuffixDemo
+    if (configType.value === 'main') {
+      formConfig.value = formConfigData
+    } else if (configType.value === 'demo') {
+      formConfig.value = autoSuffixDemo
+    } else if (configType.value === 'forms') {
+      // 从统一配置中获取选中的表单配置
+      const selectedForm = allFormsConfig.forms[selectedFormType.value]
+      if (selectedForm) {
+        formConfig.value = { formConfig: selectedForm }
+      } else {
+        throw new Error(`未找到表单配置: ${selectedFormType.value}`)
+      }
+    }
     loading.value = false
     console.log('表单配置加载成功:', formConfig.value)
   } catch (error) {
@@ -29,6 +50,16 @@ const initFormConfig = () => {
 // 切换配置类型
 const switchConfig = (type) => {
   configType.value = type
+  loading.value = true
+  currentFormData.value = {} // 清空当前表单数据
+  setTimeout(() => {
+    initFormConfig()
+  }, 100)
+}
+
+// 切换表单类型
+const switchFormType = (formType) => {
+  selectedFormType.value = formType
   loading.value = true
   currentFormData.value = {} // 清空当前表单数据
   setTimeout(() => {
@@ -64,6 +95,8 @@ const toggleTemplateManager = () => {
 
 // 组件挂载时初始化
 onMounted(() => {
+  // 默认使用新的表单系统
+  configType.value = 'forms'
   initFormConfig()
 })
 </script>
@@ -94,7 +127,31 @@ onMounted(() => {
          <!-- 表单操作工具栏 -->
          <div class="form-toolbar">
            <div class="toolbar-left">
-             <el-button-group>
+             <!-- 表单类型选择 -->
+             <div v-if="configType === 'forms'" class="form-selector">
+               <el-select
+                 v-model="selectedFormType"
+                 @change="switchFormType"
+                 placeholder="选择表单类型"
+                 style="width: 300px;"
+               >
+                 <el-option
+                   v-for="option in formOptions"
+                   :key="option.value"
+                   :label="option.label"
+                   :value="option.value"
+                 />
+               </el-select>
+             </div>
+             
+             <!-- 配置类型切换 -->
+             <el-button-group class="config-switcher">
+               <el-button
+                 :type="configType === 'forms' ? 'primary' : ''"
+                 @click="switchConfig('forms')"
+               >
+                 表单系统
+               </el-button>
                <el-button
                  :type="configType === 'main' ? 'primary' : ''"
                  @click="switchConfig('main')"
@@ -356,11 +413,29 @@ onMounted(() => {
 .toolbar-left {
   display: flex;
   align-items: center;
+  gap: 16px;
 }
 
 .toolbar-right {
   display: flex;
   align-items: center;
+}
+
+.form-selector {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.form-selector::before {
+  content: "表单类型:";
+  font-weight: 600;
+  color: #606266;
+  white-space: nowrap;
+}
+
+.config-switcher {
+  margin-left: 16px;
 }
 
 /* 模板管理器区域样式 */
@@ -376,13 +451,33 @@ onMounted(() => {
      padding: 10px 15px;
      border-radius: 6px;
      flex-direction: column;
-     gap: 10px;
+     gap: 15px;
    }
 
-   .toolbar-left,
+   .toolbar-left {
+     width: 100%;
+     justify-content: center;
+     flex-direction: column;
+     gap: 12px;
+   }
+
    .toolbar-right {
      width: 100%;
      justify-content: center;
+   }
+
+   .form-selector {
+     width: 100%;
+     justify-content: center;
+   }
+
+   .form-selector .el-select {
+     width: 100% !important;
+     max-width: 280px;
+   }
+
+   .config-switcher {
+     margin-left: 0;
    }
 
    .template-manager-section {
