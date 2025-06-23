@@ -39,7 +39,8 @@ class FormulaEngine {
       // 数组函数
       count: (arr) => Array.isArray(arr) ? arr.filter(x => x && x.trim()).length : 0,
       isEmpty: (value) => !value || (Array.isArray(value) && value.every(x => !x || !x.trim())),
-      isNotEmpty: (value) => !this.functions.isEmpty(value)
+      isNotEmpty: (value) => !this.functions.isEmpty(value),
+      generateCauseNumbers: (count) => this.generateCauseNumbers(count)
     }
   }
 
@@ -144,9 +145,9 @@ class FormulaEngine {
     // 替换 {d.variableName} 格式的变量
     return formula.replace(/\{d\.([^}]+)\}/g, (match, varName) => {
       const value = data[varName]
-      if (value === undefined || value === null) return '0'
-      if (Array.isArray(value)) return value.length
-      return value
+      if (value === undefined || value === null || value === '') return '0'
+      if (Array.isArray(value)) return value.filter(x => x && x.trim()).length
+      return Number(value) || 0
     })
   }
 
@@ -236,6 +237,10 @@ class FormulaEngine {
     if (!expression) return 0
     
     expression = expression.toString().trim()
+    
+    // 调试日志
+    console.log(`计算表达式: "${expression}"`)
+    console.log(`可用数据:`, data)
     
     // 处理字符串字面量
     if ((expression.startsWith('"') && expression.endsWith('"')) ||
@@ -375,6 +380,24 @@ class FormulaEngine {
     }
     
     return results
+  }
+
+  /**
+   * 生成诉讼理由编号字符串
+   * @param {number} count 
+   * @returns {string}
+   */
+  generateCauseNumbers(count) {
+    if (!count || count <= 0) return ''
+    
+    const ordinals = [
+      'FIRST', 'SECOND', 'THIRD', 'FOURTH', 'FIFTH', 'SIXTH', 'SEVENTH', 
+      'EIGHTH', 'NINTH', 'TENTH', 'ELEVENTH', 'TWELFTH', 'THIRTEENTH',
+      'FOURTEENTH', 'FIFTEENTH' // 可根据需要扩展
+    ];
+    
+    return Array.from({ length: count }, (_, i) => ordinals[i] || `${i + 1}TH`)
+      .join(', ');
   }
 }
 

@@ -203,6 +203,8 @@ const getMultipleValues = () => {
 // 更新字段值
 const updateFieldValue = (value, suffix = '') => {
   const fieldId = props.field.id + suffix
+  console.log(`FormField - 准备更新字段: ${fieldId} = ${value} (类型: ${typeof value})`)
+  console.log(`FormField - 字段类型: ${props.field.type}`)
   emit('update-field', fieldId, value)
 }
 
@@ -226,6 +228,8 @@ const removeMultipleValue = (index) => {
 // 获取计算字段值
 const getComputedValue = () => {
   const value = props.computedValues[props.field.id]
+  console.log(`FormField - 获取计算字段值: ${props.field.id} = ${value}`)
+  console.log(`FormField - 所有计算值:`, props.computedValues)
 
   // 如果是日期相关的计算，已经在引擎中格式化了
   if (typeof value === 'number' && !Number.isInteger(value)) {

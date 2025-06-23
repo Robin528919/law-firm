@@ -23,12 +23,12 @@
           <el-divider content-position="left">
             <h3 class="section-title">{{ section.title }}</h3>
           </el-divider>
-          
+
           <!-- 渲染分组内的字段 -->
           <template v-for="field in section.fields" :key="field.id">
-            <FormField 
-              :field="field" 
-              :formData="formData" 
+            <FormField
+              :field="field"
+              :formData="formData"
               :computedValues="computedValues"
               @update-field="updateField"
               @add-multiple="addMultipleValue"
@@ -37,13 +37,13 @@
           </template>
         </div>
       </template>
-      
+
       <template v-else>
         <!-- 传统单列表字段渲染（向后兼容） -->
         <template v-for="field in config.fields" :key="field.id">
-          <FormField 
-            :field="field" 
-            :formData="formData" 
+          <FormField
+            :field="field"
+            :formData="formData"
             :computedValues="computedValues"
             @update-field="updateField"
             @add-multiple="addMultipleValue"
@@ -150,6 +150,7 @@ const getAllFields = () => {
 // 初始化表单数据
 const initFormData = () => {
   const allFields = getAllFields()
+  console.log('初始化表单数据，所有字段:', allFields.map(f => ({ id: f.id, type: f.type })))
   allFields.forEach(field => {
     if (field.multiple) {
       // 多值字段初始化为数组
@@ -158,14 +159,24 @@ const initFormData = () => {
       if (formData[field.id].length === 0) {
         formData[field.id].push('')
       }
+      console.log(`初始化多值字段: ${field.id} = ${JSON.stringify(formData[field.id])}`)
     } else if (field.type === 'computed') {
       // 计算字段不需要初始化
-      return
+      console.log(`跳过计算字段: ${field.id}`)
+
     } else {
       // 普通字段初始化
-      formData[field.id] = props.initialData[field.id] || field.defaultValue || ''
+      const defaultValue = props.initialData[field.id] || field.defaultValue
+      if (field.type === 'number') {
+        // 数字字段初始化为null或数字
+        formData[field.id] = defaultValue ? Number(defaultValue) : null
+      } else {
+        formData[field.id] = defaultValue || ''
+      }
+      console.log(`初始化普通字段: ${field.id} (${field.type}) = ${formData[field.id]}`)
     }
   })
+  console.log('初始化完成后的formData:', JSON.stringify(formData, null, 2))
 }
 
 // 获取多值字段的值数组
@@ -199,7 +210,10 @@ const removeMultipleValue = (fieldId, index) => {
 // 计算字段的响应式值
 const computedValues = computed(() => {
   const allFields = getAllFields()
-  return calculateAllComputedFields(formData, allFields)
+  console.log('开始计算字段，当前表单数据:', formData)
+  const result = calculateAllComputedFields(formData, allFields)
+  console.log('计算字段结果:', result)
+  return result
 })
 
 // 获取计算字段值
@@ -221,7 +235,10 @@ const getComputedValue = (field) => {
 
 // 更新字段值（由FormField组件调用）
 const updateField = (fieldId, value) => {
+  console.log(`字段更新: ${fieldId} = ${value} (类型: ${typeof value})`)
+  console.log('更新前formData:', JSON.stringify(formData, null, 2))
   formData[fieldId] = value
+  console.log('更新后formData:', JSON.stringify(formData, null, 2))
 }
 
 // 表单提交处理
@@ -289,8 +306,28 @@ const isCompany = (name) => {
 
 // 组件挂载时初始化
 onMounted(() => {
+  console.log('=== DynamicForm onMounted 开始 ===')
+  console.log('当前配置:', props.config)
   initFormData()
+  console.log('=== DynamicForm onMounted 结束 ===')
 })
+
+// 监听配置变化，重新初始化表单
+watch(
+  () => props.config,
+  (newConfig, oldConfig) => {
+    if (newConfig !== oldConfig) {
+      console.log('配置已更新，重新初始化表单:', newConfig)
+      // 清空当前表单数据
+      Object.keys(formData).forEach(key => {
+        delete formData[key]
+      })
+      // 重新初始化
+      initFormData()
+    }
+  },
+  { deep: true, immediate: false }
+)
 </script>
 
 <style scoped>
