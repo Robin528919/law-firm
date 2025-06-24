@@ -23,12 +23,12 @@
           <el-divider content-position="left">
             <h3 class="section-title">{{ section.title }}</h3>
           </el-divider>
-
+          
           <!-- 渲染分组内的字段 -->
           <template v-for="field in section.fields" :key="field.id">
-            <FormField
-              :field="field"
-              :formData="formData"
+            <FormField 
+              :field="field" 
+              :formData="formData" 
               :computedValues="computedValues"
               @update-field="updateField"
               @add-multiple="addMultipleValue"
@@ -37,13 +37,13 @@
           </template>
         </div>
       </template>
-
+      
       <template v-else>
         <!-- 传统单列表字段渲染（向后兼容） -->
         <template v-for="field in config.fields" :key="field.id">
-          <FormField
-            :field="field"
-            :formData="formData"
+          <FormField 
+            :field="field" 
+            :formData="formData" 
             :computedValues="computedValues"
             @update-field="updateField"
             @add-multiple="addMultipleValue"
@@ -87,6 +87,7 @@
 
 <script setup>
 // 动态表单组件脚本 - 使用Vue 3 Composition API
+
 import { ref, reactive, computed, watch, onMounted } from 'vue'
 import { ElMessage } from 'element-plus'
 import { Plus, Delete, Download } from '@element-plus/icons-vue'
@@ -150,33 +151,31 @@ const getAllFields = () => {
 // 初始化表单数据
 const initFormData = () => {
   const allFields = getAllFields()
-  console.log('初始化表单数据，所有字段:', allFields.map(f => ({ id: f.id, type: f.type })))
   allFields.forEach(field => {
     if (field.multiple) {
       // 多值字段初始化为数组
       formData[field.id] = props.initialData[field.id] || []
       // 确保至少有一个空值供编辑
       if (formData[field.id].length === 0) {
-        formData[field.id].push('')
+        formData[field.id] = [''];
       }
-      console.log(`初始化多值字段: ${field.id} = ${JSON.stringify(formData[field.id])}`)
     } else if (field.type === 'computed') {
       // 计算字段不需要初始化
-      console.log(`跳过计算字段: ${field.id}`)
-
+      return
     } else {
       // 普通字段初始化
-      const defaultValue = props.initialData[field.id] || field.defaultValue
-      if (field.type === 'number') {
-        // 数字字段初始化为null或数字
-        formData[field.id] = defaultValue ? Number(defaultValue) : null
-      } else {
-        formData[field.id] = defaultValue || ''
+      const keys = field.id.split('.');
+      let obj = formData;
+      for (let i = 0; i < keys.length - 1; i++) {
+        const key = keys[i];
+        if (!obj[key]) {
+          set(obj, key, {});
+        }
+        obj = obj[key];
       }
-      console.log(`初始化普通字段: ${field.id} (${field.type}) = ${formData[field.id]}`)
+      obj[keys[keys.length - 1]] = props.initialData[field.id] || field.defaultValue || '';
     }
   })
-  console.log('初始化完成后的formData:', JSON.stringify(formData, null, 2))
 }
 
 // 获取多值字段的值数组
@@ -189,7 +188,8 @@ const updateMultipleValue = (fieldId, index, value) => {
   if (!formData[fieldId]) {
     formData[fieldId] = []
   }
-  formData[fieldId][index] = value
+  formData[fieldId][index] = value;
+        formData[fieldId] = [...formData[fieldId]];
 }
 
 // 添加多值字段的新值
@@ -207,64 +207,23 @@ const removeMultipleValue = (fieldId, index) => {
   }
 }
 
-  // 计算字段的响应式值
-const computedValues = computed(() => {
+// 计算字段的响应式值
+const computedValues = ref({})
+
+// 深层监听formData变化以更新计算字段
+watch(
+  () => formData,
+  (newFormData) => {
+    const allFields = getAllFields()
+    computedValues.value = calculateAllComputedFields(newFormData, allFields)
+  },
+  { deep: true }
+)
+
+// 初始化计算字段
+onMounted(() => {
   const allFields = getAllFields()
-  console.log('开始计算字段，当前表单数据:', formData)
-  
-  // 打印所有表单数据的键名，检查大小写
-  console.log('表单数据键名:')
-  Object.keys(formData).forEach(key => {
-    console.log(`  - ${key}: ${formData[key]}`)
-  })
-  
-  // 添加调试信息，特别关注 doe 字段的计算
-  if (formData.employmentStartDate && formData.employmentEndDate) {
-    console.log('雇佣开始日期:', formData.employmentStartDate)
-    console.log('雇佣结束日期:', formData.employmentEndDate)
-    
-    // 手动计算周数，用于调试
-    const start = new Date(formData.employmentStartDate)
-    const end = new Date(formData.employmentEndDate)
-    const timeDiff = end.getTime() - start.getTime()
-    
-    // 确保时间差是正数
-    if (timeDiff >= 0) {
-      const daysDiff = Math.ceil(timeDiff / (1000 * 3600 * 24))
-      const weeksDiff = Math.ceil(daysDiff / 7)
-      
-      console.log('计算的天数差:', daysDiff)
-      console.log('计算的周数:', weeksDiff)
-    } else {
-      console.log('警告: 结束日期早于开始日期')
-    }
-  }
-  
-  // 检查 complaintFilingDate 字段
-  if (formData.complaintFilingDate) {
-    console.log('投诉提交日期:', formData.complaintFilingDate)
-  }
-  
-  // 检查字段名大小写问题
-  console.log('检查字段名大小写:')
-  const fieldNames = ['employmentStartDate', 'employmentEndDate', 'complaintFilingDate']
-  fieldNames.forEach(name => {
-    const lowerCase = name.toLowerCase()
-    const upperCaseFirst = name.charAt(0).toUpperCase() + name.slice(1)
-    console.log(`  - ${name}: ${formData[name] !== undefined ? '存在' : '不存在'}`)
-    console.log(`  - ${lowerCase}: ${formData[lowerCase] !== undefined ? '存在' : '不存在'}`)
-    console.log(`  - ${upperCaseFirst}: ${formData[upperCaseFirst] !== undefined ? '存在' : '不存在'}`)
-  })
-  
-  const result = calculateAllComputedFields(formData, allFields)
-  
-  // 检查 doe 字段的计算结果
-  if (result.doe !== undefined) {
-    console.log('计算的 DOE 值:', result.doe)
-  }
-  
-  console.log('计算字段结果:', result)
-  return result
+  computedValues.value = calculateAllComputedFields(formData, allFields)
 })
 
 // 获取计算字段值
@@ -286,11 +245,21 @@ const getComputedValue = (field) => {
 
 // 更新字段值（由FormField组件调用）
 const updateField = (fieldId, value) => {
-  console.log(`字段更新: ${fieldId} = ${value} (类型: ${typeof value})`)
-  console.log('更新前formData:', JSON.stringify(formData, null, 2))
-  formData[fieldId] = value
-  console.log('更新后formData:', JSON.stringify(formData, null, 2))
-}
+    const keys = fieldId.split('.');
+      if (keys.length > 1) {
+        let obj = formData;
+        for (let i = 0; i < keys.length - 1; i++) {
+          const key = keys[i];
+          if (!obj[key]) {
+            set(obj, key, {});
+          }
+          obj = obj[key];
+        }
+        obj[keys[keys.length - 1]] = value;
+      } else {
+        formData[fieldId] = value;
+      }
+  }
 
 // 表单提交处理
 const handleSubmit = async () => {
@@ -357,28 +326,8 @@ const isCompany = (name) => {
 
 // 组件挂载时初始化
 onMounted(() => {
-  console.log('=== DynamicForm onMounted 开始 ===')
-  console.log('当前配置:', props.config)
   initFormData()
-  console.log('=== DynamicForm onMounted 结束 ===')
 })
-
-// 监听配置变化，重新初始化表单
-watch(
-  () => props.config,
-  (newConfig, oldConfig) => {
-    if (newConfig !== oldConfig) {
-      console.log('配置已更新，重新初始化表单:', newConfig)
-      // 清空当前表单数据
-      Object.keys(formData).forEach(key => {
-        delete formData[key]
-      })
-      // 重新初始化
-      initFormData()
-    }
-  },
-  { deep: true, immediate: false }
-)
 </script>
 
 <style scoped>

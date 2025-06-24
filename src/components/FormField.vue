@@ -41,7 +41,7 @@
     <!-- 单个文本输入 -->
     <div v-else>
       <el-input
-        :model-value="formData[field.id]"
+        :model-value="formData[field.id] === '' ? null : formData[field.id]"
         @update:model-value="(val) => updateFieldValue(val)"
         @blur="handleTextBlur"
         :placeholder="field.placeholder"
@@ -75,7 +75,7 @@
     :required="field.required"
   >
     <el-input
-      :model-value="formData[field.id]"
+      :model-value="formData[field.id] === '' ? null : formData[field.id]"
       @update:model-value="(val) => updateFieldValue(val)"
       @blur="handleTextBlur"
       type="textarea"
@@ -95,7 +95,7 @@
     :required="field.required"
   >
     <el-input-number
-      :model-value="formData[field.id]"
+      :model-value="formData[field.id] === '' ? null : formData[field.id]"
       @update:model-value="(val) => updateFieldValue(val)"
       :min="field.min || 0"
       :max="field.max"
@@ -116,13 +116,29 @@
     :required="field.required"
   >
     <el-date-picker
-      :model-value="formData[field.id]"
+      :model-value="formData[field.id] === '' ? null : formData[field.id]"
       @update:model-value="(val) => updateFieldValue(val)"
       type="date"
       :placeholder="field.placeholder"
       format="MMMM DD, YYYY"
       value-format="YYYY-MM-DD"
       style="width: 100%"
+    />
+    <div v-if="field.description" class="field-description">
+      {{ field.description }}
+    </div>
+  </el-form-item>
+
+  <!-- 计算字段 -->
+  <el-form-item
+    v-else-if="field.type === 'computed'"
+    :label="field.label"
+    :prop="field.id"
+  >
+    <el-input
+      :model-value="computedValues[field.id]"
+      disabled
+      :placeholder="'自动计算中...'"
     />
     <div v-if="field.description" class="field-description">
       {{ field.description }}
@@ -137,7 +153,7 @@
     :required="field.required"
   >
     <el-select
-      :model-value="formData[field.id]"
+      :model-value="formData[field.id] === '' ? null : formData[field.id]"
       @update:model-value="(val) => updateFieldValue(val)"
       :placeholder="field.placeholder"
       :multiple="field.multiple"
@@ -186,10 +202,7 @@ const props = defineProps({
     type: Object,
     required: true
   },
-  computedValues: {
-    type: Object,
-    default: () => ({})
-  }
+  computedValues: { type: Object, required: true }
 })
 
 // 组件事件定义
@@ -203,8 +216,6 @@ const getMultipleValues = () => {
 // 更新字段值
 const updateFieldValue = (value, suffix = '') => {
   const fieldId = props.field.id + suffix
-  console.log(`FormField - 准备更新字段: ${fieldId} = ${value} (类型: ${typeof value})`)
-  console.log(`FormField - 字段类型: ${props.field.type}`)
   emit('update-field', fieldId, value)
 }
 
@@ -228,8 +239,6 @@ const removeMultipleValue = (index) => {
 // 获取计算字段值
 const getComputedValue = () => {
   const value = props.computedValues[props.field.id]
-  console.log(`FormField - 获取计算字段值: ${props.field.id} = ${value}`)
-  console.log(`FormField - 所有计算值:`, props.computedValues)
 
   // 如果是日期相关的计算，已经在引擎中格式化了
   if (typeof value === 'number' && !Number.isInteger(value)) {
@@ -350,4 +359,4 @@ const removeAutoSuffix = (value) => {
     gap: 10px;
   }
 }
-</style> 
+</style>

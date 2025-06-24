@@ -217,7 +217,7 @@
               "id": "2OvertimeHours",
               "label": "How many 2 * overtime hours did the plaintiff work per week",
               "type": "number",
-              "variable": "d.TwoTimesOvertimeHours",
+              "variable": "d.2OvertimeHours",
               "min": 0,
               "step": 0.1,
               "placeholder": "Enter 2x overtime hours per week"
@@ -236,6 +236,7 @@
               "type": "number",
               "variable": "d.PayPeriods",
               "min": 1,
+              "required": true,
               "placeholder": "Enter number of pay periods"
             },
             {
@@ -317,8 +318,8 @@
               "id": "15OvertimeHours",
               "label": "1.5x Overtime Hours",
               "type": "computed",
-              "variable": "d.OvertimeHours15",
-              "formula": "max(0, {d.WeeklyHours} - {d.TwoTimesOvertimeHours} - 40)",
+              "variable": "d.15OvertimeHours",
+              "formula": "max(0, {d.WeeklyHours} - {d.2OvertimeHours} - 40)",
               "description": "{d.WeeklyHours}-{d.2OvertimeHours}-40"
             },
             {
@@ -326,7 +327,7 @@
               "label": "Total Overtime Hours",
               "type": "computed",
               "variable": "d.OvertimeHoursTotal",
-              "formula": "{d.OvertimeHours15} + {d.TwoTimesOvertimeHours}",
+              "formula": "{d.15OvertimeHours} + {d.2OvertimeHours}",
               "description": "{d.1.5OvertimeHours}+{d.2OvertimeHours}"
             },
             {
@@ -334,7 +335,7 @@
               "label": "Wage Statement Penalty",
               "type": "computed",
               "variable": "d.WageStatementPenalty",
-              "formula": "min(50 + ({d.PayPeriods} - 1) * 100, 4000)",
+              "formula": "min(50 + {d.payPeriods} * 100, 4000)",
               "description": "If < 4000, 50+{d.PayPeriods}*100, 4000"
             },
             {
@@ -412,7 +413,7 @@
               "label": "Overtime Damage",
               "type": "computed",
               "variable": "d.DamageOvertime",
-              "formula": "({d.OvertimeHours15} * {d.HourlyRate} * {d.DOE} * 1.5) + ({d.TwoTimesOvertimeHours} * {d.HourlyRate} * {d.DOE} * 2)",
+              "formula": "{d.15OvertimeHours} * {d.HourlyRate} * {d.DOE} * 1.5 + {d.2OvertimeHours} * {d.HourlyRate} * {d.DOE} * 2",
               "description": "Automatically be calculated by {d.1.5OvertimeHours}*{d.HourlyRate}*{d.DOE}*1.5+{d.2OvertimeHours}*{d.HourlyRate}*{d.DOE}*2"
             },
             {
@@ -429,7 +430,7 @@
               "type": "computed",
               "variable": "d.DamageTotal",
               "formula": "sum({d.DamageUnpaidWages}, {d.DamageMealBreaks}, {d.DamageRestBreaks}, {d.DamageOvertime}, {d.DamageWaitingTime}, {d.BusinessExpenseAmount}, {d.WageStatementPenalty})",
-              "description": "Sum of all damage items"
+              "description": "Sum of {d.DamageUnpaidWages} , {d.DamageMealBreaks} , {d.DamageRestBreaks}, {d.DamageOvertime}, {d.DamageWaitingTime}, {d.BusinessExpense}, {d.WageStatementPenalty}"
             },
             {
               "id": "interestPeriod",
@@ -704,4 +705,4 @@
       ]
     }
   }
-} 
+}

@@ -239,7 +239,7 @@
             "label": "Plaintiff Plurality 1",
             "type": "computed",
             "variable": "d.PlaintiffPlurality1",
-            "formula": "pluralize(count({d.plaintiffName}), 'Plaintiff', 'Plaintiffs')",
+            "formula": "pluralize(count({d.PlaintiffName}), 'Plaintiff', 'Plaintiffs')",
             "description": "Automatically calculates singular/plural based on plaintiff count"
           },
           {
@@ -247,7 +247,7 @@
             "label": "Plaintiff Plurality 2",
             "type": "computed",
             "variable": "d.PlaintiffPlurality2",
-            "formula": "pluralize(count({d.plaintiffName}), 'Plaintiff is', 'Plaintiffs are')",
+            "formula": "pluralize(count({d.PlaintiffName}), 'Plaintiff is', 'Plaintiffs are')",
             "description": "Automatically calculates singular/plural based on plaintiff count"
           },
           {
@@ -255,7 +255,7 @@
             "label": "Defendant Plurality 1",
             "type": "computed",
             "variable": "d.DefendantPlurality1",
-            "formula": "pluralize(count({d.defendantName}), 'Defendant', 'Defendants')",
+            "formula": "pluralize(count({d.DefendantName}), 'Defendant', 'Defendants')",
             "description": "Automatically calculates singular/plural based on defendant count"
           },
           {
@@ -263,7 +263,7 @@
             "label": "Defendant Plurality 2",
             "type": "computed",
             "variable": "d.DefendantPlurality2",
-            "formula": "pluralize(count({d.defendantName}), 'Defendant is', 'Defendants are')",
+            "formula": "pluralize(count({d.DefendantName}), 'Defendant is', 'Defendants are')",
             "description": "Automatically calculates singular/plural based on defendant count"
           },
           {
@@ -271,7 +271,7 @@
             "label": "DOE (Employment Weeks)",
             "type": "computed",
             "variable": "d.DOE",
-            "formula": "if(yearsBetween({d.complaintFilingDate}, {d.employmentStartDate}) < 3, weeksBetween({d.employmentEndDate}, {d.employmentStartDate}), weeksBetween({d.employmentEndDate}, dateSubtract({d.complaintFilingDate}, 3, 'years')))",
+            "formula": "if(yearsBetween({d.ComplaintFilingDate}, {d.EmploymentStartDate}) < 3, weeksBetween({d.EmploymentEndDate}, {d.EmploymentStartDate}), weeksBetween({d.EmploymentEndDate}, dateSubtract({d.ComplaintFilingDate}, 3, 'years')))",
             "description": "Complex weeks calculation based on 3-year statute of limitations, rounded up"
           },
           {
@@ -279,7 +279,7 @@
             "label": "1.5x Overtime Hours",
             "type": "computed",
             "variable": "d.15OvertimeHours",
-            "formula": "max(0, {d.weeklyHours} - {d.2OvertimeHours} - 40)",
+            "formula": "max(0, {d.WeeklyHours} - {d.2OvertimeHours} - 40)",
             "description": "1.5x overtime hours = Weekly hours - 2x overtime hours - 40"
           },
           {
@@ -295,7 +295,7 @@
             "label": "Overtime Status",
             "type": "computed",
             "variable": "d.OvertimeStatus",
-            "formula": "if({d.weeklyHours} > 40, 'Unpaid', 'N/A')",
+            "formula": "if({d.WeeklyHours} > 40, 'Unpaid', 'N/A')",
             "description": "Overtime status determination"
           },
           {
@@ -311,7 +311,7 @@
             "label": "3-Year Statute of Limitations Date",
             "type": "computed",
             "variable": "d.3SOL",
-            "formula": "formatDate(dateSubtract({d.complaintFilingDate}, 3, 'years'), 'legal')",
+            "formula": "formatDate(dateSubtract({d.ComplaintFilingDate}, 3, 'years'), 'legal')",
             "description": "Filing date minus 3 years"
           },
           {
@@ -319,7 +319,7 @@
             "label": "4-Year Statute of Limitations Date",
             "type": "computed",
             "variable": "d.4SOL",
-            "formula": "formatDate(dateSubtract({d.complaintFilingDate}, 4, 'years'), 'legal')",
+            "formula": "formatDate(dateSubtract({d.ComplaintFilingDate}, 4, 'years'), 'legal')",
             "description": "Filing date minus 4 years"
           }
         ]
@@ -333,7 +333,7 @@
             "label": "Wage Statement Penalty",
             "type": "computed",
             "variable": "d.WageStatementPenalty",
-            "formula": "min(50 + ({d.payPeriods} - 1) * 100, 4000)",
+            "formula": "min(50 + ({d.PayPeriods} - 1) * 100, 4000)",
             "description": "Wage statement penalty: If < 4000, then 50+(PayPeriods-1)*100, otherwise 4000"
           },
           {
@@ -341,7 +341,7 @@
             "label": "Unpaid Wages Damage",
             "type": "computed",
             "variable": "d.DamageUnpaidWages",
-            "formula": "{d.unpaidHours} * {d.hourlyRate}",
+            "formula": "{d.UnpaidHours} * {d.HourlyRate}",
             "description": "Unpaid wages damage = Unpaid hours × Hourly rate"
           },
           {
@@ -349,7 +349,7 @@
             "label": "Meal Breaks Damage",
             "type": "computed",
             "variable": "d.DamageMealBreaks",
-            "formula": "{d.missedMealBreaks} * {d.DOE} * {d.hourlyRate}",
+            "formula": "{d.MissedMealBreaks} * {d.DOE} * {d.HourlyRate}",
             "description": "Meal breaks damage = Weekly missed count × Employment weeks × Hourly rate"
           },
           {
@@ -357,7 +357,7 @@
             "label": "Rest Breaks Damage",
             "type": "computed",
             "variable": "d.DamageRestBreaks",
-            "formula": "{d.missedRestBreaks} * {d.DOE} * {d.hourlyRate}",
+            "formula": "{d.MissedRestBreaks} * {d.DOE} * {d.HourlyRate}",
             "description": "Rest breaks damage = Weekly missed count × Employment weeks × Hourly rate"
           },
           {
@@ -365,7 +365,7 @@
             "label": "Overtime Damage",
             "type": "computed",
             "variable": "d.DamageOvertime",
-            "formula": "({d.15OvertimeHours} * {d.hourlyRate} * {d.DOE} * 1.5) + ({d.2OvertimeHours} * {d.hourlyRate} * {d.DOE} * 2)",
+            "formula": "{d.15OvertimeHours} * {d.HourlyRate} * {d.DOE} * 1.5 + {d.2OvertimeHours} * {d.HourlyRate} * {d.DOE} * 2",
             "description": "Overtime damage = 1.5x overtime damage + 2x overtime damage"
           },
           {
@@ -373,7 +373,7 @@
             "label": "Waiting Time Damage",
             "type": "computed",
             "variable": "d.DamageWaitingTime",
-            "formula": "{d.hourlyRate} * 8 * 30",
+            "formula": "{d.HourlyRate} * 8 * 30",
             "description": "Waiting time damage = Hourly rate × 8 hours × 30 days"
           },
           {
@@ -381,7 +381,7 @@
             "label": "Total Damage",
             "type": "computed",
             "variable": "d.DamageTotal",
-            "formula": "sum({d.DamageUnpaidWages}, {d.DamageMealBreaks}, {d.DamageRestBreaks}, {d.DamageOvertime}, {d.DamageWaitingTime}, {d.businessExpenseAmount}, {d.WageStatementPenalty})",
+            "formula": "sum({d.DamageUnpaidWages}, {d.DamageMealBreaks}, {d.DamageRestBreaks}, {d.DamageOvertime}, {d.DamageWaitingTime}, {d.BusinessExpenseAmount}, {d.WageStatementPenalty})",
             "description": "Total damage = Sum of all damage items"
           },
           {
@@ -389,7 +389,7 @@
             "label": "Interest Period (months)",
             "type": "computed",
             "variable": "d.InterestPeriod",
-            "formula": "monthsBetween({d.complaintFilingDate}, {d.employmentEndDate})",
+            "formula": "monthsBetween({d.ComplaintFilingDate}, {d.EmploymentEndDate})",
             "description": "Interest period (months) = Filing date - Employment end date"
           },
           {

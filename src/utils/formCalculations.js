@@ -4,7 +4,7 @@
  * 现在集成了公式引擎，支持配置化的计算公式
  */
 
-import { formulaEngine, calculateMultipleFormulas } from './formulaEngine.js'
+import { formulaEngine } from './formulaEngine.js'
 
 /**
  * 计算雇佣周数
@@ -18,15 +18,8 @@ export const calculateEmploymentWeeks = (startDate, endDate) => {
   const start = new Date(startDate)
   const end = new Date(endDate)
   
-  if (isNaN(start.getTime()) || isNaN(end.getTime())) return 0
-  
-  // 确保计算的是从开始日期到结束日期的时间差
-  const timeDiff = end.getTime() - start.getTime()
-  
-  // 如果时间差为负数（结束日期早于开始日期），返回0
-  if (timeDiff < 0) return 0
-  
   // 计算天数差
+  const timeDiff = end.getTime() - start.getTime()
   const daysDiff = Math.ceil(timeDiff / (1000 * 3600 * 24))
   
   // 转换为周数（向上取整）
@@ -212,7 +205,7 @@ export const validateFieldValue = (value, fieldConfig) => {
  */
 export const calculateAllComputedFields = (formData, fieldConfigs) => {
   // 使用新的公式引擎进行计算
-  const computedValues = calculateMultipleFormulas(fieldConfigs, formData)
+  const computedValues = formulaEngine.calculateMultipleFormulas(fieldConfigs, formData)
   
   // 保持向后兼容：如果字段没有 formula 属性，使用旧的计算规则
   fieldConfigs.forEach(field => {

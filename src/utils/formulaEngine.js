@@ -26,21 +26,7 @@ class FormulaEngine {
       dateDiff: (date1, date2, unit = 'days') => this.calculateDateDiff(date1, date2, unit),
       dateAdd: (date, value, unit = 'days') => this.calculateDateAdd(date, value, unit),
       dateSubtract: (date, value, unit = 'days') => this.calculateDateAdd(date, -value, unit),
-      weeksBetween: (date1, date2) => {
-        // 确保两个日期都有效
-        if (!date1 || !date2) return 0;
-        
-        const d1 = new Date(date1);
-        const d2 = new Date(date2);
-        
-        if (isNaN(d1.getTime()) || isNaN(d2.getTime())) return 0;
-        
-        // 计算时间差（毫秒）
-        const timeDiff = d2.getTime() - d1.getTime();
-        
-        // 转换为周数并向上取整
-        return Math.ceil(timeDiff / (1000 * 3600 * 24 * 7));
-      },
+      weeksBetween: (date1, date2) => this.calculateDateDiff(date1, date2, 'weeks'),
       monthsBetween: (date1, date2) => this.calculateDateDiff(date1, date2, 'months'),
       yearsBetween: (date1, date2) => this.calculateDateDiff(date1, date2, 'years'),
       today: () => new Date().toISOString().split('T')[0],
@@ -52,9 +38,12 @@ class FormulaEngine {
       
       // 数组函数
       count: (arr) => Array.isArray(arr) ? arr.filter(x => x && x.trim()).length : 0,
+      generateCauseNumbers: (count) => {
+        if (!count || count <= 0) return '';
+        return Array.from({length: count}, (_, i) => `C-${i+1}`).join(', ');
+      },
       isEmpty: (value) => !value || (Array.isArray(value) && value.every(x => !x || !x.trim())),
-      isNotEmpty: (value) => !this.functions.isEmpty(value),
-      generateCauseNumbers: (count) => this.generateCauseNumbers(count)
+      isNotEmpty: (value) => !this.functions.isEmpty(value)
     }
   }
 
@@ -73,30 +62,19 @@ class FormulaEngine {
     
     if (isNaN(d1.getTime()) || isNaN(d2.getTime())) return 0
     
-    // 计算时间差
-    const timeDiff = d2.getTime() - d1.getTime()
-    
-    // 如果时间差为负数（结束日期早于开始日期），对于 weeks 单位返回 0
-    if (timeDiff < 0 && unit === 'weeks') {
-      console.warn('警告: 计算周数时，结束日期早于开始日期')
-      return 0
-    }
-    
-    // 确保时间差是正数（对于非 weeks 单位）
-    const absTimeDiff = Math.abs(timeDiff)
+    const timeDiff = Math.abs(d2.getTime() - d1.getTime())
     
     switch (unit) {
       case 'days':
-        return Math.ceil(absTimeDiff / (1000 * 3600 * 24))
+        return Math.ceil(timeDiff / (1000 * 3600 * 24))
       case 'weeks':
-        // 对于周数，我们希望从开始日期到结束日期的准确周数
         return Math.ceil(timeDiff / (1000 * 3600 * 24 * 7))
       case 'months':
         return Math.abs((d2.getFullYear() - d1.getFullYear()) * 12 + (d2.getMonth() - d1.getMonth()))
       case 'years':
         return Math.abs(d2.getFullYear() - d1.getFullYear())
       default:
-        return Math.ceil(absTimeDiff / (1000 * 3600 * 24))
+        return Math.ceil(timeDiff / (1000 * 3600 * 24))
     }
   }
 
@@ -169,24 +147,17 @@ class FormulaEngine {
   replaceVariables(formula, data) {
     // 替换 {d.variableName} 格式的变量
     return formula.replace(/\{d\.([^}]+)\}/g, (match, varName) => {
-      // 尝试直接使用变量名
-      let value = data[varName]
-      
-      // 如果找不到值，尝试使用首字母大写的变量名（向后兼容）
-      if (value === undefined) {
-        const capitalizedVarName = varName.charAt(0).toUpperCase() + varName.slice(1)
-        value = data[capitalizedVarName]
-        
-        // 如果仍然找不到值，尝试使用首字母小写的变量名
-        if (value === undefined) {
-          const lowercaseVarName = varName.charAt(0).toLowerCase() + varName.slice(1)
-          value = data[lowercaseVarName]
-        }
+      const value = data[varName]
+      if (value === undefined || value === null) return '0'
+      if (typeof value === 'string') {
+        const trimmed = value.trim()
+        if (trimmed === '' || isNaN(trimmed)) return '0'
+        return trimmed
       }
-      
-      if (value === undefined || value === null || value === '') return '0'
-      if (Array.isArray(value)) return value.filter(x => x && x.trim()).length
-      return Number(value) || 0
+      if (typeof value === 'boolean') return value ? '1' : '0'
+      if (Array.isArray(value)) return value.length
+      const num = Number(value)
+      return isNaN(num) ? '0' : num
     })
   }
 
@@ -199,7 +170,7 @@ class FormulaEngine {
   parseFunction(expression, data) {
     // 匹配函数调用格式：functionName(arg1, arg2, ...)
     const functionMatch = expression.match(/^(\w+)\((.*)\)$/)
-    if (!functionMatch) return expression
+    if (!functionMatch) return this.evaluateExpression(expression)
 
     const [, functionName, argsString] = functionMatch
     const func = this.functions[functionName]
@@ -252,7 +223,9 @@ class FormulaEngine {
         depth--
         currentArg += char
       } else if (!inString && char === ',' && depth === 0) {
-        args.push(this.evaluateExpression(currentArg.trim(), data))
+        // Evaluate arithmetic expressions in arguments
+      const evaluatedArg = this.evaluateExpression(currentArg.trim());
+      args.push(evaluatedArg);
         currentArg = ''
       } else {
         currentArg += char
@@ -267,6 +240,22 @@ class FormulaEngine {
   }
 
   /**
+   * 计算多个公式
+   * @param {Array} fields - 字段配置数组
+   * @param {object} data - 表单数据
+   * @returns {object} 计算结果对象
+   */
+  calculateMultipleFormulas(fields, data) {
+    const results = {}
+    fields.forEach(field => {
+      if (field.type === 'computed' && field.formula) {
+        results[field.id] = this.evaluateExpression(field.formula, data)
+      }
+    })
+    return results
+  }
+
+  /**
    * 计算表达式
    * @param {string} expression 
    * @param {object} data 
@@ -276,10 +265,6 @@ class FormulaEngine {
     if (!expression) return 0
     
     expression = expression.toString().trim()
-    
-    // 调试日志
-    console.log(`计算表达式: "${expression}"`)
-    console.log(`可用数据:`, data)
     
     // 处理字符串字面量
     if ((expression.startsWith('"') && expression.endsWith('"')) ||
@@ -315,7 +300,11 @@ class FormulaEngine {
     // 计算数学表达式
     try {
       // 安全的表达式计算（仅支持基本数学运算）
-      const safeExpression = expression.replace(/[^0-9+\-*/.() <>=!&|]/g, '')
+      let safeExpression = expression.replace(/[^0-9+\-*/.() <>=!&|]/g, '')
+      // 修复连续运算符问题，确保所有连续运算符间都插入0
+      while (safeExpression.match(/([+\-*/])\s*([+\-*/])/)) {
+        safeExpression = safeExpression.replace(/([+\-*/])\s*([+\-*/])/g, '$10$2')
+      }
       if (safeExpression !== expression) {
         // 如果包含不安全字符，使用简化计算
         return this.evaluateSimpleExpression(expression, data)
@@ -419,24 +408,6 @@ class FormulaEngine {
     }
     
     return results
-  }
-
-  /**
-   * 生成诉讼理由编号字符串
-   * @param {number} count 
-   * @returns {string}
-   */
-  generateCauseNumbers(count) {
-    if (!count || count <= 0) return ''
-    
-    const ordinals = [
-      'FIRST', 'SECOND', 'THIRD', 'FOURTH', 'FIFTH', 'SIXTH', 'SEVENTH', 
-      'EIGHTH', 'NINTH', 'TENTH', 'ELEVENTH', 'TWELFTH', 'THIRTEENTH',
-      'FOURTEENTH', 'FIFTEENTH' // 可根据需要扩展
-    ];
-    
-    return Array.from({ length: count }, (_, i) => ordinals[i] || `${i + 1}TH`)
-      .join(', ');
   }
 }
 
