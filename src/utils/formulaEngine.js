@@ -26,7 +26,21 @@ class FormulaEngine {
       dateDiff: (date1, date2, unit = 'days') => this.calculateDateDiff(date1, date2, unit),
       dateAdd: (date, value, unit = 'days') => this.calculateDateAdd(date, value, unit),
       dateSubtract: (date, value, unit = 'days') => this.calculateDateAdd(date, -value, unit),
-      weeksBetween: (date1, date2) => this.calculateDateDiff(date1, date2, 'weeks'),
+      weeksBetween: (date1, date2) => {
+        // 确保两个日期都有效
+        if (!date1 || !date2) return 0;
+        
+        const d1 = new Date(date1);
+        const d2 = new Date(date2);
+        
+        if (isNaN(d1.getTime()) || isNaN(d2.getTime())) return 0;
+        
+        // 计算时间差（毫秒）
+        const timeDiff = d2.getTime() - d1.getTime();
+        
+        // 转换为周数并向上取整
+        return Math.ceil(timeDiff / (1000 * 3600 * 24 * 7));
+      },
       monthsBetween: (date1, date2) => this.calculateDateDiff(date1, date2, 'months'),
       yearsBetween: (date1, date2) => this.calculateDateDiff(date1, date2, 'years'),
       today: () => new Date().toISOString().split('T')[0],
@@ -59,19 +73,30 @@ class FormulaEngine {
     
     if (isNaN(d1.getTime()) || isNaN(d2.getTime())) return 0
     
-    const timeDiff = Math.abs(d2.getTime() - d1.getTime())
+    // 计算时间差
+    const timeDiff = d2.getTime() - d1.getTime()
+    
+    // 如果时间差为负数（结束日期早于开始日期），对于 weeks 单位返回 0
+    if (timeDiff < 0 && unit === 'weeks') {
+      console.warn('警告: 计算周数时，结束日期早于开始日期')
+      return 0
+    }
+    
+    // 确保时间差是正数（对于非 weeks 单位）
+    const absTimeDiff = Math.abs(timeDiff)
     
     switch (unit) {
       case 'days':
-        return Math.ceil(timeDiff / (1000 * 3600 * 24))
+        return Math.ceil(absTimeDiff / (1000 * 3600 * 24))
       case 'weeks':
+        // 对于周数，我们希望从开始日期到结束日期的准确周数
         return Math.ceil(timeDiff / (1000 * 3600 * 24 * 7))
       case 'months':
         return Math.abs((d2.getFullYear() - d1.getFullYear()) * 12 + (d2.getMonth() - d1.getMonth()))
       case 'years':
         return Math.abs(d2.getFullYear() - d1.getFullYear())
       default:
-        return Math.ceil(timeDiff / (1000 * 3600 * 24))
+        return Math.ceil(absTimeDiff / (1000 * 3600 * 24))
     }
   }
 
@@ -144,7 +169,21 @@ class FormulaEngine {
   replaceVariables(formula, data) {
     // 替换 {d.variableName} 格式的变量
     return formula.replace(/\{d\.([^}]+)\}/g, (match, varName) => {
-      const value = data[varName]
+      // 尝试直接使用变量名
+      let value = data[varName]
+      
+      // 如果找不到值，尝试使用首字母大写的变量名（向后兼容）
+      if (value === undefined) {
+        const capitalizedVarName = varName.charAt(0).toUpperCase() + varName.slice(1)
+        value = data[capitalizedVarName]
+        
+        // 如果仍然找不到值，尝试使用首字母小写的变量名
+        if (value === undefined) {
+          const lowercaseVarName = varName.charAt(0).toLowerCase() + varName.slice(1)
+          value = data[lowercaseVarName]
+        }
+      }
+      
       if (value === undefined || value === null || value === '') return '0'
       if (Array.isArray(value)) return value.filter(x => x && x.trim()).length
       return Number(value) || 0
@@ -408,4 +447,4 @@ export const formulaEngine = new FormulaEngine()
 export const calculateFormula = (formula, data) => formulaEngine.calculate(formula, data)
 export const calculateMultipleFormulas = (formulas, data) => formulaEngine.calculateMultiple(formulas, data)
 
-export default FormulaEngine 
+export default FormulaEngine

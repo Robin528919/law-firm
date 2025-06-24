@@ -207,11 +207,62 @@ const removeMultipleValue = (fieldId, index) => {
   }
 }
 
-// 计算字段的响应式值
+  // 计算字段的响应式值
 const computedValues = computed(() => {
   const allFields = getAllFields()
   console.log('开始计算字段，当前表单数据:', formData)
+  
+  // 打印所有表单数据的键名，检查大小写
+  console.log('表单数据键名:')
+  Object.keys(formData).forEach(key => {
+    console.log(`  - ${key}: ${formData[key]}`)
+  })
+  
+  // 添加调试信息，特别关注 doe 字段的计算
+  if (formData.employmentStartDate && formData.employmentEndDate) {
+    console.log('雇佣开始日期:', formData.employmentStartDate)
+    console.log('雇佣结束日期:', formData.employmentEndDate)
+    
+    // 手动计算周数，用于调试
+    const start = new Date(formData.employmentStartDate)
+    const end = new Date(formData.employmentEndDate)
+    const timeDiff = end.getTime() - start.getTime()
+    
+    // 确保时间差是正数
+    if (timeDiff >= 0) {
+      const daysDiff = Math.ceil(timeDiff / (1000 * 3600 * 24))
+      const weeksDiff = Math.ceil(daysDiff / 7)
+      
+      console.log('计算的天数差:', daysDiff)
+      console.log('计算的周数:', weeksDiff)
+    } else {
+      console.log('警告: 结束日期早于开始日期')
+    }
+  }
+  
+  // 检查 complaintFilingDate 字段
+  if (formData.complaintFilingDate) {
+    console.log('投诉提交日期:', formData.complaintFilingDate)
+  }
+  
+  // 检查字段名大小写问题
+  console.log('检查字段名大小写:')
+  const fieldNames = ['employmentStartDate', 'employmentEndDate', 'complaintFilingDate']
+  fieldNames.forEach(name => {
+    const lowerCase = name.toLowerCase()
+    const upperCaseFirst = name.charAt(0).toUpperCase() + name.slice(1)
+    console.log(`  - ${name}: ${formData[name] !== undefined ? '存在' : '不存在'}`)
+    console.log(`  - ${lowerCase}: ${formData[lowerCase] !== undefined ? '存在' : '不存在'}`)
+    console.log(`  - ${upperCaseFirst}: ${formData[upperCaseFirst] !== undefined ? '存在' : '不存在'}`)
+  })
+  
   const result = calculateAllComputedFields(formData, allFields)
+  
+  // 检查 doe 字段的计算结果
+  if (result.doe !== undefined) {
+    console.log('计算的 DOE 值:', result.doe)
+  }
+  
   console.log('计算字段结果:', result)
   return result
 })

@@ -18,8 +18,15 @@ export const calculateEmploymentWeeks = (startDate, endDate) => {
   const start = new Date(startDate)
   const end = new Date(endDate)
   
-  // 计算天数差
+  if (isNaN(start.getTime()) || isNaN(end.getTime())) return 0
+  
+  // 确保计算的是从开始日期到结束日期的时间差
   const timeDiff = end.getTime() - start.getTime()
+  
+  // 如果时间差为负数（结束日期早于开始日期），返回0
+  if (timeDiff < 0) return 0
+  
+  // 计算天数差
   const daysDiff = Math.ceil(timeDiff / (1000 * 3600 * 24))
   
   // 转换为周数（向上取整）
