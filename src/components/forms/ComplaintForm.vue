@@ -25,8 +25,9 @@
           required
           description="Multiple plaintiffs separated by commas. Each name should be followed by an individual designation"
           @change="(value) => handleFieldChange(value, 'plaintiffName')"
+          @blur="handlePlaintiffNameBlur"
         />
-        
+
         <FormField
           label="Plaintiff's Job"
           v-model="formData.plaintiffJob"
@@ -35,7 +36,7 @@
           placeholder="e.g. Chef"
           required
         />
-        
+
         <!-- Defendant Name Complex Field -->
         <div class="defendant-name-group">
           <label class="field-group-label">Defendant Name</label>
@@ -49,7 +50,7 @@
             @update:defendant-entity-type="(value) => handleFieldChange(value, 'defendantEntityType')"
           />
         </div>
-        
+
         <FormField
           label="Court Location (County)"
           v-model="formData.courtLocation"
@@ -59,7 +60,7 @@
           required
           description="Enter county name in all capital letters"
         />
-        
+
         <FormField
           label="Court Name"
           v-model="formData.courtName"
@@ -68,7 +69,7 @@
           placeholder="e.g. STANLEY MOSK COURTHOUSE"
           required
         />
-        
+
         <FormField
           label="Case Number"
           v-model="formData.caseNumber"
@@ -77,7 +78,7 @@
           placeholder="e.g. LASC123456"
           description="Need to set default as space"
         />
-        
+
         <FormField
           label="Judge Name"
           v-model="formData.judgeName"
@@ -85,13 +86,13 @@
           type="text"
           placeholder="e.g. Michael Doe"
         />
-        
+
         <el-form-item label="Complaint Filing Date" prop="complaintFilingDate">
-          <el-date-picker 
-            v-model="formData.complaintFilingDate" 
-            type="date" 
-            placeholder="Select complaint filing date or expected filing date" 
-            style="width: 100%" 
+          <el-date-picker
+            v-model="formData.complaintFilingDate"
+            type="date"
+            placeholder="Select complaint filing date or expected filing date"
+            style="width: 100%"
             value-format="YYYY-MM-DD"
             format="YYYY-MM-DD"
           />
@@ -132,7 +133,7 @@
           placeholder="e.g. Los Angeles, California"
           required
         />
-        
+
         <FormField
           label="Defendant Business Type"
           v-model="formData.defendantBusinessType"
@@ -141,7 +142,7 @@
           placeholder="e.g. restaurant"
           required
         />
-        
+
         <FormField
           label="Defendant's Detailed Business Address"
           v-model="formData.defendantBusinessAddress"
@@ -163,27 +164,27 @@
         :columns="1"
       >
         <el-form-item label="Start Date of the Employment" prop="employmentStartDate">
-          <el-date-picker 
-            v-model="formData.employmentStartDate" 
-            type="date" 
-            placeholder="e.g. May 1, 2022" 
-            style="width: 100%" 
+          <el-date-picker
+            v-model="formData.employmentStartDate"
+            type="date"
+            placeholder="e.g. May 1, 2022"
+            style="width: 100%"
             value-format="YYYY-MM-DD"
             format="YYYY-MM-DD"
           />
         </el-form-item>
-        
+
         <el-form-item label="End Date of the Employment" prop="employmentEndDate">
-          <el-date-picker 
-            v-model="formData.employmentEndDate" 
-            type="date" 
-            placeholder="e.g. June 23, 2024" 
-            style="width: 100%" 
+          <el-date-picker
+            v-model="formData.employmentEndDate"
+            type="date"
+            placeholder="e.g. June 23, 2024"
+            style="width: 100%"
             value-format="YYYY-MM-DD"
             format="YYYY-MM-DD"
           />
         </el-form-item>
-        
+
         <FormField
           label="Plaintiff's Hourly Rate"
           v-model="formData.hourlyRate"
@@ -196,7 +197,7 @@
           description="Need to be used to calculate unpaid wages, overtime, etc"
           @change="(value) => handleFieldChange(value, 'hourlyRate')"
         />
-        
+
         <FormField
           label="Unpaid Hours"
           v-model="formData.unpaidHours"
@@ -208,7 +209,7 @@
           required
           @change="(value) => handleFieldChange(value, 'unpaidHours')"
         />
-        
+
         <FormField
           label="How Many Actual Hours Did the Plaintiff Work Per Week"
           v-model="formData.weeklyHours"
@@ -220,7 +221,7 @@
           required
           @change="(value) => handleFieldChange(value, 'weeklyHours')"
         />
-        
+
         <FormField
           label="How Many 2 * Overtime Hours Did the Plaintiff Work Per Week"
           v-model="formData.doubleOvertimeHours"
@@ -251,7 +252,7 @@
           required
           description="Options: Daily, Weekly, Bi-Weekly, Monthly, Bi-Monthly, Quarterly"
         />
-        
+
         <FormField
           label="What is the Applicable IWC Order (Number)"
           v-model="formData.iwcOrder"
@@ -262,7 +263,7 @@
           :precision="0"
           required
         />
-        
+
         <FormField
           label="Payperiods"
           v-model="formData.payPeriods"
@@ -274,7 +275,7 @@
           required
           @change="(value) => handleFieldChange(value, 'payPeriods')"
         />
-        
+
         <FormField
           label="How Many Missed Meal Breaks Per Week"
           v-model="formData.missedMealBreaks"
@@ -285,7 +286,7 @@
           :precision="0"
           @change="(value) => handleFieldChange(value, 'missedMealBreaks')"
         />
-        
+
         <FormField
           label="How Many Missed Rest Breaks Per Week"
           v-model="formData.missedRestBreaks"
@@ -296,7 +297,7 @@
           :precision="0"
           @change="(value) => handleFieldChange(value, 'missedRestBreaks')"
         />
-        
+
         <FormField
           label="What is the Type of Unpaid Expense"
           v-model="formData.businessExpenseType"
@@ -304,7 +305,7 @@
           type="text"
           placeholder="e.g. Gas"
         />
-        
+
         <FormField
           label="What is the Amount of Unreimbursed Business Expense"
           v-model="formData.businessExpenseAmount"
@@ -333,7 +334,7 @@
           :display-value="`${calculations.doe} weeks`"
           description="Automatically calculated based on employment dates and filing date"
         />
-        
+
         <FormField
           label="1.5x Overtime Hours"
           :model-value="calculations.oneAndHalfOvertimeHours"
@@ -341,7 +342,7 @@
           :is-calculated="true"
           :display-value="`${calculations.oneAndHalfOvertimeHours} hours/week`"
         />
-        
+
         <FormField
           label="Total Overtime Hours"
           :model-value="calculations.overtimeHoursTotal"
@@ -349,7 +350,7 @@
           :is-calculated="true"
           :display-value="`${calculations.overtimeHoursTotal} hours/week`"
         />
-        
+
         <FormField
           label="Overtime Status"
           :model-value="calculations.overtimeStatus"
@@ -357,7 +358,7 @@
           :is-calculated="true"
           :display-value="calculations.overtimeStatus"
         />
-        
+
         <FormField
           label="Damage Unpaid Wages"
           :model-value="calculations.damageUnpaidWages"
@@ -366,7 +367,7 @@
           :display-value="`$${calculations.damageUnpaidWages.toLocaleString()}`"
           description="Automatically calculated by Unpaid Hours * Hourly Rate"
         />
-        
+
         <FormField
           label="Damage Meal Breaks"
           :model-value="calculations.damageMealBreaks"
@@ -375,7 +376,7 @@
           :display-value="`$${calculations.damageMealBreaks.toLocaleString()}`"
           description="Automatically calculated by Missed Meal Breaks * DOE * Hourly Rate"
         />
-        
+
         <FormField
           label="Damage Rest Breaks"
           :model-value="calculations.damageRestBreaks"
@@ -384,7 +385,7 @@
           :display-value="`$${calculations.damageRestBreaks.toLocaleString()}`"
           description="Automatically calculated by Missed Rest Breaks * DOE * Hourly Rate"
         />
-        
+
         <FormField
           label="Damage Overtime"
           :model-value="calculations.damageOvertime"
@@ -393,7 +394,7 @@
           :display-value="`$${calculations.damageOvertime.toLocaleString()}`"
           description="Automatically calculated by 1.5x Hours * Rate * DOE * 1.5 + 2x Hours * Rate * DOE * 2"
         />
-        
+
         <FormField
           label="Damage Waiting Time"
           :model-value="calculations.damageWaitingTime"
@@ -402,7 +403,7 @@
           :display-value="`$${calculations.damageWaitingTime.toLocaleString()}`"
           description="Automatically calculated by Hourly Rate * 8 * 30"
         />
-        
+
         <FormField
           label="Wage Statement Penalty"
           :model-value="calculations.wageStatementPenalty"
@@ -411,7 +412,7 @@
           :display-value="`$${calculations.wageStatementPenalty.toLocaleString()}`"
           description="If < 4000, 50 + Pay Periods * 100, otherwise 4000"
         />
-        
+
         <FormField
           label="Damage Total"
           :model-value="calculations.damageTotal"
@@ -421,7 +422,7 @@
           class="total-damage-field"
           description="Sum of all damage amounts"
         />
-        
+
         <FormField
           label="Pre-Judgment Interest"
           :model-value="calculations.preJudgmentInterest"
@@ -448,7 +449,7 @@
           :display-value="calculations.plaintiffPlurality1"
           description="Plaintiff or Plaintiffs - automatically applied based on single or multiple plaintiffs"
         />
-        
+
         <FormField
           label="Plaintiff Plurality 2"
           :model-value="calculations.plaintiffPlurality2"
@@ -457,7 +458,7 @@
           :display-value="calculations.plaintiffPlurality2"
           description="Plaintiff is or Plaintiffs are - automatically applied based on single or multiple plaintiffs"
         />
-        
+
         <FormField
           label="Defendant Plurality 1"
           :model-value="calculations.defendantPlurality1"
@@ -466,7 +467,7 @@
           :display-value="calculations.defendantPlurality1"
           description="Defendant or Defendants - automatically applied based on single or multiple defendants"
         />
-        
+
         <FormField
           label="Defendant Plurality 2"
           :model-value="calculations.defendantPlurality2"
@@ -493,7 +494,7 @@
           :display-value="calculations.executedDate"
           description="Today's date in June 15, 2025 format"
         />
-        
+
         <FormField
           label="Cause Number"
           :model-value="calculations.causeNumber"
@@ -502,7 +503,7 @@
           :display-value="calculations.causeNumber"
           description="In the format of FIRST, SECOND, THIRD"
         />
-        
+
         <FormField
           label="3-Year Statute of Limitations"
           :model-value="calculations.sol3"
@@ -511,7 +512,7 @@
           :display-value="calculations.sol3"
           description="Complaint Filing Date - 3 years in June 16, 2025 format"
         />
-        
+
         <FormField
           label="4-Year Statute of Limitations"
           :model-value="calculations.sol4"
@@ -531,11 +532,11 @@ import FormGroup from '@/components/common/FormGroup.vue'
 import FormField from '@/components/common/FormField.vue'
 import DefendantNameField from '@/components/common/DefendantNameField.vue'
 import { useFormStore } from '@/stores/formStore'
-import { 
-  CAUSES_OF_ACTION, 
-  PAY_PERIOD_OPTIONS, 
+import {
+  CAUSES_OF_ACTION,
+  PAY_PERIOD_OPTIONS,
   FIELD_TOOLTIPS,
-  VALIDATION_RULES 
+  VALIDATION_RULES
 } from '@/utils/constants'
 
 // 使用表单状态管理
@@ -577,6 +578,18 @@ const handleFieldChange = (value, field) => {
   // 更新对应的字段
   if (field) {
     formStore.updateComplaintForm(field, value)
+  }
+}
+
+// 处理 Plaintiff Name 失去焦点事件，自动添加 ", an individual"
+const handlePlaintiffNameBlur = (value) => {
+  const currentValue = value || ''
+  // 检查是否已经包含 ", an individual" 或为空
+  if (currentValue && !currentValue.includes(', an individual')) {
+    // 移除可能存在的尾随逗号和空格
+    const cleanedValue = currentValue.replace(/,?\s*$/, '')
+    const newValue = `${cleanedValue}, an individual`
+    formStore.updateComplaintForm('plaintiffName', newValue)
   }
 }
 
@@ -658,4 +671,4 @@ defineExpose({
     font-size: 14px;
   }
 }
-</style> 
+</style>
