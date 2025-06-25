@@ -1,102 +1,136 @@
 <template>
   <div class="form-actions" :class="actionsClasses">
-    <div class="actions-left">
-      <!-- 左侧操作按钮 -->
-      <slot name="left">
-        <el-button 
-          v-if="showReset"
-          @click="handleReset"
-          :disabled="disabled || isLoading"
-          :loading="resetLoading"
-        >
-          <el-icon><RefreshLeft /></el-icon>
-          Reset Form
-        </el-button>
-        
-        <el-button 
-          v-if="showClear"
-          @click="handleClear"
-          :disabled="disabled || isLoading"
-          type="warning"
-          plain
-        >
-          <el-icon><Delete /></el-icon>
-          Clear Data
-        </el-button>
-      </slot>
+    <!-- 提交前邮箱输入 -->
+    <div class="submission-email-section" v-if="showSubmit">
+      <div class="email-label">
+        <el-icon class="email-icon"><Message /></el-icon>
+        <span>Email Address for Submission</span>
+        <span class="required-mark">*</span>
+      </div>
+      <el-input
+        v-model="emailAddress"
+        type="email"
+        placeholder="Please enter your email address"
+        :disabled="disabled || isLoading"
+        clearable
+        @input="handleEmailChange"
+        @blur="validateEmail"
+        :class="{ 'has-error': emailError }"
+      />
+      <div v-if="emailError" class="email-error">{{ emailError }}</div>
     </div>
-
-    <div class="actions-center">
-      <!-- 中间状态显示 -->
-      <slot name="center">
-        <div v-if="showStatus" class="form-status">
-          <div class="status-item">
-            <el-icon class="status-icon" :class="statusIconClass">
-              <component :is="statusIcon" />
-            </el-icon>
-            <span class="status-text">{{ statusText }}</span>
-          </div>
+    
+    <div class="actions-row">
+      <div class="actions-left">
+        <!-- 左侧操作按钮 -->
+        <slot name="left">
+          <el-button 
+            v-if="showReset"
+            @click="handleReset"
+            :disabled="disabled || isLoading"
+            :loading="resetLoading"
+          >
+            <el-icon><RefreshLeft /></el-icon>
+            Reset Form
+          </el-button>
           
-          <div v-if="showProgress" class="progress-item">
-            <el-progress 
-              :percentage="progressPercentage" 
-              :status="progressStatus"
-              :stroke-width="6"
-              text-inside
-            />
-          </div>
-        </div>
-      </slot>
-    </div>
+          <el-button 
+            v-if="showClear"
+            @click="handleClear"
+            :disabled="disabled || isLoading"
+            type="warning"
+            plain
+          >
+            <el-icon><Delete /></el-icon>
+            Clear Data
+          </el-button>
+        </slot>
+      </div>
 
-    <div class="actions-right">
-      <!-- 右侧主要操作按钮 -->
-      <slot name="right">
-        <el-button 
-          v-if="showSave"
-          @click="handleSave"
-          :disabled="disabled || !canSave"
-          :loading="saveLoading"
-          type="info"
-        >
-          <el-icon><FolderOpened /></el-icon>
-          Save Draft
-        </el-button>
-        
-        <el-button 
-          v-if="showExport"
-          @click="handleExport"
-          :disabled="disabled || isLoading"
-          :loading="exportLoading"
-          type="success"
-          plain
-        >
-          <el-icon><Download /></el-icon>
-          Export Data
-        </el-button>
-        
-        <el-button 
-          v-if="showSubmit"
-          @click="handleSubmit"
-          :disabled="disabled || !canSubmit"
-          :loading="submitLoading"
-          type="primary"
-        >
-          <el-icon><Check /></el-icon>
-          {{ submitText }}
-        </el-button>
-      </slot>
+      <div class="actions-center">
+        <!-- 中间状态显示 -->
+        <slot name="center">
+          <div v-if="showStatus" class="form-status">
+            <div class="status-item">
+              <el-icon class="status-icon" :class="statusIconClass">
+                <component :is="statusIcon" />
+              </el-icon>
+              <span class="status-text">{{ statusText }}</span>
+            </div>
+            
+            <div v-if="showProgress" class="progress-item">
+              <el-progress 
+                :percentage="progressPercentage" 
+                :status="progressStatus"
+                :stroke-width="6"
+                text-inside
+              />
+            </div>
+          </div>
+        </slot>
+      </div>
+
+      <div class="actions-right">
+        <!-- 右侧主要操作按钮 -->
+        <slot name="right">
+          <el-button 
+            v-if="showSave"
+            @click="handleSave"
+            :disabled="disabled || !canSave"
+            :loading="saveLoading"
+            type="info"
+          >
+            <el-icon><FolderOpened /></el-icon>
+            Save Draft
+          </el-button>
+          
+          <el-button 
+            v-if="showExport"
+            @click="handleExport"
+            :disabled="disabled || isLoading"
+            :loading="exportLoading"
+            type="success"
+            plain
+          >
+            <el-icon><Download /></el-icon>
+            Export Data
+          </el-button>
+          
+          <el-button 
+            v-if="showSubmit"
+            @click="handleSubmit"
+            :disabled="disabled || !canSubmit || (showSubmit && !isEmailValid)"
+            :loading="submitLoading"
+            type="primary"
+          >
+            <el-icon><Check /></el-icon>
+            {{ submitText }}
+          </el-button>
+        </slot>
+      </div>
     </div>
   </div>
 </template>
 
 <script setup>
-import { computed } from 'vue'
+import { computed, ref, watch } from 'vue'
 import { ElMessage, ElMessageBox } from 'element-plus'
 import {
-  RefreshLeft, Delete, FolderOpened, Download, Check,
+  RefreshLeft, Delete, FolderOpened, Download, Check, Message,
   CircleCheckFilled, WarningFilled, CircleCloseFilled, Loading
 } from '@element-plus/icons-vue'
+import { useFormStore } from '@/stores/formStore'
+
+const formStore = useFormStore()
+
+// 邮箱相关状态
+const emailAddress = ref('')
+const emailError = ref('')
+
+// 监听表单存储的邮箱地址
+watch(() => formStore.submissionEmail, (newEmail) => {
+  emailAddress.value = newEmail || ''
+}, { immediate: true })
 
 // Props定义
 const props = defineProps({
@@ -168,6 +202,11 @@ const statusIconClass = computed(() => ({
   'status-info': props.statusType === 'info'
 }))
 
+const isEmailValid = computed(() => {
+  if (!props.showSubmit) return true
+  return emailAddress.value.trim() !== '' && !emailError.value
+})
+
 // 事件处理
 const handleReset = async () => {
   try {
@@ -214,19 +253,96 @@ const handleExport = () => {
 }
 
 const handleSubmit = () => {
+  // 提交前验证邮箱
+  if (props.showSubmit && !validateEmail()) {
+    ElMessage.error('Please enter a valid email address before submitting')
+    return
+  }
+  
   emit('submit')
+}
+
+// 邮箱验证
+const validateEmail = () => {
+  if (!emailAddress.value.trim()) {
+    emailError.value = 'Email address is required'
+    return false
+  }
+  
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
+  if (!emailRegex.test(emailAddress.value)) {
+    emailError.value = 'Please enter a valid email address'
+    return false
+  }
+  
+  emailError.value = ''
+  return true
+}
+
+// 邮箱输入处理
+const handleEmailChange = (value) => {
+  emailAddress.value = value
+  formStore.updateSubmissionEmail(value)
+  // 清除错误信息
+  if (emailError.value) {
+    emailError.value = ''
+  }
 }
 </script>
 
 <style scoped>
 .form-actions {
   display: flex;
-  justify-content: space-between;
-  align-items: center;
-  gap: var(--spacing-md);
+  flex-direction: column;
+  gap: var(--spacing-lg);
   padding: var(--spacing-lg) var(--spacing-xl);
   background: var(--background);
   border-top: 1px solid var(--border);
+}
+
+/* 邮箱输入区域 */
+.submission-email-section {
+  width: 100%;
+  max-width: 400px;
+  margin: 0 auto;
+}
+
+.email-label {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-sm);
+  margin-bottom: var(--spacing-sm);
+  font-size: var(--font-sm);
+  font-weight: 500;
+  color: var(--text-primary);
+}
+
+.email-icon {
+  color: var(--primary-color);
+  font-size: 16px;
+}
+
+.required-mark {
+  color: var(--danger-color);
+  font-weight: bold;
+}
+
+.email-error {
+  margin-top: var(--spacing-xs);
+  font-size: var(--font-xs);
+  color: var(--danger-color);
+}
+
+.has-error :deep(.el-input__wrapper) {
+  border-color: var(--danger-color);
+}
+
+/* 操作按钮区域 */
+.form-actions .actions-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: var(--spacing-md);
 }
 
 /* 位置变体 */
@@ -369,9 +485,12 @@ const handleSubmit = () => {
 /* 响应式设计 */
 @media (max-width: 768px) {
   .form-actions {
+    padding: var(--spacing-md);
+  }
+  
+  .actions-row {
     flex-direction: column;
     gap: var(--spacing-md);
-    padding: var(--spacing-md);
   }
   
   .actions-left,
@@ -383,6 +502,10 @@ const handleSubmit = () => {
   
   .actions-center {
     order: -1;
+  }
+  
+  .submission-email-section {
+    max-width: 100%;
   }
   
   .variant-floating {
@@ -409,7 +532,7 @@ const handleSubmit = () => {
     gap: var(--spacing-sm);
   }
   
-  .form-actions .el-button {
+  .actions-row .el-button {
     width: 100%;
   }
 }

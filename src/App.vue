@@ -227,6 +227,12 @@ const handleExport = () => {
 const handleSubmit = async () => {
   if (!formStore.currentFormType) return
   
+  // 检查邮箱地址
+  if (!formStore.submissionEmail || !formStore.submissionEmail.trim()) {
+    ElMessage.error('Please enter your email address before submitting')
+    return
+  }
+  
   const progress = currentFormProgress.value
   if (progress < 100) {
     ElMessage.warning(`Form completion is ${progress}%. It is recommended to complete all required fields before submitting.`)
@@ -239,23 +245,39 @@ const handleSubmit = async () => {
     try {
       const valid = await formRef.validate()
       if (valid) {
+        // 准备提交数据，包含邮箱地址
+        const submissionData = {
+          submissionEmail: formStore.submissionEmail,
+          formType: formStore.currentFormType,
+          formData: formStore.getCurrentFormData(),
+          timestamp: new Date().toISOString()
+        }
+        
         ElMessage.success('Form submitted successfully!')
-        console.log('Submitted form data:', formStore.getCurrentFormData())
+        console.log('Submitted data:', submissionData)
       }
     } catch (error) {
       ElMessage.error('Form validation failed, please check required fields')
       console.log('Validation error:', error)
     }
   } else {
+    // 准备提交数据，包含邮箱地址
+    const submissionData = {
+      submissionEmail: formStore.submissionEmail,
+      formType: formStore.currentFormType,
+      formData: formStore.getCurrentFormData(),
+      timestamp: new Date().toISOString()
+    }
+    
     ElMessage.success('Form submitted successfully!')
-    console.log('Submitted form data:', formStore.getCurrentFormData())
+    console.log('Submitted data:', submissionData)
   }
 }
 </script>
 
 <style scoped>
 .main-content {
-  max-width: 1200px;
+  max-width: 900px;
   margin: 0 auto;
   padding: var(--spacing-lg);
   background: var(--background);

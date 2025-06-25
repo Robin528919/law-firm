@@ -7,6 +7,9 @@ export const useFormStore = defineStore('form', () => {
   // 当前选中的表单类型
   const currentFormType = ref('complaint')
   
+  // 通用提交邮箱地址
+  const submissionEmail = ref('')
+  
   // 起诉/损害赔偿表单数据
   const complaintForm = ref({
     // 基础信息
@@ -231,6 +234,10 @@ export const useFormStore = defineStore('form', () => {
     settlementForm.value[field] = value
   }
   
+  const updateSubmissionEmail = (email) => {
+    submissionEmail.value = email
+  }
+  
   const resetForm = (type = null) => {
     const targetType = type || currentFormType.value
     
@@ -274,6 +281,7 @@ export const useFormStore = defineStore('form', () => {
   const exportFormData = () => {
     const data = {
       currentFormType: currentFormType.value,
+      submissionEmail: submissionEmail.value,
       timestamp: new Date().toISOString(),
       forms: {
         complaint: complaintForm.value,
@@ -292,6 +300,10 @@ export const useFormStore = defineStore('form', () => {
   const importFormData = (data) => {
     if (data.currentFormType) {
       currentFormType.value = data.currentFormType
+    }
+    
+    if (data.submissionEmail) {
+      submissionEmail.value = data.submissionEmail
     }
     
     if (data.forms) {
@@ -404,6 +416,7 @@ export const useFormStore = defineStore('form', () => {
   return {
     // 状态
     currentFormType,
+    submissionEmail,
     complaintForm,
     answerForm,
     settlementForm,
@@ -419,6 +432,7 @@ export const useFormStore = defineStore('form', () => {
     updateComplaintForm,
     updateAnswerForm,
     updateSettlementForm,
+    updateSubmissionEmail,
     resetForm,
     resetCurrentForm,
     clearCurrentForm,
