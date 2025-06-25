@@ -1,6 +1,6 @@
 <template>
-  <el-form-item 
-    :label="label" 
+  <el-form-item
+    :label="label"
     :prop="prop"
     :class="fieldClasses"
     :rules="fieldRules"
@@ -25,7 +25,7 @@
         :placeholder="placeholder"
         :disabled="disabled || isCalculated"
         :readonly="readonly || isCalculated"
-        :maxlength="maxlength"
+        :maxlength="maxlength || undefined"
         :show-word-limit="showWordLimit"
         clearable
         @input="handleInput"
@@ -39,8 +39,8 @@
         :placeholder="placeholder"
         :disabled="disabled || isCalculated"
         :readonly="readonly || isCalculated"
-        :min="min"
-        v-bind="max !== null && min !== null && max >= min ? { max } : {}"
+        :min="min || undefined"
+        :max="(max !== null && min !== null && max >= min) ? max : undefined"
         :precision="precision"
         :step="step"
         :controls="!isCalculated"
@@ -58,7 +58,7 @@
         :disabled="disabled || isCalculated"
         :readonly="readonly || isCalculated"
         :rows="rows"
-        :maxlength="maxlength"
+        :maxlength="maxlength || undefined"
         :show-word-limit="showWordLimit"
         resize="vertical"
         @input="handleInput"
@@ -164,55 +164,95 @@
   </el-form-item>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { computed } from 'vue'
 import { QuestionFilled, Edit } from '@element-plus/icons-vue'
 
-// Props定义
-const props = defineProps({
+// 类型定义
+interface Option {
+  value: string | number
+  label: string
+  description?: string
+  disabled?: boolean
+}
+
+interface Props {
   // 基础属性
-  label: { type: String, required: true },
-  modelValue: { type: [String, Number, Array, Boolean, Date], default: '' },
-  type: { type: String, default: 'text' },
-  prop: { type: String, default: '' },
-  
+  label: string
+  modelValue?: string | number | string[] | boolean | Date | null
+  type?: 'text' | 'email' | 'number' | 'textarea' | 'date' | 'select' | 'checkbox' | 'radio'
+  prop?: string
+
   // 验证和状态
-  required: { type: Boolean, default: false },
-  rules: { type: Array, default: () => [] },
-  disabled: { type: Boolean, default: false },
-  readonly: { type: Boolean, default: false },
-  isCalculated: { type: Boolean, default: false },
-  
+  required?: boolean
+  rules?: any[]
+  disabled?: boolean
+  readonly?: boolean
+  isCalculated?: boolean
+
   // 输入属性
-  placeholder: { type: String, default: '' },
-  maxlength: { type: Number, default: null },
-  showWordLimit: { type: Boolean, default: false },
-  
+  placeholder?: string
+  maxlength?: number | null
+  showWordLimit?: boolean
+
   // 数字输入属性
-  min: { type: Number, default: null },
-  max: { type: Number, default: null },
-  precision: { type: Number, default: 2 },
-  step: { type: Number, default: 1 },
-  
+  min?: number | null
+  max?: number | null
+  precision?: number
+  step?: number
+
   // 文本域属性
-  rows: { type: Number, default: 3 },
-  
+  rows?: number
+
   // 选择器属性
-  options: { type: Array, default: () => [] },
-  multiple: { type: Boolean, default: false },
-  filterable: { type: Boolean, default: false },
-  clearable: { type: Boolean, default: true },
-  
+  options?: Option[]
+  multiple?: boolean
+  filterable?: boolean
+  clearable?: boolean
+
   // 提示和说明
-  tooltip: { type: String, default: '' },
-  description: { type: String, default: '' },
-  
+  tooltip?: string
+  description?: string
+
   // 计算字段显示值
-  displayValue: { type: String, default: '' }
+  displayValue?: string
+}
+
+// Props定义
+const props = withDefaults(defineProps<Props>(), {
+  modelValue: '',
+  type: 'text',
+  prop: '',
+  required: false,
+  rules: () => [],
+  disabled: false,
+  readonly: false,
+  isCalculated: false,
+  placeholder: '',
+  maxlength: null,
+  showWordLimit: false,
+  min: null,
+  max: null,
+  precision: 2,
+  step: 1,
+  rows: 3,
+  options: () => [],
+  multiple: false,
+  filterable: false,
+  clearable: true,
+  tooltip: '',
+  description: '',
+  displayValue: ''
 })
 
 // 事件定义
-const emit = defineEmits(['update:modelValue', 'change', 'blur'])
+interface Emits {
+  (e: 'update:modelValue', value: any): void
+  (e: 'change', value: any): void
+  (e: 'blur', value: string): void
+}
+
+const emit = defineEmits<Emits>()
 
 // 计算属性
 const fieldClasses = computed(() => ({
@@ -222,7 +262,7 @@ const fieldClasses = computed(() => ({
 }))
 
 const fieldRules = computed(() => {
-  const rules = [...props.rules]
+  const rules = [...(props.rules || [])]
   if (props.required && !props.isCalculated) {
     rules.unshift({
       required: true,
@@ -234,13 +274,14 @@ const fieldRules = computed(() => {
 })
 
 // 事件处理
-const handleInput = (value) => {
+const handleInput = (value: any) => {
   emit('update:modelValue', value)
   emit('change', value)
 }
 
-const handleBlur = (event) => {
-  emit('blur', event.target.value)
+const handleBlur = (event: Event) => {
+  const target = event.target as HTMLInputElement
+  emit('blur', target.value)
 }
 </script>
 
@@ -308,30 +349,26 @@ const handleBlur = (event) => {
 }
 
 /* 计算字段样式增强 */
-:deep(.calculated-field .el-input__wrapper) {
+.calculated-field :deep(.el-input__wrapper),
+.calculated-field :deep(.el-input-number__wrapper) {
   background: linear-gradient(135deg, #f0f9ff, #e0f2fe) !important;
   border-color: var(--info-color) !important;
 }
 
-:deep(.calculated-field .el-input__inner) {
+.calculated-field :deep(.el-input__inner) {
   color: var(--info-color) !important;
   font-weight: 600;
 }
 
-:deep(.calculated-field .el-input-number__wrapper) {
-  background: linear-gradient(135deg, #f0f9ff, #e0f2fe) !important;
-  border-color: var(--info-color) !important;
-}
-
 /* 必填字段样式 */
-:deep(.required-field .el-form-item__label::after) {
+.required-field :deep(.el-form-item__label::after) {
   content: ' *';
   color: var(--danger-color);
   font-weight: bold;
 }
 
 /* 禁用字段样式 */
-:deep(.disabled-field .el-input__wrapper) {
+.disabled-field :deep(.el-input__wrapper) {
   background-color: var(--background-light) !important;
 }
 
@@ -342,13 +379,13 @@ const handleBlur = (event) => {
   gap: 12px;
 }
 
-:deep(.el-checkbox) {
+:deep(.el-checkbox-group .el-checkbox) {
   width: 100%;
   margin-right: 0 !important;
 }
 
-:deep(.el-checkbox__label) {
+:deep(.el-checkbox-group .el-checkbox__label) {
   width: 100%;
   padding-left: 8px;
 }
-</style> 
+</style>
