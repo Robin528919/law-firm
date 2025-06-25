@@ -10,7 +10,7 @@
           :loading="resetLoading"
         >
           <el-icon><RefreshLeft /></el-icon>
-          重置表单
+          Reset Form
         </el-button>
         
         <el-button 
@@ -21,7 +21,7 @@
           plain
         >
           <el-icon><Delete /></el-icon>
-          清空数据
+          Clear Data
         </el-button>
       </slot>
     </div>
@@ -60,7 +60,7 @@
           type="info"
         >
           <el-icon><FolderOpened /></el-icon>
-          保存草稿
+          Save Draft
         </el-button>
         
         <el-button 
@@ -72,7 +72,7 @@
           plain
         >
           <el-icon><Download /></el-icon>
-          导出数据
+          Export Data
         </el-button>
         
         <el-button 
@@ -104,7 +104,7 @@ const props = defineProps({
   showReset: { type: Boolean, default: true },
   showClear: { type: Boolean, default: false },
   showSave: { type: Boolean, default: true },
-  showExport: { type: Boolean, default: true },
+  showExport: { type: Boolean, default: false },
   showSubmit: { type: Boolean, default: true },
   
   // 按钮状态
@@ -122,7 +122,7 @@ const props = defineProps({
   // 状态显示
   showStatus: { type: Boolean, default: true },
   statusType: { type: String, default: 'info' }, // success, warning, error, info
-  statusText: { type: String, default: '就绪' },
+  statusText: { type: String, default: 'Ready' },
   
   // 进度显示
   showProgress: { type: Boolean, default: false },
@@ -130,7 +130,7 @@ const props = defineProps({
   progressStatus: { type: String, default: '' },
   
   // 文本定制
-  submitText: { type: String, default: '提交表单' },
+  submitText: { type: String, default: 'Submit Form' },
   
   // 样式变体
   variant: { type: String, default: 'default' }, // default, compact, floating
@@ -172,16 +172,16 @@ const statusIconClass = computed(() => ({
 const handleReset = async () => {
   try {
     await ElMessageBox.confirm(
-      '确定要重置表单吗？这将清空所有已填写的数据。',
-      '确认重置',
+      'Are you sure you want to reset the form? This will clear all filled data.',
+      'Confirm Reset',
       {
-        confirmButtonText: '确定重置',
-        cancelButtonText: '取消',
+        confirmButtonText: 'Reset',
+        cancelButtonText: 'Cancel',
         type: 'warning'
       }
     )
     emit('reset')
-    ElMessage.success('表单已重置')
+    ElMessage.success('Form has been reset')
   } catch {
     // 用户取消
   }
@@ -190,16 +190,16 @@ const handleReset = async () => {
 const handleClear = async () => {
   try {
     await ElMessageBox.confirm(
-      '确定要清空所有数据吗？此操作不可恢复。',
-      '确认清空',
+      'Are you sure you want to clear all data? This operation cannot be undone.',
+      'Confirm Clear',
       {
-        confirmButtonText: '确定清空',
-        cancelButtonText: '取消',
+        confirmButtonText: 'Clear',
+        cancelButtonText: 'Cancel',
         type: 'error'
       }
     )
     emit('clear')
-    ElMessage.success('数据已清空')
+    ElMessage.success('Data has been cleared')
   } catch {
     // 用户取消
   }

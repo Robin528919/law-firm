@@ -1,26 +1,26 @@
 <template>
   <AppLayout>
-    <!-- 主要内容区域 -->
+    <!-- Main content area -->
     <div class="main-content">
-      <!-- 表单选择器 -->
+      <!-- Form selector -->
       <FormSelector />
       
-      <!-- 当前表单内容 -->
+      <!-- Current form content -->
       <div class="form-content" v-if="formStore.currentFormType">
-        <!-- 起诉/损害赔偿表单 -->
+        <!-- Complaint/Damages form -->
         <ComplaintForm v-if="formStore.currentFormType === 'complaint'" ref="complaintFormRef" />
         
-        <!-- 回复表单 -->
+        <!-- Answer form -->
         <AnswerForm v-if="formStore.currentFormType === 'answer'" ref="answerFormRef" />
         
-        <!-- 和解协议表单 -->
+        <!-- Settlement agreement form -->
         <SettlementForm v-if="formStore.currentFormType === 'settlement'" ref="settlementFormRef" />
         
-        <!-- 表单操作按钮 -->
+        <!-- Form action buttons -->
         <FormActions 
           variant="default"
-          :show-save="true"
-          :show-export="true"
+          :show-save="false"
+          :show-export="false"
           :show-submit="true"
           :loading="formStore.isLoading"
           :progress="currentFormProgress"
@@ -32,15 +32,15 @@
         />
       </div>
       
-      <!-- 未选择表单时的提示 -->
+      <!-- Prompt when no form is selected -->
       <div class="no-form-selected" v-else>
-        <el-empty description="请选择一个表单类型开始使用">
+        <el-empty description="Please select a form type to get started">
           <template #image>
             <el-icon size="120" color="var(--primary-color)">
               <DocumentCopy />
             </el-icon>
           </template>
-          <el-button type="primary" @click="showFormSelector">选择表单类型</el-button>
+          <el-button type="primary" @click="showFormSelector">Select Form Type</el-button>
         </el-empty>
       </div>
     </div>
@@ -59,15 +59,15 @@ import AnswerForm from '@/components/forms/AnswerForm.vue'
 import SettlementForm from '@/components/forms/SettlementForm.vue'
 import { useFormStore } from '@/stores/formStore'
 
-// 使用表单状态管理
+// Use form state management
 const formStore = useFormStore()
 
-// 表单引用
+// Form references
 const complaintFormRef = ref()
 const answerFormRef = ref()
 const settlementFormRef = ref()
 
-// 当前表单的完成进度
+// Current form completion progress
 const currentFormProgress = computed(() => {
   switch (formStore.currentFormType) {
     case 'complaint':
@@ -81,7 +81,7 @@ const currentFormProgress = computed(() => {
   }
 })
 
-// 计算起诉表单进度
+// Calculate complaint form progress
 const calculateComplaintProgress = () => {
   const requiredFields = [
     'plaintiffName', 'plaintiffJob', 'defendantName', 'courtLocation', 
@@ -101,7 +101,7 @@ const calculateComplaintProgress = () => {
   return Math.round((filledFields / requiredFields.length) * 100)
 }
 
-// 计算回复表单进度
+// Calculate answer form progress
 const calculateAnswerProgress = () => {
   const requiredFields = [
     'letterDate', 'ocName', 'ocFirm', 'ocAddress', 'caseName',
@@ -117,7 +117,7 @@ const calculateAnswerProgress = () => {
   return Math.round((filledFields / requiredFields.length) * 100)
 }
 
-// 计算和解协议表单进度
+// Calculate settlement agreement form progress
 const calculateSettlementProgress = () => {
   const requiredFields = [
     'plaintiffName', 'defendantName', 'courtName', 'caseName',
@@ -135,7 +135,7 @@ const calculateSettlementProgress = () => {
   return Math.round((filledFields / requiredFields.length) * 100)
 }
 
-// 获取当前表单引用
+// Get current form reference
 const getCurrentFormRef = () => {
   switch (formStore.currentFormType) {
     case 'complaint':
@@ -149,22 +149,22 @@ const getCurrentFormRef = () => {
   }
 }
 
-// 显示表单选择器
+// Show form selector
 const showFormSelector = () => {
-  ElMessage.info('请在上方选择表单类型')
+  ElMessage.info('Please select a form type above')
 }
 
-// 表单操作处理
+// Form operation handlers
 const handleReset = async () => {
   if (!formStore.currentFormType) return
   
   try {
     await ElMessageBox.confirm(
-      '确定要重置当前表单吗？这将清空所有已填写的数据。',
-      '确认重置',
+      'Are you sure you want to reset the current form? This will clear all filled data.',
+      'Confirm Reset',
       {
-        confirmButtonText: '确定',
-        cancelButtonText: '取消',
+        confirmButtonText: 'OK',
+        cancelButtonText: 'Cancel',
         type: 'warning',
       }
     )
@@ -175,9 +175,9 @@ const handleReset = async () => {
     }
     
     formStore.resetCurrentForm()
-    ElMessage.success('表单已重置')
+    ElMessage.success('Form has been reset')
   } catch {
-    // 用户取消操作
+    // User cancelled operation
   }
 }
 
@@ -186,19 +186,19 @@ const handleClear = async () => {
   
   try {
     await ElMessageBox.confirm(
-      '确定要清空当前表单的所有数据吗？此操作不可撤销。',
-      '确认清空',
+      'Are you sure you want to clear all data in the current form? This operation cannot be undone.',
+      'Confirm Clear',
       {
-        confirmButtonText: '确定',
-        cancelButtonText: '取消',
+        confirmButtonText: 'OK',
+        cancelButtonText: 'Cancel',
         type: 'warning',
       }
     )
     
     formStore.clearCurrentForm()
-    ElMessage.success('数据已清空')
+    ElMessage.success('Data has been cleared')
   } catch {
-    // 用户取消操作
+    // User cancelled operation
   }
 }
 
@@ -207,9 +207,9 @@ const handleSave = () => {
   
   try {
     formStore.saveFormData()
-    ElMessage.success('草稿已保存到本地存储')
+    ElMessage.success('Draft has been saved to local storage')
   } catch (error) {
-    ElMessage.error('保存失败：' + error.message)
+    ElMessage.error('Save failed: ' + error.message)
   }
 }
 
@@ -218,9 +218,9 @@ const handleExport = () => {
   
   try {
     formStore.exportFormDataWithDownload()
-    ElMessage.success('数据导出成功')
+    ElMessage.success('Data exported successfully')
   } catch (error) {
-    ElMessage.error('导出失败：' + error.message)
+    ElMessage.error('Export failed: ' + error.message)
   }
 }
 
@@ -229,7 +229,7 @@ const handleSubmit = async () => {
   
   const progress = currentFormProgress.value
   if (progress < 100) {
-    ElMessage.warning(`表单完成度为 ${progress}%，建议完成所有必填项后再提交`)
+    ElMessage.warning(`Form completion is ${progress}%. It is recommended to complete all required fields before submitting.`)
     return
   }
   
@@ -239,16 +239,16 @@ const handleSubmit = async () => {
     try {
       const valid = await formRef.validate()
       if (valid) {
-        ElMessage.success('表单提交成功！')
-        console.log('提交的表单数据：', formStore.getCurrentFormData())
+        ElMessage.success('Form submitted successfully!')
+        console.log('Submitted form data:', formStore.getCurrentFormData())
       }
     } catch (error) {
-      ElMessage.error('表单验证失败，请检查必填项')
-      console.log('验证错误：', error)
+      ElMessage.error('Form validation failed, please check required fields')
+      console.log('Validation error:', error)
     }
   } else {
-    ElMessage.success('表单提交成功！')
-    console.log('提交的表单数据：', formStore.getCurrentFormData())
+    ElMessage.success('Form submitted successfully!')
+    console.log('Submitted form data:', formStore.getCurrentFormData())
   }
 }
 </script>

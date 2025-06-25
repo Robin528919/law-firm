@@ -4,25 +4,25 @@
       <div class="header-brand">
         <h1 class="header-title">
           <el-icon class="header-icon"><Document /></el-icon>
-          法律文书表单系统
+          Legal Document Form System
         </h1>
-        <p class="header-subtitle">专业的法律文书生成工具 - 支持起诉/损害赔偿、回复表单、和解协议</p>
+        <p class="header-subtitle">Professional Legal Document Generation Tool - Supporting Complaint/Damages, Answer Forms, Settlement Agreements</p>
       </div>
       
       <div class="header-actions">
-        <el-tooltip content="系统帮助" placement="bottom">
+        <el-tooltip content="System Help" placement="bottom">
           <el-button @click="showHelp">
             <el-icon><QuestionFilled /></el-icon>
           </el-button>
         </el-tooltip>
         
-        <el-tooltip content="导出数据" placement="bottom">
+        <el-tooltip content="Export Data" placement="bottom">
           <el-button @click="exportData">
             <el-icon><Download /></el-icon>
           </el-button>
         </el-tooltip>
         
-        <el-tooltip content="导入数据" placement="bottom">
+        <el-tooltip content="Import Data" placement="bottom">
           <el-button @click="importData">
             <el-icon><Upload /></el-icon>
           </el-button>
@@ -39,17 +39,17 @@ import { useFormStore } from '@/stores/formStore'
 
 const formStore = useFormStore()
 
-// 显示帮助信息
+// Display help information
 const showHelp = () => {
   ElMessageBox.alert(
-    '这是一个专业的法律文书表单系统，支持三种类型的法律文书生成：\n\n' +
-    '1. 起诉/损害赔偿表单 - 用于劳动法起诉和损害赔偿计算\n' +
-    '2. 回复表单 - 用于法庭回复文书\n' +
-    '3. 和解协议表单 - 用于和解协议和付款安排\n\n' +
-    '系统会自动计算相关的法律金额和日期，并提供专业的表单验证。',
-    '系统帮助',
+    'This is a professional legal document form system that supports three types of legal document generation:\n\n' +
+    '1. Complaint/Damages Form - For labor law complaints and damage calculations\n' +
+    '2. Answer Form - For court reply documents\n' +
+    '3. Settlement Agreement Form - For settlement agreements and payment arrangements\n\n' +
+    'The system automatically calculates relevant legal amounts and dates, and provides professional form validation.',
+    'System Help',
     {
-      confirmButtonText: '了解',
+      confirmButtonText: 'Got it',
       type: 'info',
       customStyle: { width: '500px' }
     }
@@ -72,9 +72,9 @@ const exportData = () => {
     document.body.removeChild(link)
     URL.revokeObjectURL(url)
     
-    ElMessage.success('数据导出成功')
+    ElMessage.success('Data exported successfully')
   } catch (error) {
-    ElMessage.error('导出失败: ' + error.message)
+    ElMessage.error('Export failed: ' + error.message)
   }
 }
 
@@ -93,19 +93,19 @@ const importData = () => {
       const data = JSON.parse(text)
       
       await ElMessageBox.confirm(
-        '导入数据将覆盖当前所有表单数据，是否继续？',
-        '确认导入',
+        'Importing data will overwrite all current form data. Do you want to continue?',
+        'Confirm Import',
         {
-          confirmButtonText: '确定',
-          cancelButtonText: '取消',
+          confirmButtonText: 'OK',
+          cancelButtonText: 'Cancel',
           type: 'warning'
         }
       )
       
       formStore.importFormData(data)
-      ElMessage.success('数据导入成功')
+      ElMessage.success('Data imported successfully')
     } catch (error) {
-      ElMessage.error('导入失败: ' + error.message)
+      ElMessage.error('Import failed: ' + error.message)
     }
   }
   

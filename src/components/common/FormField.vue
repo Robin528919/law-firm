@@ -74,7 +74,7 @@
         :disabled="disabled || isCalculated"
         :readonly="readonly || isCalculated"
         value-format="YYYY-MM-DD"
-        format="YYYY年MM月DD日"
+        format="YYYY-MM-DD"
         style="width: 100%"
         @change="handleInput"
       />
@@ -152,7 +152,7 @@
         />
         <div class="calculated-label">
           <el-icon><Edit /></el-icon>
-          <span>自动计算</span>
+          <span>Auto-Calculated</span>
         </div>
       </div>
     </div>
@@ -226,7 +226,7 @@ const fieldRules = computed(() => {
   if (props.required && !props.isCalculated) {
     rules.unshift({
       required: true,
-      message: `${props.label}为必填项`,
+      message: `${props.label} is required`,
       trigger: props.type === 'select' || props.type === 'date' ? 'change' : 'blur'
     })
   }
