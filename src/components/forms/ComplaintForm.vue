@@ -321,8 +321,6 @@
         icon="Calculator"
         variant="card"
         :columns="2"
-        badge="Auto-Calculated"
-        badge-type="success"
       >
         <FormField
           label="Number of Weeks Employed (DOE)"

@@ -245,6 +245,7 @@ const toggleCollapse = () => {
 
 .group-badge {
   margin-left: var(--spacing-sm);
+  display: none; /* 隐藏所有徽章 */
 }
 
 .group-description {
