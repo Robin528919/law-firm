@@ -127,6 +127,9 @@ body {
   padding: var(--spacing-lg);
   box-shadow: var(--shadow-md);
   margin-bottom: var(--spacing-xl);
+  max-width: 900px;
+  margin-left: auto;
+  margin-right: auto;
   
   .selector-title {
     font-size: var(--font-lg);
@@ -254,6 +257,9 @@ body {
   position: sticky;
   bottom: 0;
   z-index: 50;
+  margin-top: var(--spacing-xl);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-md);
   
   .actions-left,
   .actions-right {
@@ -263,6 +269,14 @@ body {
 }
 
 // 响应式设计
+@media (max-width: 968px) {
+  .form-selector {
+    max-width: 100%;
+    margin-left: 0;
+    margin-right: 0;
+  }
+}
+
 @media (max-width: 768px) {
   .app-header,
   .app-main,

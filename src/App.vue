@@ -255,13 +255,19 @@ const handleSubmit = async () => {
 
 <style scoped>
 .main-content {
+  max-width: 1200px;
+  margin: 0 auto;
   padding: var(--spacing-lg);
   background: var(--background);
+  width: 100%;
 }
 
 .form-content {
   margin-top: var(--spacing-xl);
   animation: slideIn 0.3s ease-out;
+  max-width: 900px;
+  margin-left: auto;
+  margin-right: auto;
 }
 
 .no-form-selected {
@@ -291,6 +297,20 @@ const handleSubmit = async () => {
 }
 
 /* 响应式设计 */
+@media (max-width: 968px) {
+  .main-content {
+    max-width: 100%;
+    margin: 0;
+    padding: var(--spacing-md);
+  }
+  
+  .form-content {
+    max-width: 100%;
+    margin-left: 0;
+    margin-right: 0;
+  }
+}
+
 @media (max-width: 768px) {
   .main-content {
     padding: var(--spacing-md);
