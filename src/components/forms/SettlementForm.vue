@@ -8,130 +8,144 @@
       size="default"
       @submit.prevent="handleSubmit"
     >
-      <!-- 当事人信息 -->
+      <!-- Party Information -->
       <FormGroup
-        title="当事人信息"
-        description="和解协议中的原告和被告信息"
+        title="Party Information"
+        description="Plaintiff and defendant information in the settlement agreement"
         icon="UserFilled"
         variant="card"
         :columns="2"
       >
         <FormField
-          label="原告姓名"
+          label="Plaintiff Name"
           v-model="formData.plaintiffName"
           prop="plaintiffName"
           type="text"
-          placeholder="请输入原告姓名，多个原告用逗号分隔"
+          placeholder="e.g. James Doe, should be followed by individual designation"
           required
-          :tooltip="FIELD_TOOLTIPS.plaintiffName"
+          description="Should be followed by an individual designation; Can add multiple"
           @change="(value) => handleFieldChange(value, 'plaintiffName')"
         />
         
         <FormField
-          label="被告姓名"
+          label="Defendant Name"
           v-model="formData.defendantName"
           prop="defendantName"
           type="text"
-          placeholder="请输入被告姓名，多个被告用逗号分隔"
+          placeholder="e.g. Chris Wu"
           required
-          :tooltip="FIELD_TOOLTIPS.defendantName"
+          description="Can add multiple. If corporation, need to select state. For example, a California corporation."
           @change="(value) => handleFieldChange(value, 'defendantName')"
         />
       </FormGroup>
 
-      <!-- 案件信息 -->
+      <!-- Case Information -->
       <FormGroup
-        title="案件信息"
-        description="相关案件的法院和案件详细信息"
+        title="Case Information"
+        description="Court and case details information"
         icon="ScaleToOriginal"
         variant="bordered"
         :columns="2"
       >
         <FormField
-          label="法院名称"
+          label="Court Name"
           v-model="formData.courtName"
           prop="courtName"
           type="text"
-          placeholder="例如：Los Angeles Superior Court"
+          placeholder="e.g. Los Angeles Superior Court"
           required
         />
         
         <FormField
-          label="案件名称(官方)"
+          label="Case Name (Official)"
           v-model="formData.caseName"
           prop="caseName"
           type="text"
-          placeholder="例如：James Doe v. Chris Wu"
+          placeholder="e.g. James Doe v. Chris Wu"
           required
         />
         
         <FormField
-          label="案件号"
+          label="Case Number"
           v-model="formData.caseNumber"
           prop="caseNumber"
           type="text"
-          placeholder="如暂无案件号请留空"
-          :tooltip="FIELD_TOOLTIPS.caseNumber"
+          placeholder="e.g. LASC123456"
+          description="Need to set default as space"
         />
       </FormGroup>
 
-      <!-- 和解金额 -->
+      <!-- Settlement Amount -->
       <FormGroup
-        title="和解金额"
-        description="和解协议的金额信息和付款安排"
+        title="Settlement Amount"
+        description="Settlement amount information and payment arrangements"
         icon="Money"
         variant="card"
         :columns="2"
       >
         <FormField
-          label="和解金额(数字)"
+          label="Settlement Numerical Amount (without $)"
           v-model="formData.settlementNumericalAmount"
           prop="settlementNumericalAmount"
           type="number"
-          placeholder="请输入和解金额"
+          placeholder="50,000"
           :min="0"
           :precision="2"
           required
           @change="handleAmountChange"
         />
         
-        <FormField
-          label="和解金额(大写)"
-          v-model="formData.settlementWrittenAmount"
-          prop="settlementWrittenAmount"
-          type="text"
-          placeholder="例如：FIFTY THOUSAND"
-          required
-          description="请输入金额的英文大写形式（不含&quot;Dollars&quot;）"
-        />
+        <div class="amount-words-field">
+          <FormField
+            label="Settlement Written Amount (without Dollars)"
+            v-model="formData.settlementWrittenAmount"
+            prop="settlementWrittenAmount"
+            type="text"
+            placeholder="e.g. FIFTY THOUSAND"
+            required
+            description="Automatically generated based on numerical amount, can be manually edited"
+          />
+          <el-button 
+            v-if="formData.settlementNumericalAmount > 0"
+            type="primary" 
+            size="small" 
+            @click="generateAmountWords"
+            title="Regenerate based on numerical amount"
+            style="margin-top: 8px; align-self: flex-start;"
+          >
+            <el-icon><Refresh /></el-icon>
+            Regenerate
+          </el-button>
+        </div>
         
         <FormField
-          label="分期付款详情"
+          label="Installment Payments"
           v-model="formData.installmentPayment"
           prop="installmentPayment"
           type="textarea"
-          placeholder="例如：$25,000 payable no later than March 1, 2020; $25,000 payable no later than June 1, 2020"
+          placeholder='e.g. $50,000 payable no later than March 1, 2020'
           :rows="4"
-          description="可添加多个分期付款安排，用分号分隔"
+          description="Can add multiple installment payment, with semicolon separating each item. Can add number and date for each installment."
         />
       </FormGroup>
 
-      <!-- 辩护律师信息 -->
+      <!-- Defense Counsel Information -->
       <FormGroup
-        title="辩护律师信息"
-        description="被告方律师和律师事务所的联系信息"
+        title="Defense Counsel Information"
+        description="Defense attorney and law firm contact information"
         icon="Postcard"
         variant="default"
         :columns="2"
       >
         <FormField
-          label="联系方式"
+          label="Defense Counsel Contact Method"
           v-model="formData.defenseContactMethod"
           prop="defenseContactMethod"
           type="select"
-          placeholder="请选择联系方式"
+          placeholder="Select contact method"
           :options="contactMethodOptions"
           required
+          description="Options: Email, Facsimile, used to send default notification"
           @change="handleContactMethodChange"
         />
         
@@ -147,118 +161,146 @@
         />
         
         <FormField
-          label="辩护律师姓名"
+          label="Defense Counsel Name"
           v-model="formData.defenseCounselName"
           prop="defenseCounselName"
           type="text"
-          placeholder="请输入辩护律师姓名"
+          placeholder="e.g. De Att"
           required
         />
         
         <FormField
-          label="辩护律师事务所"
+          label="Defense Counsel Firm"
           v-model="formData.defenseCounselFirm"
           prop="defenseCounselFirm"
           type="text"
-          placeholder="请输入辩护律师事务所名称"
+          placeholder="e.g. DA, PC"
           required
         />
         
         <FormField
-          label="辩护事务所地址"
+          label="Defense Firm Address"
           v-model="formData.defenseFirmAddress"
           prop="defenseFirmAddress"
           type="textarea"
-          placeholder="请输入辩护律师事务所的完整地址"
+          placeholder="e.g. 123 Hill St, Los Angeles, CA 90018"
           :rows="3"
           required
         />
       </FormGroup>
 
-      <!-- 语法助手 -->
+      <!-- Grammar Helper -->
       <FormGroup
-        title="语法助手"
-        description="根据当事人数量自动生成的语法形式"
+        title="Grammar Helper"
+        description="Automatically generated grammar forms based on number of parties"
         icon="ChatDotRound"
         variant="bordered"
         :columns="2"
       >
         <FormField
-          label="原告复数形式"
+          label="Plaintiff Plurality"
           :model-value="plaintiffPlurality"
           type="text"
           :is-calculated="true"
           :display-value="plaintiffPlurality"
+          description="Plaintiff or Plaintiffs - automatically applied based on single or multiple plaintiffs"
         />
         
         <FormField
-          label="被告复数形式"
+          label="Defendant Plurality"
           :model-value="defendantPlurality"
           type="text"
           :is-calculated="true"
           :display-value="defendantPlurality"
+          description="Defendant or Defendants - automatically applied based on single or multiple defendants"
         />
       </FormGroup>
 
-      <!-- 和解协议预览 -->
+      <!-- Settlement Agreement Preview -->
       <FormGroup
-        title="和解协议预览"
-        description="根据输入信息生成的和解协议格式预览"
+        title="Settlement Agreement Preview"
+        description="Settlement agreement format preview generated based on input information"
         icon="Document"
         variant="card"
         :columns="1"
       >
         <div class="agreement-preview">
-          <h4>和解协议要点：</h4>
+          <h4>Settlement Agreement Key Points:</h4>
           <div class="preview-content">
             <div class="agreement-section">
-              <strong>案件信息：</strong>
-              <p>{{ formData.caseName || '待输入案件名称' }}</p>
-              <p>案件号：{{ formData.caseNumber || '待分配' }}</p>
-              <p>法院：{{ formData.courtName || '待输入法院名称' }}</p>
+              <strong>Case Information:</strong>
+              <p>{{ formData?.caseName || 'To be entered case name' }}</p>
+              <p>Case Number: {{ formData?.caseNumber || 'To be assigned' }}</p>
+              <p>Court: {{ formData?.courtName || 'To be entered court name' }}</p>
             </div>
             
             <div class="agreement-section">
-              <strong>当事人：</strong>
-              <p>{{ plaintiffPlurality }}：{{ formData.plaintiffName || '待输入原告' }}</p>
-              <p>{{ defendantPlurality }}：{{ formData.defendantName || '待输入被告' }}</p>
+              <strong>Parties:</strong>
+              <p>{{ plaintiffPlurality }}: {{ formData?.plaintiffName || 'To be entered plaintiff' }}</p>
+              <p>{{ defendantPlurality }}: {{ formData?.defendantName || 'To be entered defendant' }}</p>
             </div>
             
             <div class="agreement-section">
-              <strong>和解金额：</strong>
-              <p v-if="formData.settlementNumericalAmount > 0">
+              <strong>Settlement Amount:</strong>
+              <p v-if="formData?.settlementNumericalAmount > 0">
                 ${{ formData.settlementNumericalAmount.toLocaleString() }} 
-                ({{ formData.settlementWrittenAmount || '大写金额待输入' }} DOLLARS)
+                ({{ formData?.settlementWrittenAmount || 'Written amount to be entered' }} DOLLARS)
               </p>
-              <p v-else>待输入和解金额</p>
+              <p v-else>To be entered settlement amount</p>
             </div>
             
-            <div class="agreement-section" v-if="formData.installmentPayment">
-              <strong>付款安排：</strong>
+            <div class="agreement-section" v-if="formData?.installmentPayment">
+              <strong>Payment Arrangement:</strong>
               <div style="white-space: pre-line;">{{ formData.installmentPayment }}</div>
             </div>
             
             <div class="agreement-section">
-              <strong>律师联系信息：</strong>
-              <p>{{ formData.defenseCounselName || '待输入律师姓名' }}</p>
-              <p>{{ formData.defenseCounselFirm || '待输入事务所' }}</p>
-              <p style="white-space: pre-line;">{{ formData.defenseFirmAddress || '待输入地址' }}</p>
+              <strong>Defense Counsel Contact Information:</strong>
+              <p>{{ formData?.defenseCounselName || 'To be entered counsel name' }}</p>
+              <p>{{ formData?.defenseCounselFirm || 'To be entered firm' }}</p>
+              <p style="white-space: pre-line;">{{ formData?.defenseFirmAddress || 'To be entered address' }}</p>
               <p v-if="formattedContactMethod">{{ formattedContactMethod }}</p>
             </div>
           </div>
         </div>
       </FormGroup>
 
-      <!-- 表单统计 -->
+      <!-- Execution Information -->
       <FormGroup
-        title="表单统计"
-        description="当前表单的完成状态和数据统计"
+        title="Execution Information"
+        description="Execution date and related information of the settlement agreement"
+        icon="Calendar"
+        variant="bordered"
+        :columns="2"
+      >
+        <FormField
+          label="Agreement Execution Date"
+          :model-value="executedDate"
+          type="text"
+          :is-calculated="true"
+          :display-value="executedDate"
+          description="Settlement agreement signing execution date, automatically generated as current date"
+        />
+        
+        <FormField
+          label="Agreement Validity"
+          :model-value="agreementValidity"
+          type="text"
+          :is-calculated="true"
+          :display-value="agreementValidity"
+        />
+      </FormGroup>
+
+      <!-- Form Statistics -->
+      <FormGroup
+        title="Form Statistics"
+        description="Completion status and data statistics of the current form"
         icon="PieChart"
         variant="default"
         :columns="3"
       >
         <FormField
-          label="完成进度"
+          label="Completion Progress"
           :model-value="completionPercentage"
           type="number"
           :is-calculated="true"
@@ -266,15 +308,15 @@
         />
         
         <FormField
-          label="总金额"
-          :model-value="formData.settlementNumericalAmount"
+          label="Total Amount"
+          :model-value="formData?.settlementNumericalAmount"
           type="number"
           :is-calculated="true"
-          :display-value="`$${(formData.settlementNumericalAmount || 0).toLocaleString()}`"
+          :display-value="`$${(formData?.settlementNumericalAmount || 0).toLocaleString()}`"
         />
         
         <FormField
-          label="表单状态"
+          label="Form Status"
           :model-value="formStatus"
           type="text"
           :is-calculated="true"
@@ -287,6 +329,7 @@
 
 <script setup>
 import { ref, computed } from 'vue'
+import { Refresh } from '@element-plus/icons-vue'
 import FormGroup from '@/components/common/FormGroup.vue'
 import FormField from '@/components/common/FormField.vue'
 import { useFormStore } from '@/stores/formStore'
@@ -295,19 +338,14 @@ import {
   FIELD_TOOLTIPS,
   VALIDATION_RULES 
 } from '@/utils/constants'
-import { getPlurality } from '@/utils/calculations'
+import { getPlurality, convertAmountToWords, formatLegalDate } from '@/utils/calculations'
 
 // 使用表单状态管理
 const formStore = useFormStore()
 const formRef = ref()
 
-// 表单数据
-const formData = computed({
-  get: () => formStore.settlementForm,
-  set: (value) => {
-    // 这里可以添加额外的处理逻辑
-  }
-})
+// 表单数据 - 直接使用 ref，支持双向绑定
+const formData = formStore.settlementForm
 
 // 联系方式选项
 const contactMethodOptions = CONTACT_METHOD_OPTIONS
@@ -328,42 +366,42 @@ const validationRules = {
 
 // 动态联系方式输入
 const showContactInput = computed(() => {
-  return formData.value.defenseContactMethod && formData.value.defenseContactMethod !== ''
+  return formData.value?.defenseContactMethod && formData.value.defenseContactMethod !== ''
 })
 
 const contactInputLabel = computed(() => {
-  return formData.value.defenseContactMethod === 'email' ? '邮箱地址' : '传真号码'
+  return formData.value?.defenseContactMethod === 'email' ? 'Email Address' : 'Fax Number'
 })
 
 const contactInputType = computed(() => {
-  return formData.value.defenseContactMethod === 'email' ? 'email' : 'text'
+  return formData.value?.defenseContactMethod === 'email' ? 'email' : 'text'
 })
 
 const contactInputPlaceholder = computed(() => {
-  return formData.value.defenseContactMethod === 'email' 
-    ? '请输入邮箱地址' 
-    : '请输入传真号码 (格式: 123-456-7890)'
+  return formData.value?.defenseContactMethod === 'email' 
+    ? 'Enter email address' 
+    : 'Enter fax number (format: 123-456-7890)'
 })
 
 const contactInputProp = computed(() => {
-  return formData.value.defenseContactMethod === 'email' ? 'defenseEmail' : 'defenseFax'
+  return formData.value?.defenseContactMethod === 'email' ? 'defenseEmail' : 'defenseFax'
 })
 
 const contactInputValue = computed({
   get: () => {
-    return formData.value.defenseContactMethod === 'email' 
+    return formData.value?.defenseContactMethod === 'email' 
       ? formData.value.defenseEmail || ''
       : formData.value.defenseFax || ''
   },
   set: (value) => {
-    const field = formData.value.defenseContactMethod === 'email' ? 'defenseEmail' : 'defenseFax'
+    const field = formData.value?.defenseContactMethod === 'email' ? 'defenseEmail' : 'defenseFax'
     formStore.updateSettlementForm(field, value)
   }
 })
 
 // 格式化的联系方式显示
 const formattedContactMethod = computed(() => {
-  if (!formData.value.defenseContactMethod) return ''
+  if (!formData.value?.defenseContactMethod) return ''
   
   const method = formData.value.defenseContactMethod
   const value = method === 'email' ? formData.value.defenseEmail : formData.value.defenseFax
@@ -376,12 +414,12 @@ const formattedContactMethod = computed(() => {
 
 // 复数形式
 const plaintiffPlurality = computed(() => {
-  const plurality = getPlurality(formData.value.plaintiffName)
+  const plurality = getPlurality(formData.value?.plaintiffName || '')
   return plurality.form1
 })
 
 const defendantPlurality = computed(() => {
-  const plurality = getPlurality(formData.value.defendantName)
+  const plurality = getPlurality(formData.value?.defendantName || '')
   return plurality.form1Defendant
 })
 
@@ -391,12 +429,12 @@ const totalRequiredFields = computed(() => {
 })
 
 const filledRequiredFields = computed(() => {
-  return Object.keys(validationRules).filter(field => {
+  return formData.value ? Object.keys(validationRules).filter(field => {
     const value = formData.value[field]
     if (typeof value === 'string') return value.trim() !== '' && value !== ' '
     if (typeof value === 'number') return value > 0
     return value !== null && value !== undefined
-  }).length
+  }).length : 0
 })
 
 const completionPercentage = computed(() => {
@@ -407,11 +445,23 @@ const completionPercentage = computed(() => {
 
 const formStatus = computed(() => {
   const percentage = completionPercentage.value
-  if (percentage === 100) return '已完成'
-  if (percentage >= 80) return '接近完成'
-  if (percentage >= 50) return '半数完成'
-  if (percentage >= 20) return '已开始'
-  return '未开始'
+  if (percentage === 100) return 'Completed'
+  if (percentage >= 80) return 'Near Completion'
+  if (percentage >= 50) return 'Half Complete'
+  if (percentage >= 20) return 'Started'
+  return 'Not Started'
+})
+
+// 自动日期字段
+const executedDate = computed(() => {
+  return formatLegalDate(new Date())
+})
+
+const agreementValidity = computed(() => {
+  const percentage = completionPercentage.value
+  if (percentage === 100) return 'Valid Agreement'
+  if (percentage >= 80) return 'Near Complete'
+  return 'To be Improved'
 })
 
 // 字段变更处理
@@ -423,7 +473,13 @@ const handleFieldChange = (value, field) => {
 
 const handleAmountChange = (value) => {
   formStore.updateSettlementForm('settlementNumericalAmount', value)
-  // 这里可以添加自动生成大写金额的逻辑
+  // 自动生成大写金额
+  if (value && value > 0) {
+    const wordsAmount = convertAmountToWords(value)
+    formStore.updateSettlementForm('settlementWrittenAmount', wordsAmount)
+  } else {
+    formStore.updateSettlementForm('settlementWrittenAmount', '')
+  }
 }
 
 const handleContactMethodChange = (value) => {
@@ -435,6 +491,14 @@ const handleContactMethodChange = (value) => {
 
 const handleContactInputChange = (value) => {
   contactInputValue.value = value
+}
+
+const generateAmountWords = () => {
+  const amount = formData.value?.settlementNumericalAmount
+  if (amount && amount > 0) {
+    const wordsAmount = convertAmountToWords(amount)
+    formStore.updateSettlementForm('settlementWrittenAmount', wordsAmount)
+  }
 }
 
 // 表单提交
@@ -517,6 +581,25 @@ defineExpose({
 .agreement-section p {
   margin: 0 0 var(--spacing-xs) 0;
   color: var(--text-primary);
+}
+
+.amount-words-field {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-sm);
+}
+
+.amount-words-field .el-button {
+  width: fit-content;
+  background: linear-gradient(135deg, var(--primary-color), var(--primary-color-light));
+  border: none;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  transition: all 0.3s ease;
+}
+
+.amount-words-field .el-button:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
 }
 
 /* 响应式调整 */

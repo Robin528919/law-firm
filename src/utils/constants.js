@@ -1,23 +1,23 @@
 /**
- * 法律文书表单常量定义
+ * Legal Document Form Constants Definition
  */
 
-// 表单类型选项
+// Form Type Options
 export const FORM_TYPES = [
   {
     value: 'complaint',
-    label: '起诉/损害赔偿表单 (Complaint/Damages)',
-    description: '用于创建劳动法起诉和损害赔偿文书'
+    label: 'Complaint/Damages Form',
+    description: 'Create labor law complaint and damage calculation documents'
   },
   {
     value: 'answer',
-    label: '回复表单 (M&C RE Answer)',
-    description: '用于创建法庭回复文书'
+    label: 'M&C RE Answer Form',
+    description: 'Create court reply documents'
   },
   {
     value: 'settlement',
-    label: '和解协议表单 (Settlement Agreement - Payments)',
-    description: '用于创建和解协议和付款安排文书'
+    label: 'Settlement Agreement (Payments) Form',
+    description: 'Create settlement agreement and payment arrangement documents'
   }
 ]
 
@@ -65,20 +65,20 @@ export const CAUSES_OF_ACTION = [
   }
 ]
 
-// 薪资周期选项
+// Pay Period Options
 export const PAY_PERIOD_OPTIONS = [
-  { value: 'daily', label: '日薪 (Daily)' },
-  { value: 'weekly', label: '周薪 (Weekly)' },
-  { value: 'bi-weekly', label: '双周薪 (Bi-Weekly)' },
-  { value: 'monthly', label: '月薪 (Monthly)' },
-  { value: 'bi-monthly', label: '双月薪 (Bi-Monthly)' },
-  { value: 'quarterly', label: '季薪 (Quarterly)' }
+  { value: 'daily', label: 'Daily' },
+  { value: 'weekly', label: 'Weekly' },
+  { value: 'bi-weekly', label: 'Bi-Weekly' },
+  { value: 'monthly', label: 'Monthly' },
+  { value: 'bi-monthly', label: 'Bi-Monthly' },
+  { value: 'quarterly', label: 'Quarterly' }
 ]
 
-// 联系方式选项
+// Contact Method Options
 export const CONTACT_METHOD_OPTIONS = [
-  { value: 'email', label: '邮件 (Email)' },
-  { value: 'facsimile', label: '传真 (Facsimile)' }
+  { value: 'email', label: 'Email' },
+  { value: 'facsimile', label: 'Facsimile' }
 ]
 
 // 美国州列表（用于公司类型）
@@ -135,28 +135,28 @@ export const US_STATES = [
   { value: 'WY', label: 'Wyoming' }
 ]
 
-// 表单验证规则
+// Form Validation Rules
 export const VALIDATION_RULES = {
-  required: { required: true, message: '此字段为必填项', trigger: 'blur' },
-  email: { type: 'email', message: '请输入有效的邮箱地址', trigger: 'blur' },
-  number: { type: 'number', message: '请输入有效的数字', trigger: 'blur' },
-  date: { type: 'date', message: '请选择有效的日期', trigger: 'change' },
+  required: { required: true, message: 'This field is required', trigger: 'blur' },
+  email: { type: 'email', message: 'Please enter a valid email address', trigger: 'blur' },
+  number: { type: 'number', message: 'Please enter a valid number', trigger: 'blur' },
+  date: { type: 'date', message: 'Please select a valid date', trigger: 'change' },
   phone: { 
     pattern: /^\d{3}-\d{3}-\d{4}$/, 
-    message: '请输入有效的电话号码格式 (XXX-XXX-XXXX)', 
+    message: 'Please enter a valid phone number format (XXX-XXX-XXXX)', 
     trigger: 'blur' 
   }
 }
 
-// 字段提示信息
+// Field Tooltip Information
 export const FIELD_TOOLTIPS = {
-  plaintiffName: '原告姓名，多个原告请用逗号分隔，每个姓名后会自动添加 ", an individual,"',
-  defendantName: '被告姓名，如果是公司请选择注册州，例如 "a California corporation."',
-  courtLocation: '法院所在县名，请使用全大写字母，例如 "LOS ANGELES"',
-  caseNumber: '案件编号，如果暂无请留空',
-  doe: '根据雇佣期间和诉讼时效自动计算的雇佣周数',
-  hourlyRate: '员工的时薪，用于计算各项损害赔偿',
-  weeklyHours: '员工每周实际工作小时数',
-  overtimeHours: '每周超过40小时以上的加班时间',
-  damageCalculated: '此金额根据输入的数据自动计算，不可手动修改'
+  plaintiffName: 'Plaintiff name, multiple plaintiffs separated by commas, each name will automatically add ", an individual,"',
+  defendantName: 'Defendant name, if corporation, please select the state of incorporation, e.g. "a California corporation."',
+  courtLocation: 'County name where the court is located, please use all capital letters, e.g. "LOS ANGELES"',
+  caseNumber: 'Case number, leave empty if not available yet',
+  doe: 'Number of weeks employed automatically calculated based on employment period and statute of limitations',
+  hourlyRate: 'Employee hourly rate, used to calculate various damage compensations',
+  weeklyHours: 'Actual hours worked by employee per week',
+  overtimeHours: 'Overtime hours exceeding 40 hours per week',
+  damageCalculated: 'This amount is automatically calculated based on input data and cannot be manually modified'
 } 

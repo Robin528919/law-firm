@@ -8,174 +8,176 @@
       size="default"
       @submit.prevent="handleSubmit"
     >
-      <!-- 基本信息 -->
+      <!-- Basic Information -->
       <FormGroup
-        title="基本信息"
-        description="法庭回复文书的基本信息"
+        title="Basic Information"
+        description="Basic information for court reply documents"
         icon="Document"
         variant="card"
         :columns="2"
       >
-        <FormField
-          label="信件日期"
-          :model-value="formData.letterDate"
-          prop="letterDate"
-          type="date"
-          placeholder="请选择信件日期"
-          required
-          @change="(value) => handleFieldChange(value, 'letterDate')"
-        />
+        <el-form-item label="Letter Date" prop="letterDate">
+          <el-date-picker 
+            v-model="formData.letterDate" 
+            type="date" 
+            placeholder="e.g. June 23, 2025" 
+            style="width: 100%" 
+            value-format="YYYY-MM-DD"
+            format="YYYY-MM-DD"
+          />
+        </el-form-item>
         
-        <FormField
-          label="回复截止日期"
-          :model-value="formData.respDate"
-          prop="respDate"
-          type="date"
-          placeholder="请选择回复截止日期"
-          required
-          @change="(value) => handleFieldChange(value, 'respDate')"
-        />
+        <el-form-item label="Last Date to Respond" prop="respDate">
+          <el-date-picker 
+            v-model="formData.respDate" 
+            type="date" 
+            placeholder="e.g. June 30, 2025" 
+            style="width: 100%" 
+            value-format="YYYY-MM-DD"
+            format="YYYY-MM-DD"
+          />
+        </el-form-item>
       </FormGroup>
 
-      <!-- 案件信息 -->
+      <!-- Case Information -->
       <FormGroup
-        title="案件信息"
-        description="相关案件的详细信息"
+        title="Case Information"
+        description="Detailed information of the related case"
         icon="FolderOpened"
         variant="bordered"
         :columns="2"
       >
         <FormField
-          label="案件名称"
+          label="Case Name"
           v-model="formData.caseName"
           prop="caseName"
           type="text"
-          placeholder="请输入完整的案件名称"
+          placeholder="e.g. James Doe v. Chris Wu"
           required
         />
         
         <FormField
-          label="案件号"
+          label="Case Number"
           v-model="formData.caseNumber"
           prop="caseNumber"
           type="text"
-          placeholder="请输入案件编号"
+          placeholder="e.g. LASC123456"
           required
         />
         
         <FormField
-          label="被告姓名"
+          label="Defendant Name"
           v-model="formData.defendantName"
           prop="defendantName"
           type="text"
-          placeholder="请输入被告姓名"
+          placeholder="e.g. Chris Wu"
           required
         />
         
         <FormField
-          label="抗辩编号"
+          label="Affirmative Defense Number Subject to Demurrer"
           v-model="formData.adNumber"
           prop="adNumber"
           type="text"
-          placeholder="例如：First through Twentieth"
+          placeholder="e.g. First through Twentieth"
           required
-          description="输入需要抗辩的编号范围，例如：First through Twentieth"
+          description="Enter the range of affirmative defense numbers subject to demurrer"
         />
       </FormGroup>
 
-      <!-- 对方律师信息 -->
+      <!-- Opposing Counsel Information -->
       <FormGroup
-        title="对方律师信息"
-        description="对方律师和律师事务所的详细信息"
+        title="Opposing Counsel Information"
+        description="Detailed information of opposing counsel and law firm"
         icon="Avatar"
         variant="card"
         :columns="1"
       >
         <FormField
-          label="对方律师姓名"
+          label="Opposing Counsel's Name"
           v-model="formData.ocName"
           prop="ocName"
           type="textarea"
-          placeholder="请输入对方律师姓名，支持多行输入"
+          placeholder="e.g. Amy Doe\nBryant Doe"
           :rows="3"
           required
-          description="支持多个律师姓名，可使用换行分隔"
+          description="Allow line break for multiple counsel names"
         />
         
         <FormField
-          label="对方律师事务所"
+          label="Opposing Firm Name"
           v-model="formData.ocFirm"
           prop="ocFirm"
           type="text"
-          placeholder="请输入对方律师事务所名称"
+          placeholder="e.g. ABC, PC"
           required
         />
         
         <FormField
-          label="对方事务所地址"
+          label="Opposing Firm Address"
           v-model="formData.ocAddress"
           prop="ocAddress"
           type="textarea"
-          placeholder="请输入对方律师事务所的完整地址"
+          placeholder="e.g. 123 Grand Ave, Los Angeles, CA 90019"
           :rows="4"
           required
-          description="请输入完整的邮寄地址，支持多行格式"
+          description="Allow line break for complete mailing address"
         />
       </FormGroup>
 
-      <!-- 格式化预览 -->
+      <!-- Formatted Preview -->
       <FormGroup
-        title="格式化预览"
-        description="根据输入信息生成的标准化格式预览"
+        title="Formatted Preview"
+        description="Standardized format preview generated based on input information"
         icon="View"
         variant="default"
         :columns="1"
       >
         <div class="preview-section">
-          <h4>信件头部信息：</h4>
+          <h4>Letter Header Information:</h4>
           <div class="preview-content">
-            <p><strong>日期：</strong> {{ formattedLetterDate }}</p>
-            <p><strong>案件：</strong> {{ formData.caseName || '待输入' }}</p>
-            <p><strong>案件号：</strong> {{ formData.caseNumber || '待输入' }}</p>
+            <p><strong>Date:</strong> {{ formattedLetterDate }}</p>
+            <p><strong>Case:</strong> {{ formData?.caseName || 'To be entered' }}</p>
+            <p><strong>Case Number:</strong> {{ formData?.caseNumber || 'To be entered' }}</p>
           </div>
           
-          <h4 style="margin-top: 20px;">对方律师信息：</h4>
+          <h4 style="margin-top: 20px;">Opposing Counsel Information:</h4>
           <div class="preview-content">
-            <div v-if="formData.ocName" style="white-space: pre-line;">
+            <div v-if="formData?.ocName" style="white-space: pre-line;">
               {{ formData.ocName }}
             </div>
-            <div v-else class="placeholder-text">对方律师姓名 - 待输入</div>
+            <div v-else class="placeholder-text">Opposing Counsel's Name - To be entered</div>
             
-            <div v-if="formData.ocFirm" style="margin-top: 8px;">
+            <div v-if="formData?.ocFirm" style="margin-top: 8px;">
               {{ formData.ocFirm }}
             </div>
-            <div v-else class="placeholder-text">律师事务所 - 待输入</div>
+            <div v-else class="placeholder-text">Law Firm - To be entered</div>
             
-            <div v-if="formData.ocAddress" style="margin-top: 8px; white-space: pre-line;">
+            <div v-if="formData?.ocAddress" style="margin-top: 8px; white-space: pre-line;">
               {{ formData.ocAddress }}
             </div>
-            <div v-else class="placeholder-text">事务所地址 - 待输入</div>
+            <div v-else class="placeholder-text">Firm Address - To be entered</div>
           </div>
           
-          <h4 style="margin-top: 20px;">关键信息：</h4>
+          <h4 style="margin-top: 20px;">Key Information:</h4>
           <div class="preview-content">
-            <p><strong>被告：</strong> {{ formData.defendantName || '待输入' }}</p>
-            <p><strong>抗辩编号：</strong> {{ formData.adNumber || '待输入' }}</p>
-            <p><strong>回复截止：</strong> {{ formattedRespDate }}</p>
+            <p><strong>Defendant:</strong> {{ formData?.defendantName || 'To be entered' }}</p>
+            <p><strong>Affirmative Defense Number:</strong> {{ formData?.adNumber || 'To be entered' }}</p>
+            <p><strong>Response Deadline:</strong> {{ formattedRespDate }}</p>
           </div>
         </div>
       </FormGroup>
 
-      <!-- 表单统计 -->
+      <!-- Form Statistics -->
       <FormGroup
-        title="表单统计"
-        description="当前表单的完成状态和数据统计"
+        title="Form Statistics"
+        description="Completion status and data statistics of the current form"
         icon="DataAnalysis"
         variant="bordered"
         :columns="2"
       >
         <FormField
-          label="必填字段完成度"
+          label="Required Fields Completion"
           :model-value="completionPercentage"
           type="number"
           :is-calculated="true"
@@ -183,7 +185,7 @@
         />
         
         <FormField
-          label="表单状态"
+          label="Form Status"
           :model-value="formStatus"
           type="text"
           :is-calculated="true"
@@ -191,19 +193,19 @@
         />
         
         <FormField
-          label="总字段数"
+          label="Total Fields"
           :model-value="totalFields"
           type="number"
           :is-calculated="true"
-          :display-value="`${totalFields} 个`"
+          :display-value="`${totalFields} fields`"
         />
         
         <FormField
-          label="已填写字段"
+          label="Filled Fields"
           :model-value="filledFields"
           type="number"
           :is-calculated="true"
-          :display-value="`${filledFields} 个`"
+          :display-value="`${filledFields} fields`"
         />
       </FormGroup>
     </el-form>
@@ -222,13 +224,8 @@ import { formatLegalDate } from '@/utils/calculations'
 const formStore = useFormStore()
 const formRef = ref()
 
-// 表单数据
-const formData = computed({
-  get: () => formStore.answerForm,
-  set: (value) => {
-    // 这里可以添加额外的处理逻辑
-  }
-})
+// 表单数据 - 直接使用 ref，支持双向绑定
+const formData = formStore.answerForm
 
 // 验证规则
 const validationRules = {
@@ -245,23 +242,23 @@ const validationRules = {
 
 // 格式化日期
 const formattedLetterDate = computed(() => {
-  return formData.value.letterDate ? formatLegalDate(formData.value.letterDate) : '待选择'
+  return formData.value?.letterDate ? formatLegalDate(formData.value.letterDate) : '待选择'
 })
 
 const formattedRespDate = computed(() => {
-  return formData.value.respDate ? formatLegalDate(formData.value.respDate) : '待选择'
+  return formData.value?.respDate ? formatLegalDate(formData.value.respDate) : '待选择'
 })
 
 // 表单统计
 const totalFields = computed(() => {
-  return Object.keys(formData.value).length
+  return formData.value ? Object.keys(formData.value).length : 0
 })
 
 const filledFields = computed(() => {
-  return Object.values(formData.value).filter(value => {
+  return formData.value ? Object.values(formData.value).filter(value => {
     if (typeof value === 'string') return value.trim() !== ''
     return value !== null && value !== undefined
-  }).length
+  }).length : 0
 })
 
 const completionPercentage = computed(() => {
@@ -271,11 +268,11 @@ const completionPercentage = computed(() => {
 
 const formStatus = computed(() => {
   const percentage = completionPercentage.value
-  if (percentage === 100) return '已完成'
-  if (percentage >= 80) return '接近完成'
-  if (percentage >= 50) return '半数完成'
-  if (percentage >= 20) return '已开始'
-  return '未开始'
+  if (percentage === 100) return 'Completed'
+  if (percentage >= 80) return 'Near Completion'
+  if (percentage >= 50) return 'Half Complete'
+  if (percentage >= 20) return 'Started'
+  return 'Not Started'
 })
 
 // 字段变更处理

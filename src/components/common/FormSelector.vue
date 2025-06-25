@@ -3,16 +3,16 @@
     <div class="selector-header">
       <h2 class="selector-title">
         <el-icon class="title-icon"><Menu /></el-icon>
-        选择表单类型
+        Select Form Type
       </h2>
-      <p class="selector-description">请选择您要创建的法律文书类型，系统将自动加载相应的表单字段和计算逻辑。</p>
+      <p class="selector-description">Please select the type of legal document you want to create. The system will automatically load the corresponding form fields and calculation logic.</p>
     </div>
     
     <div class="selector-content">
       <el-select
         v-model="currentFormType"
         @change="handleFormTypeChange"
-        placeholder="请选择表单类型"
+        placeholder="Please select form type"
         size="large"
         style="width: 100%"
         :disabled="isChanging"
@@ -86,26 +86,26 @@ const getFormIcon = (formType) => {
   return iconMap[formType] || Document
 }
 
-// 获取表单特性
+// Get form features
 const getFormFeatures = (formType) => {
   const featuresMap = {
     complaint: [
-      '自动计算损害赔偿',
-      '支持多种起诉原因',
-      '智能日期处理',
-      '复数形式自动判断'
+      'Automatic damage calculation',
+      'Multiple causes of action support',
+      'Smart date processing',
+      'Automatic plural form judgment'
     ],
     answer: [
-      '标准法庭回复格式',
-      '自动日期格式化',
-      '支持多行地址输入',
-      '简洁高效的界面'
+      'Standard court reply format',
+      'Automatic date formatting',
+      'Multi-line address input support',
+      'Clean and efficient interface'
     ],
     settlement: [
-      '分期付款计算',
-      '多种联系方式',
-      '金额大小写转换',
-      '完整协议生成'
+      'Installment payment calculation',
+      'Multiple contact methods',
+      'Amount case conversion',
+      'Complete agreement generation'
     ]
   }
   return featuresMap[formType] || []
@@ -129,11 +129,11 @@ const handleFormTypeChange = async (newType) => {
     
     if (hasData) {
       await ElMessageBox.confirm(
-        '切换表单类型将清空当前数据，是否继续？',
-        '确认切换',
+        'Switching form type will clear current data. Do you want to continue?',
+        'Confirm Switch',
         {
-          confirmButtonText: '确定切换',
-          cancelButtonText: '取消',
+          confirmButtonText: 'Switch',
+          cancelButtonText: 'Cancel',
           type: 'warning',
           customClass: 'form-switch-dialog'
         }
@@ -155,11 +155,11 @@ const handleFormTypeChange = async (newType) => {
 const getCurrentFormData = () => {
   switch (currentFormType.value) {
     case 'complaint':
-      return formStore.complaintForm
+      return formStore.complaintForm.value // 修复：获取ref的value
     case 'answer':
-      return formStore.answerForm
+      return formStore.answerForm.value // 修复：获取ref的value
     case 'settlement':
-      return formStore.settlementForm
+      return formStore.settlementForm.value // 修复：获取ref的value
     default:
       return {}
   }

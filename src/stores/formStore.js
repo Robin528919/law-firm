@@ -69,6 +69,8 @@ export const useFormStore = defineStore('form', () => {
     settlementNumericalAmount: 0,
     installmentPayment: '',
     defenseContactMethod: '',
+    defenseEmail: '',
+    defenseFax: '',
     defenseCounselName: '',
     defenseCounselFirm: '',
     defenseFirmAddress: ''

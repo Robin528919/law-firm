@@ -234,4 +234,72 @@ export const calculate4SOL = (complaintFilingDate) => {
 export const generateCauseNumber = (index) => {
   const numbers = ['FIRST', 'SECOND', 'THIRD', 'FOURTH', 'FIFTH', 'SIXTH', 'SEVENTH', 'EIGHTH']
   return numbers[index] || 'FIRST'
+}
+
+/**
+ * 将数字转换为英文大写形式（适用于法律文书）
+ * @param {number} amount - 金额数字
+ * @returns {string} 英文大写金额（不含"DOLLARS"）
+ */
+export const convertAmountToWords = (amount) => {
+  if (!amount || amount === 0) return ''
+  
+  const ones = ['', 'ONE', 'TWO', 'THREE', 'FOUR', 'FIVE', 'SIX', 'SEVEN', 'EIGHT', 'NINE', 
+                'TEN', 'ELEVEN', 'TWELVE', 'THIRTEEN', 'FOURTEEN', 'FIFTEEN', 'SIXTEEN', 
+                'SEVENTEEN', 'EIGHTEEN', 'NINETEEN']
+  
+  const tens = ['', '', 'TWENTY', 'THIRTY', 'FORTY', 'FIFTY', 'SIXTY', 'SEVENTY', 'EIGHTY', 'NINETY']
+  
+  const scales = ['', 'THOUSAND', 'MILLION', 'BILLION']
+  
+  function convertHundreds(n) {
+    let result = ''
+    
+    if (n >= 100) {
+      result += ones[Math.floor(n / 100)] + ' HUNDRED'
+      n %= 100
+      if (n > 0) result += ' '
+    }
+    
+    if (n >= 20) {
+      result += tens[Math.floor(n / 10)]
+      n %= 10
+      if (n > 0) result += '-' + ones[n]
+    } else if (n > 0) {
+      result += ones[n]
+    }
+    
+    return result
+  }
+  
+  // 处理小数部分
+  const [wholePart, decimalPart] = amount.toString().split('.')
+  let wholeAmount = parseInt(wholePart)
+  
+  if (wholeAmount === 0) return 'ZERO'
+  
+  let result = ''
+  let scaleIndex = 0
+  
+  while (wholeAmount > 0) {
+    const chunk = wholeAmount % 1000
+    if (chunk !== 0) {
+      const chunkWords = convertHundreds(chunk)
+      if (scaleIndex > 0) {
+        result = chunkWords + ' ' + scales[scaleIndex] + (result ? ' ' + result : '')
+      } else {
+        result = chunkWords
+      }
+    }
+    wholeAmount = Math.floor(wholeAmount / 1000)
+    scaleIndex++
+  }
+  
+  // 处理小数部分（如果需要）
+  if (decimalPart && parseInt(decimalPart) > 0) {
+    const cents = parseInt(decimalPart.padEnd(2, '0').substring(0, 2))
+    result += ' AND ' + convertHundreds(cents) + ' CENTS'
+  }
+  
+  return result
 } 
