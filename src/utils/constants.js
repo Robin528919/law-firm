@@ -41,27 +41,92 @@ export const CAUSES_OF_ACTION = [
   {
     value: 'overtime_wages',
     label: 'FAILURE TO PAY OVERTIME WAGES',
-    description: '[Labor Code §§ 510, 1194]'
+    description: '[Labor Code §§ 510 and 1194 et seq.]'
+  },
+  {
+    value: 'waiting_time_penalties',
+    label: 'FAILURE TO PAY WAGES DUE UPON TERMINATION: WAITING TIME PENALTIES',
+    description: '[Labor Code §§ 201, 202 and 203]'
   },
   {
     value: 'wage_statements',
-    label: 'FAILURE TO PROVIDE ACCURATE WAGE STATEMENTS',
-    description: '[Labor Code § 226]'
+    label: 'FAILURE TO ISSUE ACCURATE ITEMIZED WAGE STATEMENTS',
+    description: '[Labor Code § 226 et seq.]'
   },
   {
-    value: 'waiting_time',
-    label: 'WAITING TIME PENALTIES',
-    description: '[Labor Code §§ 201-203]'
+    value: 'unfair_business_practices',
+    label: 'UNLAWFUL/UNFAIR BUSINESS PRACTICES',
+    description: '[Business and Professions Code § 17200 et seq.]'
   },
   {
-    value: 'business_expenses',
-    label: 'FAILURE TO REIMBURSE BUSINESS EXPENSES',
+    value: 'work_expenses',
+    label: 'FAILURE TO REMIBURSE WORK RELATED EXPENSES',
     description: '[Labor Code § 2802]'
   },
   {
-    value: 'unfair_business',
-    label: 'UNFAIR BUSINESS PRACTICES',
-    description: '[Business and Professions Code § 17200 et seq.]'
+    value: 'workers_comp_retaliation',
+    label: 'RETALIATION FOR FILING A WORKERS\' COMPENSATION CLAIM',
+    description: '[Labor Code § 132(a)]'
+  },
+  {
+    value: 'disability_discrimination',
+    label: 'DISCRIMINATION BASED ON DISABILITY OR RELATED MEDICAL CONDITION',
+    description: '[Government Code § 12940 et seq.]'
+  },
+  {
+    value: 'reasonable_accommodation',
+    label: 'FAILURE TO PROVIDE REASONABLE ACCOMMODATION FOR DISABILITY / MEDICAL CONDITION',
+    description: '[Govt. Code § 12940 et seq.]'
+  },
+  {
+    value: 'interactive_process',
+    label: 'FAILURE TO ENTER INTO AN INTERACTIVE PROCESS',
+    description: '[Govt. Code § 12940 et seq.]'
+  },
+  {
+    value: 'medical_leave_retaliation',
+    label: 'RETALIATION: UNLAWFUL DISCHARGE FOR TAKING MEDICAL LEAVE AND REQUEST FOR ACCOMMODATION',
+    description: '[Govt. Code § 12940 et seq.]'
+  },
+  {
+    value: 'sex_race_discrimination',
+    label: 'DISCRIMINATION BASED UPON SEX AND/OR RACE/ETHNICITY – DISPARATE IMPACT',
+    description: '[CAL. GOV. CODE §§ 12940, ET SEQ.]'
+  },
+  {
+    value: 'prevent_discrimination',
+    label: 'FAILURE TO PREVENT DISCRIMINATION AND HARASSMENT',
+    description: '[Government Code § 12940 et seq.]'
+  },
+  {
+    value: 'whistleblower_retaliation',
+    label: 'WHISTLEBLOWER RETALIATION',
+    description: '[Cal. Lab. Code § 1102.5]'
+  },
+  {
+    value: 'wrongful_termination',
+    label: 'WRONGFUL TERMINATION IN VIOLATION OF PUBLIC POLICY',
+    description: ''
+  },
+  {
+    value: 'sexual_harassment',
+    label: 'SEXUAL HARASSMENT (HOSTILE WORK ENVIRONMENT)',
+    description: '[Government Code § 12940 et seq.]'
+  },
+  {
+    value: 'feha_retaliation',
+    label: 'RETALIATION IN VIOLATION OF FEHA',
+    description: '[Cal. Gov. Code §§ 12940, et seq.]'
+  },
+  {
+    value: 'intentional_emotional_distress',
+    label: 'INTENTIONAL INFLICTION OF EMOTIONAL DISTRESS',
+    description: ''
+  },
+  {
+    value: 'negligent_emotional_distress',
+    label: 'NEGLIGENT INFLICTION OF EMOTIONAL DISTRESS',
+    description: ''
   }
 ]
 

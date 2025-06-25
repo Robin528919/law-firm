@@ -334,4 +334,21 @@ const handleBlur = (event) => {
 :deep(.disabled-field .el-input__wrapper) {
   background-color: var(--background-light) !important;
 }
+
+/* 复选框组样式 - 一行一个选项 */
+:deep(.el-checkbox-group) {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+:deep(.el-checkbox) {
+  width: 100%;
+  margin-right: 0 !important;
+}
+
+:deep(.el-checkbox__label) {
+  width: 100%;
+  padding-left: 8px;
+}
 </style> 
