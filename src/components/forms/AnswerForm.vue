@@ -14,7 +14,7 @@
         description="Basic information for court reply documents"
         icon="Document"
         variant="card"
-        :columns="2"
+        :columns="1"
       >
         <el-form-item label="Letter Date" prop="letterDate">
           <el-date-picker 
@@ -45,7 +45,7 @@
         description="Detailed information of the related case"
         icon="FolderOpened"
         variant="bordered"
-        :columns="2"
+        :columns="1"
       >
         <FormField
           label="Case Name"
@@ -65,14 +65,19 @@
           required
         />
         
-        <FormField
-          label="Defendant Name"
-          v-model="formData.defendantName"
-          prop="defendantName"
-          type="text"
-          placeholder="e.g. Chris Wu"
-          required
-        />
+        <!-- Defendant Name Complex Field -->
+        <div class="defendant-name-group">
+          <label class="field-group-label">Defendant Name</label>
+          <DefendantNameField
+            :defendant-name="formData.defendantName"
+            :defendant-state="formData.defendantState"
+            :defendant-entity-type="formData.defendantEntityType"
+            required
+            @update:defendant-name="(value) => handleFieldChange(value, 'defendantName')"
+            @update:defendant-state="(value) => handleFieldChange(value, 'defendantState')"
+            @update:defendant-entity-type="(value) => handleFieldChange(value, 'defendantEntityType')"
+          />
+        </div>
         
         <FormField
           label="Affirmative Defense Number Subject to Demurrer"
@@ -161,7 +166,7 @@
           
           <h4 style="margin-top: 20px;">Key Information:</h4>
           <div class="preview-content">
-            <p><strong>Defendant:</strong> {{ formData?.defendantName || 'To be entered' }}</p>
+            <p><strong>Defendant:</strong> {{ formStore.formattedAnswerDefendantName || 'To be entered' }}</p>
             <p><strong>Affirmative Defense Number:</strong> {{ formData?.adNumber || 'To be entered' }}</p>
             <p><strong>Response Deadline:</strong> {{ formattedRespDate }}</p>
           </div>
@@ -174,7 +179,7 @@
         description="Completion status and data statistics of the current form"
         icon="DataAnalysis"
         variant="bordered"
-        :columns="2"
+        :columns="1"
       >
         <FormField
           label="Required Fields Completion"
@@ -216,6 +221,7 @@
 import { ref, computed } from 'vue'
 import FormGroup from '@/components/common/FormGroup.vue'
 import FormField from '@/components/common/FormField.vue'
+import DefendantNameField from '@/components/common/DefendantNameField.vue'
 import { useFormStore } from '@/stores/formStore'
 import { VALIDATION_RULES } from '@/utils/constants'
 import { formatLegalDate } from '@/utils/calculations'
@@ -236,6 +242,8 @@ const validationRules = {
   caseName: [VALIDATION_RULES.required],
   caseNumber: [VALIDATION_RULES.required],
   defendantName: [VALIDATION_RULES.required],
+  defendantState: [VALIDATION_RULES.required],
+  defendantEntityType: [VALIDATION_RULES.required],
   adNumber: [VALIDATION_RULES.required],
   respDate: [VALIDATION_RULES.required, VALIDATION_RULES.date]
 }
@@ -354,6 +362,26 @@ defineExpose({
 .placeholder-text {
   color: var(--text-light);
   font-style: italic;
+}
+
+/* Defendant Name Group */
+.defendant-name-group {
+  margin-bottom: var(--spacing-lg);
+  grid-column: 1 / -1; /* 跨越整个网格 */
+}
+
+.field-group-label {
+  display: block;
+  font-size: var(--font-sm);
+  font-weight: 500;
+  color: var(--text-primary);
+  margin-bottom: var(--spacing-md);
+}
+
+.field-group-label::after {
+  content: ' *';
+  color: var(--danger-color);
+  font-weight: bold;
 }
 
 /* 响应式调整 */

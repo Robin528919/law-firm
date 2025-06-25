@@ -1,7 +1,7 @@
 import { defineStore } from 'pinia'
 import { ref, computed } from 'vue'
 import * as calculations from '@/utils/calculations'
-import { formatLegalDate } from '@/utils/calculations'
+import { formatLegalDate, formatDefendantName } from '@/utils/calculations'
 
 export const useFormStore = defineStore('form', () => {
   // 当前选中的表单类型
@@ -16,6 +16,8 @@ export const useFormStore = defineStore('form', () => {
     plaintiffName: '',
     plaintiffJob: '',
     defendantName: '',
+    defendantState: '',
+    defendantEntityType: '',
     courtLocation: '',
     courtName: '',
     caseNumber: ' ', // 默认空格
@@ -57,6 +59,8 @@ export const useFormStore = defineStore('form', () => {
     caseName: '',
     caseNumber: '',
     defendantName: '',
+    defendantState: '',
+    defendantEntityType: '',
     adNumber: '',
     respDate: null
   })
@@ -65,6 +69,8 @@ export const useFormStore = defineStore('form', () => {
   const settlementForm = ref({
     plaintiffName: '',
     defendantName: '',
+    defendantState: '',
+    defendantEntityType: '',
     courtName: '',
     caseName: '',
     caseNumber: ' ', // 默认空格
@@ -79,6 +85,24 @@ export const useFormStore = defineStore('form', () => {
     defenseFirmAddress: ''
   })
   
+  // 格式化的被告名称（起诉表单）
+  const formattedComplaintDefendantName = computed(() => {
+    const form = complaintForm.value
+    return formatDefendantName(form.defendantName, form.defendantState, form.defendantEntityType)
+  })
+
+  // 格式化的被告名称（回复表单）
+  const formattedAnswerDefendantName = computed(() => {
+    const form = answerForm.value
+    return formatDefendantName(form.defendantName, form.defendantState, form.defendantEntityType)
+  })
+
+  // 格式化的被告名称（和解表单）
+  const formattedSettlementDefendantName = computed(() => {
+    const form = settlementForm.value
+    return formatDefendantName(form.defendantName, form.defendantState, form.defendantEntityType)
+  })
+
   // 起诉表单的计算字段
   const complaintCalculations = computed(() => {
     const form = complaintForm.value
@@ -159,7 +183,7 @@ export const useFormStore = defineStore('form', () => {
     
     // 复数形式
     const plaintiffPlurality = calculations.getPlurality(form.plaintiffName)
-    const defendantPlurality = calculations.getPlurality(form.defendantName)
+    const defendantPlurality = calculations.getPlurality(formattedComplaintDefendantName.value)
     
     // 状态判断
     const overtimeStatus = calculations.calculateOvertimeStatus(form.weeklyHours)
@@ -425,6 +449,9 @@ export const useFormStore = defineStore('form', () => {
     
     // 计算属性
     complaintCalculations,
+    formattedComplaintDefendantName,
+    formattedAnswerDefendantName,
+    formattedSettlementDefendantName,
     isFormValid,
     
     // 方法

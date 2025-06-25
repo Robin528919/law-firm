@@ -14,7 +14,7 @@
         description="Plaintiff and defendant information in the settlement agreement"
         icon="UserFilled"
         variant="card"
-        :columns="2"
+        :columns="1"
       >
         <FormField
           label="Plaintiff Name"
@@ -27,16 +27,19 @@
           @change="(value) => handleFieldChange(value, 'plaintiffName')"
         />
 
-        <FormField
-          label="Defendant Name"
-          v-model="formData.defendantName"
-          prop="defendantName"
-          type="text"
-          placeholder="e.g. Chris Wu"
-          required
-          description="Can add multiple. If corporation, need to select state. For example, a California corporation."
-          @change="(value) => handleFieldChange(value, 'defendantName')"
-        />
+        <!-- Defendant Name Complex Field -->
+        <div class="defendant-name-group">
+          <label class="field-group-label">Defendant Name</label>
+          <DefendantNameField
+            :defendant-name="formData.defendantName"
+            :defendant-state="formData.defendantState"
+            :defendant-entity-type="formData.defendantEntityType"
+            required
+            @update:defendant-name="(value) => handleFieldChange(value, 'defendantName')"
+            @update:defendant-state="(value) => handleFieldChange(value, 'defendantState')"
+            @update:defendant-entity-type="(value) => handleFieldChange(value, 'defendantEntityType')"
+          />
+        </div>
       </FormGroup>
 
       <!-- Case Information -->
@@ -45,7 +48,7 @@
         description="Court and case details information"
         icon="ScaleToOriginal"
         variant="bordered"
-        :columns="2"
+        :columns="1"
       >
         <FormField
           label="Court Name"
@@ -81,7 +84,7 @@
         description="Settlement amount information and payment arrangements"
         icon="Money"
         variant="card"
-        :columns="2"
+        :columns="1"
       >
         <FormField
           label="Settlement Numerical Amount (without $)"
@@ -135,7 +138,7 @@
         description="Defense attorney and law firm contact information"
         icon="Postcard"
         variant="default"
-        :columns="2"
+        :columns="1"
       >
         <FormField
           label="Defense Counsel Contact Method"
@@ -195,7 +198,7 @@
         description="Automatically generated grammar forms based on number of parties"
         icon="ChatDotRound"
         variant="bordered"
-        :columns="2"
+        :columns="1"
       >
         <FormField
           label="Plaintiff Plurality"
@@ -237,7 +240,7 @@
             <div class="agreement-section">
               <strong>Parties:</strong>
               <p>{{ plaintiffPlurality }}: {{ formData?.plaintiffName || 'To be entered plaintiff' }}</p>
-              <p>{{ defendantPlurality }}: {{ formData?.defendantName || 'To be entered defendant' }}</p>
+              <p>{{ defendantPlurality }}: {{ formStore.formattedSettlementDefendantName || 'To be entered defendant' }}</p>
             </div>
 
             <div class="agreement-section">
@@ -271,7 +274,7 @@
         description="Execution date and related information of the settlement agreement"
         icon="Calendar"
         variant="bordered"
-        :columns="2"
+        :columns="1"
       >
         <FormField
           label="Agreement Execution Date"
@@ -297,7 +300,7 @@
         description="Completion status and data statistics of the current form"
         icon="PieChart"
         variant="default"
-        :columns="3"
+        :columns="1"
       >
         <FormField
           label="Completion Progress"
@@ -332,6 +335,7 @@ import { ref, computed } from 'vue'
 import { Refresh } from '@element-plus/icons-vue'
 import FormGroup from '@/components/common/FormGroup.vue'
 import FormField from '@/components/common/FormField.vue'
+import DefendantNameField from '@/components/common/DefendantNameField.vue'
 import { useFormStore } from '@/stores/formStore'
 import {
   CONTACT_METHOD_OPTIONS,
@@ -353,6 +357,8 @@ const contactMethodOptions = CONTACT_METHOD_OPTIONS
 const validationRules = {
   plaintiffName: [VALIDATION_RULES.required],
   defendantName: [VALIDATION_RULES.required],
+  defendantState: [VALIDATION_RULES.required],
+  defendantEntityType: [VALIDATION_RULES.required],
   courtName: [VALIDATION_RULES.required],
   caseName: [VALIDATION_RULES.required],
   settlementWrittenAmount: [VALIDATION_RULES.required],
@@ -418,7 +424,7 @@ const plaintiffPlurality = computed(() => {
 })
 
 const defendantPlurality = computed(() => {
-  const plurality = getPlurality(formData.value?.defendantName || '')
+  const plurality = getPlurality(formStore.formattedSettlementDefendantName || '')
   return plurality.form1Defendant
 })
 
@@ -599,6 +605,26 @@ defineExpose({
 .amount-words-field .el-button:hover {
   transform: translateY(-1px);
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+}
+
+/* Defendant Name Group */
+.defendant-name-group {
+  margin-bottom: var(--spacing-lg);
+  grid-column: 1 / -1; /* 跨越整个网格 */
+}
+
+.field-group-label {
+  display: block;
+  font-size: var(--font-sm);
+  font-weight: 500;
+  color: var(--text-primary);
+  margin-bottom: var(--spacing-md);
+}
+
+.field-group-label::after {
+  content: ' *';
+  color: var(--danger-color);
+  font-weight: bold;
 }
 
 /* 响应式调整 */

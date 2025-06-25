@@ -14,7 +14,7 @@
         description="Basic party and court information for the complaint case"
         icon="User"
         variant="card"
-        :columns="2"
+        :columns="1"
       >
         <FormField
           label="Plaintiff Name"
@@ -36,16 +36,19 @@
           required
         />
         
-        <FormField
-          label="Defendant Name"
-          v-model="formData.defendantName"
-          prop="defendantName"
-          type="text"
-          placeholder="e.g. Chris Wu"
-          required
-          description="Can add multiple. If corporation, need to select state. For example, a California corporation."
-          @change="(value) => handleFieldChange(value, 'defendantName')"
-        />
+        <!-- Defendant Name Complex Field -->
+        <div class="defendant-name-group">
+          <label class="field-group-label">Defendant Name</label>
+          <DefendantNameField
+            :defendant-name="formData.defendantName"
+            :defendant-state="formData.defendantState"
+            :defendant-entity-type="formData.defendantEntityType"
+            required
+            @update:defendant-name="(value) => handleFieldChange(value, 'defendantName')"
+            @update:defendant-state="(value) => handleFieldChange(value, 'defendantState')"
+            @update:defendant-entity-type="(value) => handleFieldChange(value, 'defendantEntityType')"
+          />
+        </div>
         
         <FormField
           label="Court Location (County)"
@@ -119,7 +122,7 @@
         description="Residence and workplace address information of the parties"
         icon="LocationFilled"
         variant="default"
-        :columns="2"
+        :columns="1"
       >
         <FormField
           label="Plaintiff Residence (County, State)"
@@ -157,7 +160,7 @@
         description="Plaintiff's employment period and working conditions information"
         icon="Briefcase"
         variant="card"
-        :columns="2"
+        :columns="1"
       >
         <el-form-item label="Start Date of the Employment" prop="employmentStartDate">
           <el-date-picker 
@@ -236,7 +239,7 @@
         description="Pay period, IWC order and other related information"
         icon="Setting"
         variant="bordered"
-        :columns="2"
+        :columns="1"
       >
         <FormField
           label="Pay Period Interval"
@@ -320,7 +323,7 @@
         description="Legal-related data automatically calculated based on the above information"
         icon="Calculator"
         variant="card"
-        :columns="2"
+        :columns="1"
       >
         <FormField
           label="Number of Weeks Employed (DOE)"
@@ -435,7 +438,7 @@
         description="Automatically generated grammar forms based on number of parties"
         icon="ChatDotRound"
         variant="default"
-        :columns="2"
+        :columns="1"
       >
         <FormField
           label="Plaintiff Plurality 1"
@@ -480,7 +483,7 @@
         description="Statute of limitations and execution dates calculated based on filing date"
         icon="Calendar"
         variant="bordered"
-        :columns="2"
+        :columns="1"
       >
         <FormField
           label="Executed Date"
@@ -526,6 +529,7 @@
 import { ref, computed, watch } from 'vue'
 import FormGroup from '@/components/common/FormGroup.vue'
 import FormField from '@/components/common/FormField.vue'
+import DefendantNameField from '@/components/common/DefendantNameField.vue'
 import { useFormStore } from '@/stores/formStore'
 import { 
   CAUSES_OF_ACTION, 
@@ -549,6 +553,8 @@ const validationRules = {
   plaintiffName: [VALIDATION_RULES.required],
   plaintiffJob: [VALIDATION_RULES.required],
   defendantName: [VALIDATION_RULES.required],
+  defendantState: [VALIDATION_RULES.required],
+  defendantEntityType: [VALIDATION_RULES.required],
   courtLocation: [VALIDATION_RULES.required],
   courtName: [VALIDATION_RULES.required],
   complaintFilingDate: [VALIDATION_RULES.required, VALIDATION_RULES.date],
@@ -625,6 +631,25 @@ defineExpose({
 :deep(.total-damage-field .calculated-label) {
   background: var(--success-color) !important;
   color: white !important;
+}
+
+/* Defendant Name Group */
+.defendant-name-group {
+  margin-bottom: var(--spacing-lg);
+}
+
+.field-group-label {
+  display: block;
+  font-size: var(--font-sm);
+  font-weight: 500;
+  color: var(--text-primary);
+  margin-bottom: var(--spacing-md);
+}
+
+.field-group-label::after {
+  content: ' *';
+  color: var(--danger-color);
+  font-weight: bold;
 }
 
 /* 响应式调整 */

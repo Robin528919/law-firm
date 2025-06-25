@@ -302,4 +302,59 @@ export const convertAmountToWords = (amount) => {
   }
   
   return result
+}
+
+/**
+ * 格式化被告名称
+ * @param {string} name - 被告基础名称
+ * @param {string} state - 州名称或代码
+ * @param {string} entityType - 主体类型
+ * @returns {string} 格式化后的被告名称
+ */
+export const formatDefendantName = (name, state, entityType) => {
+  if (!name || !name.trim()) {
+    return ''
+  }
+  
+  // 基础名称
+  let formattedName = name.trim()
+  
+  // 如果有州和主体类型，添加格式化后缀
+  if (state && entityType) {
+    // 获取州的全名（从代码转换为全名）
+    const stateMap = {
+      'AL': 'Alabama', 'AK': 'Alaska', 'AZ': 'Arizona', 'AR': 'Arkansas', 'CA': 'California',
+      'CO': 'Colorado', 'CT': 'Connecticut', 'DE': 'Delaware', 'FL': 'Florida', 'GA': 'Georgia',
+      'HI': 'Hawaii', 'ID': 'Idaho', 'IL': 'Illinois', 'IN': 'Indiana', 'IA': 'Iowa',
+      'KS': 'Kansas', 'KY': 'Kentucky', 'LA': 'Louisiana', 'ME': 'Maine', 'MD': 'Maryland',
+      'MA': 'Massachusetts', 'MI': 'Michigan', 'MN': 'Minnesota', 'MS': 'Mississippi', 'MO': 'Missouri',
+      'MT': 'Montana', 'NE': 'Nebraska', 'NV': 'Nevada', 'NH': 'New Hampshire', 'NJ': 'New Jersey',
+      'NM': 'New Mexico', 'NY': 'New York', 'NC': 'North Carolina', 'ND': 'North Dakota', 'OH': 'Ohio',
+      'OK': 'Oklahoma', 'OR': 'Oregon', 'PA': 'Pennsylvania', 'RI': 'Rhode Island', 'SC': 'South Carolina',
+      'SD': 'South Dakota', 'TN': 'Tennessee', 'TX': 'Texas', 'UT': 'Utah', 'VT': 'Vermont',
+      'VA': 'Virginia', 'WA': 'Washington', 'WV': 'West Virginia', 'WI': 'Wisconsin', 'WY': 'Wyoming'
+    }
+    
+    const stateLabel = (stateMap[state.toUpperCase()] || state).toLowerCase()
+    
+    // 根据主体类型选择适当的描述
+    let entityDescription = ''
+    switch (entityType.toLowerCase()) {
+      case 'corporation':
+        entityDescription = 'corporation'
+        break
+      case 'llc':
+        entityDescription = 'limited liability company'
+        break
+      case 'partnership':
+        entityDescription = 'partnership'
+        break
+      default:
+        entityDescription = entityType.toLowerCase()
+    }
+    
+    formattedName += `, a ${stateLabel} ${entityDescription}`
+  }
+  
+  return formattedName
 } 

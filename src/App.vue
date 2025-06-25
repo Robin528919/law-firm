@@ -84,8 +84,8 @@ const currentFormProgress = computed(() => {
 // Calculate complaint form progress
 const calculateComplaintProgress = () => {
   const requiredFields = [
-    'plaintiffName', 'plaintiffJob', 'defendantName', 'courtLocation', 
-    'courtName', 'complaintFilingDate', 'selectedCauses', 'plaintiffResidence',
+    'plaintiffName', 'plaintiffJob', 'defendantName', 'defendantState', 'defendantEntityType',
+    'courtLocation', 'courtName', 'complaintFilingDate', 'selectedCauses', 'plaintiffResidence',
     'defendantBusinessType', 'defendantBusinessAddress', 'employmentStartDate',
     'employmentEndDate', 'hourlyRate', 'unpaidHours', 'weeklyHours',
     'payPeriodInterval', 'iwcOrder', 'payPeriods'
@@ -105,7 +105,7 @@ const calculateComplaintProgress = () => {
 const calculateAnswerProgress = () => {
   const requiredFields = [
     'letterDate', 'ocName', 'ocFirm', 'ocAddress', 'caseName',
-    'caseNumber', 'defendantName', 'adNumber', 'respDate'
+    'caseNumber', 'defendantName', 'defendantState', 'defendantEntityType', 'adNumber', 'respDate'
   ]
   
   const filledFields = requiredFields.filter(field => {
@@ -120,7 +120,7 @@ const calculateAnswerProgress = () => {
 // Calculate settlement agreement form progress
 const calculateSettlementProgress = () => {
   const requiredFields = [
-    'plaintiffName', 'defendantName', 'courtName', 'caseName',
+    'plaintiffName', 'defendantName', 'defendantState', 'defendantEntityType', 'courtName', 'caseName',
     'settlementWrittenAmount', 'settlementNumericalAmount', 'defenseContactMethod',
     'defenseCounselName', 'defenseCounselFirm', 'defenseFirmAddress'
   ]

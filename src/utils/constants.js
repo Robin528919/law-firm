@@ -146,6 +146,13 @@ export const CONTACT_METHOD_OPTIONS = [
   { value: 'facsimile', label: 'Facsimile' }
 ]
 
+// Entity Type Options for Defendant
+export const ENTITY_TYPE_OPTIONS = [
+  { value: 'corporation', label: 'Corporation' },
+  { value: 'llc', label: 'LLC' },
+  { value: 'partnership', label: 'Partnership' }
+]
+
 // 美国州列表（用于公司类型）
 export const US_STATES = [
   { value: 'AL', label: 'Alabama' },
