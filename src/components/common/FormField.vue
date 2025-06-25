@@ -289,7 +289,7 @@ const handleBlur = (event) => {
   top: 50%;
   right: 12px;
   transform: translateY(-50%);
-  display: flex;
+  display: none; /* 隐藏自动计算标签 */
   align-items: center;
   gap: 4px;
   font-size: 12px;
