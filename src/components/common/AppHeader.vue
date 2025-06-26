@@ -4,9 +4,8 @@
       <div class="header-brand">
         <h1 class="header-title">
           <el-icon class="header-icon"><Document /></el-icon>
-          Legal Document Form System
+          Jack Law Sample Generator
         </h1>
-        <p class="header-subtitle">Professional Legal Document Generation Tool - Supporting Complaint/Damages, Answer Forms, Settlement Agreements</p>
       </div>
       
       <div class="header-actions">
