@@ -82,7 +82,9 @@ export const useFormStore = defineStore('form', () => {
     defenseFax: '',
     defenseCounselName: '',
     defenseCounselFirm: '',
-    defenseFirmAddress: ''
+    defenseFirmAddress: '',
+    plaintiffPlurality1: 'Plaintiff',
+    defendantPlurality1: 'Defendant'
   })
   
   // 格式化的被告名称（起诉表单）

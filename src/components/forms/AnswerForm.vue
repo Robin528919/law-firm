@@ -172,47 +172,6 @@
           </div>
         </div>
       </FormGroup>
-
-      <!-- Form Statistics -->
-      <FormGroup
-        title="Form Statistics"
-        description="Completion status and data statistics of the current form"
-        icon="DataAnalysis"
-        variant="bordered"
-        :columns="1"
-      >
-        <FormField
-          label="Required Fields Completion"
-          :model-value="completionPercentage"
-          type="number"
-          :is-calculated="true"
-          :display-value="`${completionPercentage}%`"
-        />
-        
-        <FormField
-          label="Form Status"
-          :model-value="formStatus"
-          type="text"
-          :is-calculated="true"
-          :display-value="formStatus"
-        />
-        
-        <FormField
-          label="Total Fields"
-          :model-value="totalFields"
-          type="number"
-          :is-calculated="true"
-          :display-value="`${totalFields} fields`"
-        />
-        
-        <FormField
-          label="Filled Fields"
-          :model-value="filledFields"
-          type="number"
-          :is-calculated="true"
-          :display-value="`${filledFields} fields`"
-        />
-      </FormGroup>
     </el-form>
   </div>
 </template>
@@ -250,37 +209,11 @@ const validationRules = {
 
 // 格式化日期
 const formattedLetterDate = computed(() => {
-  return formData.value?.letterDate ? formatLegalDate(formData.value.letterDate) : '待选择'
+  return formData.value?.letterDate ? formatLegalDate(formData.value.letterDate) : 'To be selected'
 })
 
 const formattedRespDate = computed(() => {
-  return formData.value?.respDate ? formatLegalDate(formData.value.respDate) : '待选择'
-})
-
-// 表单统计
-const totalFields = computed(() => {
-  return formData.value ? Object.keys(formData.value).length : 0
-})
-
-const filledFields = computed(() => {
-  return formData.value ? Object.values(formData.value).filter(value => {
-    if (typeof value === 'string') return value.trim() !== ''
-    return value !== null && value !== undefined
-  }).length : 0
-})
-
-const completionPercentage = computed(() => {
-  const percentage = totalFields.value > 0 ? Math.round((filledFields.value / totalFields.value) * 100) : 0
-  return Math.min(percentage, 100)
-})
-
-const formStatus = computed(() => {
-  const percentage = completionPercentage.value
-  if (percentage === 100) return 'Completed'
-  if (percentage >= 80) return 'Near Completion'
-  if (percentage >= 50) return 'Half Complete'
-  if (percentage >= 20) return 'Started'
-  return 'Not Started'
+  return formData.value?.respDate ? formatLegalDate(formData.value.respDate) : 'To be selected'
 })
 
 // 字段变更处理

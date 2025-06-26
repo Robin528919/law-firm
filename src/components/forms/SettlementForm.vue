@@ -201,21 +201,19 @@
         :columns="1"
       >
         <FormField
-          label="Plaintiff Plurality"
-          :model-value="plaintiffPlurality"
+          label="Plaintiff"
+          v-model="formData.plaintiffPlurality1"
           type="text"
           :is-calculated="true"
-          :display-value="plaintiffPlurality"
-          description="Plaintiff or Plaintiffs - automatically applied based on single or multiple plaintiffs"
+          description='"Plaintiff" or "Plaintiffs". Need to be automatically applied upon single plaintiff or multiple plaintiff'
         />
 
         <FormField
-          label="Defendant Plurality"
-          :model-value="defendantPlurality"
+          label="Defendant"
+          v-model="formData.defendantPlurality1"
           type="text"
           :is-calculated="true"
-          :display-value="defendantPlurality"
-          description="Defendant or Defendants - automatically applied based on single or multiple defendants"
+          description='"Defendant" or "Defendants". Need to be automatically applied upon single defendant or multiple defendants.'
         />
       </FormGroup>
 
@@ -239,8 +237,8 @@
 
             <div class="agreement-section">
               <strong>Parties:</strong>
-              <p>{{ plaintiffPlurality }}: {{ formData?.plaintiffName || 'To be entered plaintiff' }}</p>
-              <p>{{ defendantPlurality }}: {{ formStore.formattedSettlementDefendantName || 'To be entered defendant' }}</p>
+              <p>{{ formData.plaintiffPlurality1 }}: {{ formData?.plaintiffName || 'To be entered plaintiff' }}</p>
+              <p>{{ formData.defendantPlurality1 }}: {{ formStore.formattedSettlementDefendantName || 'To be entered defendant' }}</p>
             </div>
 
             <div class="agreement-section">
@@ -267,71 +265,12 @@
           </div>
         </div>
       </FormGroup>
-
-      <!-- Execution Information -->
-      <FormGroup
-        title="Execution Information"
-        description="Execution date and related information of the settlement agreement"
-        icon="Calendar"
-        variant="bordered"
-        :columns="1"
-      >
-        <FormField
-          label="Agreement Execution Date"
-          :model-value="executedDate"
-          type="text"
-          :is-calculated="true"
-          :display-value="executedDate"
-          description="Settlement agreement signing execution date, automatically generated as current date"
-        />
-
-        <FormField
-          label="Agreement Validity"
-          :model-value="agreementValidity"
-          type="text"
-          :is-calculated="true"
-          :display-value="agreementValidity"
-        />
-      </FormGroup>
-
-      <!-- Form Statistics -->
-      <FormGroup
-        title="Form Statistics"
-        description="Completion status and data statistics of the current form"
-        icon="PieChart"
-        variant="default"
-        :columns="1"
-      >
-        <FormField
-          label="Completion Progress"
-          :model-value="completionPercentage"
-          type="number"
-          :is-calculated="true"
-          :display-value="`${completionPercentage}%`"
-        />
-
-        <FormField
-          label="Total Amount"
-          :model-value="formData?.settlementNumericalAmount"
-          type="number"
-          :is-calculated="true"
-          :display-value="`$${(formData?.settlementNumericalAmount || 0).toLocaleString()}`"
-        />
-
-        <FormField
-          label="Form Status"
-          :model-value="formStatus"
-          type="text"
-          :is-calculated="true"
-          :display-value="formStatus"
-        />
-      </FormGroup>
     </el-form>
   </div>
 </template>
 
 <script setup>
-import { ref, computed } from 'vue'
+import { ref, computed, watchEffect } from 'vue'
 import { Refresh } from '@element-plus/icons-vue'
 import FormGroup from '@/components/common/FormGroup.vue'
 import FormField from '@/components/common/FormField.vue'
@@ -417,56 +356,32 @@ const formattedContactMethod = computed(() => {
   return `${methodText} to "${value}"`
 })
 
-// 复数形式
-const plaintiffPlurality = computed(() => {
-  const plurality = getPlurality(formData.value?.plaintiffName || '')
-  return plurality.form1
+// 监听原告和被告名称变化，自动更新复数形式
+watchEffect(() => {
+  const plaintiffPlurality = getPlurality(formData.value?.plaintiffName || '')
+  formStore.updateSettlementForm('plaintiffPlurality1', plaintiffPlurality.form1)
+
+  const defendantPlurality = getPlurality(formStore.formattedSettlementDefendantName || '')
+  formStore.updateSettlementForm('defendantPlurality1', defendantPlurality.form1Defendant)
 })
 
-const defendantPlurality = computed(() => {
-  const plurality = getPlurality(formStore.formattedSettlementDefendantName || '')
-  return plurality.form1Defendant
-})
+// 表单提交
+const handleSubmit = async () => {
+  try {
+    const valid = await formRef.value.validate()
+    if (valid) {
+      console.log('和解协议表单验证通过，可以提交')
+    }
+  } catch (error) {
+    console.log('和解协议表单验证失败:', error)
+  }
+}
 
-// 表单统计
-const totalRequiredFields = computed(() => {
-  return Object.keys(validationRules).length
-})
-
-const filledRequiredFields = computed(() => {
-  return formData.value ? Object.keys(validationRules).filter(field => {
-    const value = formData.value[field]
-    if (typeof value === 'string') return value.trim() !== '' && value !== ' '
-    if (typeof value === 'number') return value > 0
-    return value !== null && value !== undefined
-  }).length : 0
-})
-
-const completionPercentage = computed(() => {
-  return totalRequiredFields.value > 0
-    ? Math.round((filledRequiredFields.value / totalRequiredFields.value) * 100)
-    : 0
-})
-
-const formStatus = computed(() => {
-  const percentage = completionPercentage.value
-  if (percentage === 100) return 'Completed'
-  if (percentage >= 80) return 'Near Completion'
-  if (percentage >= 50) return 'Half Complete'
-  if (percentage >= 20) return 'Started'
-  return 'Not Started'
-})
-
-// 自动日期字段
-const executedDate = computed(() => {
-  return formatLegalDate(new Date())
-})
-
-const agreementValidity = computed(() => {
-  const percentage = completionPercentage.value
-  if (percentage === 100) return 'Valid Agreement'
-  if (percentage >= 80) return 'Near Complete'
-  return 'To be Improved'
+// 暴露方法给父组件
+defineExpose({
+  validate: () => formRef.value?.validate(),
+  resetForm: () => formRef.value?.resetFields(),
+  formRef
 })
 
 // 字段变更处理
@@ -505,25 +420,6 @@ const generateAmountWords = () => {
     formStore.updateSettlementForm('settlementWrittenAmount', wordsAmount)
   }
 }
-
-// 表单提交
-const handleSubmit = async () => {
-  try {
-    const valid = await formRef.value.validate()
-    if (valid) {
-      console.log('和解协议表单验证通过，可以提交')
-    }
-  } catch (error) {
-    console.log('和解协议表单验证失败:', error)
-  }
-}
-
-// 暴露方法给父组件
-defineExpose({
-  validate: () => formRef.value?.validate(),
-  resetForm: () => formRef.value?.resetFields(),
-  formRef
-})
 </script>
 
 <style scoped>
