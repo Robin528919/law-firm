@@ -3,41 +3,41 @@
     <!-- Main content area -->
     <div class="main-content">
       <!-- Form selector -->
-      <FormSelector />
-      
+      <FormSelector/>
+
       <!-- Current form content -->
       <div class="form-content" v-if="formStore.currentFormType">
         <!-- Complaint/Damages form -->
-        <ComplaintForm v-if="formStore.currentFormType === 'complaint'" ref="complaintFormRef" />
-        
+        <ComplaintForm v-if="formStore.currentFormType === 'complaint'" ref="complaintFormRef"/>
+
         <!-- Answer form -->
-        <AnswerForm v-if="formStore.currentFormType === 'answer'" ref="answerFormRef" />
-        
+        <AnswerForm v-if="formStore.currentFormType === 'answer'" ref="answerFormRef"/>
+
         <!-- Settlement agreement form -->
-        <SettlementForm v-if="formStore.currentFormType === 'settlement'" ref="settlementFormRef" />
-        
+        <SettlementForm v-if="formStore.currentFormType === 'settlement'" ref="settlementFormRef"/>
+
         <!-- Form action buttons -->
-        <FormActions 
-          variant="default"
-          :show-save="false"
-          :show-export="false"
-          :show-submit="true"
-          :loading="formStore.isLoading"
-          :progress="currentFormProgress"
-          @reset="handleReset"
-          @clear="handleClear"
-          @save="handleSave"
-          @export="handleExport"
-          @submit="handleSubmit"
+        <FormActions
+            variant="default"
+            :show-save="false"
+            :show-export="false"
+            :show-submit="true"
+            :loading="formStore.isLoading"
+            :progress="currentFormProgress"
+            @reset="handleReset"
+            @clear="handleClear"
+            @save="handleSave"
+            @export="handleExport"
+            @submit="handleSubmit"
         />
       </div>
-      
+
       <!-- Prompt when no form is selected -->
       <div class="no-form-selected" v-else>
         <el-empty description="Please select a form type to get started">
           <template #image>
             <el-icon size="120" color="var(--primary-color)">
-              <DocumentCopy />
+              <DocumentCopy/>
             </el-icon>
           </template>
           <el-button type="primary" @click="showFormSelector">Select Form Type</el-button>
@@ -48,16 +48,16 @@
 </template>
 
 <script setup>
-import { ref, computed } from 'vue'
-import { DocumentCopy } from '@element-plus/icons-vue'
-import { ElMessage, ElMessageBox } from 'element-plus'
+import {ref, computed} from 'vue'
+import {DocumentCopy} from '@element-plus/icons-vue'
+import {ElMessage, ElMessageBox} from 'element-plus'
 import AppLayout from '@/components/common/AppLayout.vue'
 import FormSelector from '@/components/common/FormSelector.vue'
 import FormActions from '@/components/common/FormActions.vue'
 import ComplaintForm from '@/components/forms/ComplaintForm.vue'
 import AnswerForm from '@/components/forms/AnswerForm.vue'
 import SettlementForm from '@/components/forms/SettlementForm.vue'
-import { useFormStore } from '@/stores/formStore'
+import {useFormStore} from '@/stores/formStore'
 
 // Use form state management
 const formStore = useFormStore()
@@ -90,14 +90,14 @@ const calculateComplaintProgress = () => {
     'employmentEndDate', 'hourlyRate', 'unpaidHours', 'weeklyHours',
     'payPeriodInterval', 'iwcOrder', 'payPeriods'
   ]
-  
+
   const filledFields = requiredFields.filter(field => {
     const value = formStore.complaintForm[field]
     if (Array.isArray(value)) return value.length > 0
     if (typeof value === 'string') return value.trim() !== ''
     return value !== null && value !== undefined && value !== 0
   }).length
-  
+
   return Math.round((filledFields / requiredFields.length) * 100)
 }
 
@@ -105,15 +105,15 @@ const calculateComplaintProgress = () => {
 const calculateAnswerProgress = () => {
   const requiredFields = [
     'letterDate', 'ocName', 'ocFirm', 'ocAddress', 'caseName',
-    'caseNumber', 'defendantName', 'defendantState', 'defendantEntityType', 'adNumber', 'respDate'
+    'caseNumber', 'defendantName', 'adNumber', 'respDate'
   ]
-  
+
   const filledFields = requiredFields.filter(field => {
     const value = formStore.answerForm[field]
     if (typeof value === 'string') return value.trim() !== ''
     return value !== null && value !== undefined
   }).length
-  
+
   return Math.round((filledFields / requiredFields.length) * 100)
 }
 
@@ -124,14 +124,14 @@ const calculateSettlementProgress = () => {
     'settlementWrittenAmount', 'settlementNumericalAmount', 'defenseContactMethod',
     'defenseCounselName', 'defenseCounselFirm', 'defenseFirmAddress'
   ]
-  
+
   const filledFields = requiredFields.filter(field => {
     const value = formStore.settlementForm[field]
     if (typeof value === 'string') return value.trim() !== '' && value !== ' '
     if (typeof value === 'number') return value > 0
     return value !== null && value !== undefined
   }).length
-  
+
   return Math.round((filledFields / requiredFields.length) * 100)
 }
 
@@ -157,23 +157,23 @@ const showFormSelector = () => {
 // Form operation handlers
 const handleReset = async () => {
   if (!formStore.currentFormType) return
-  
+
   try {
     await ElMessageBox.confirm(
-      'Are you sure you want to reset the current form? This will clear all filled data.',
-      'Confirm Reset',
-      {
-        confirmButtonText: 'OK',
-        cancelButtonText: 'Cancel',
-        type: 'warning',
-      }
+        'Are you sure you want to reset the current form? This will clear all filled data.',
+        'Confirm Reset',
+        {
+          confirmButtonText: 'OK',
+          cancelButtonText: 'Cancel',
+          type: 'warning',
+        }
     )
-    
+
     const formRef = getCurrentFormRef()
     if (formRef && formRef.resetForm) {
       formRef.resetForm()
     }
-    
+
     formStore.resetCurrentForm()
     ElMessage.success('Form has been reset')
   } catch {
@@ -183,18 +183,18 @@ const handleReset = async () => {
 
 const handleClear = async () => {
   if (!formStore.currentFormType) return
-  
+
   try {
     await ElMessageBox.confirm(
-      'Are you sure you want to clear all data in the current form? This operation cannot be undone.',
-      'Confirm Clear',
-      {
-        confirmButtonText: 'OK',
-        cancelButtonText: 'Cancel',
-        type: 'warning',
-      }
+        'Are you sure you want to clear all data in the current form? This operation cannot be undone.',
+        'Confirm Clear',
+        {
+          confirmButtonText: 'OK',
+          cancelButtonText: 'Cancel',
+          type: 'warning',
+        }
     )
-    
+
     formStore.clearCurrentForm()
     ElMessage.success('Data has been cleared')
   } catch {
@@ -204,7 +204,7 @@ const handleClear = async () => {
 
 const handleSave = () => {
   if (!formStore.currentFormType) return
-  
+
   try {
     formStore.saveFormData()
     ElMessage.success('Draft has been saved to local storage')
@@ -215,7 +215,7 @@ const handleSave = () => {
 
 const handleExport = () => {
   if (!formStore.currentFormType) return
-  
+
   try {
     formStore.exportFormDataWithDownload()
     ElMessage.success('Data exported successfully')
@@ -226,19 +226,19 @@ const handleExport = () => {
 
 const handleSubmit = async () => {
   if (!formStore.currentFormType) return
-  
+
   // 检查邮箱地址
   if (!formStore.submissionEmail || !formStore.submissionEmail.trim()) {
     ElMessage.error('Please enter your email address before submitting')
     return
   }
-  
+
   const progress = currentFormProgress.value
   if (progress < 100) {
     ElMessage.warning(`Form completion is ${progress}%. It is recommended to complete all required fields before submitting.`)
     return
   }
-  
+
   // 验证表单
   const formRef = getCurrentFormRef()
   if (formRef && formRef.validate) {
@@ -252,9 +252,26 @@ const handleSubmit = async () => {
           formData: formStore.getCurrentFormData(),
           timestamp: new Date().toISOString()
         }
-        
+
         ElMessage.success('Form submitted successfully!')
-        console.log('Submitted data:', submissionData)
+        // 发送POST请求
+        console.log('提交数据', submissionData)
+        try {
+          const response = await fetch('https://n8n-jacklaw-u42541.vm.elestio.app/webhook-test/b881c94b-a224-4df4-af9c-c2d5cbe337cd', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(submissionData)
+          })
+          if (response.ok) {
+            console.log('表单提交成功')
+          } else {
+            console.log('表单提交失败，服务器返回错误', response.status, await response.text())
+          }
+        } catch (err) {
+          console.log('表单提交失败，网络错误:', err)
+        }
       }
     } catch (error) {
       ElMessage.error('Form validation failed, please check required fields')
@@ -268,7 +285,7 @@ const handleSubmit = async () => {
       formData: formStore.getCurrentFormData(),
       timestamp: new Date().toISOString()
     }
-    
+
     ElMessage.success('Form submitted successfully!')
     console.log('Submitted data:', submissionData)
   }
@@ -325,7 +342,7 @@ const handleSubmit = async () => {
     margin: 0;
     padding: var(--spacing-md);
   }
-  
+
   .form-content {
     max-width: 100%;
     margin-left: 0;
@@ -337,7 +354,7 @@ const handleSubmit = async () => {
   .main-content {
     padding: var(--spacing-md);
   }
-  
+
   .no-form-selected :deep(.el-icon) {
     font-size: 80px !important;
   }

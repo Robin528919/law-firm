@@ -1,127 +1,126 @@
 <template>
   <div class="answer-form">
     <el-form
-      ref="formRef"
-      :model="formData"
-      :rules="validationRules"
-      label-width="160px"
-      size="default"
-      @submit.prevent="handleSubmit"
+        ref="formRef"
+        :model="formData"
+        :rules="validationRules"
+        label-width="160px"
+        size="default"
     >
       <!-- Basic Information -->
       <FormGroup
-        title="Basic Information"
-        description="Basic information for court reply documents"
-        icon="Document"
-        variant="card"
-        :columns="1"
+          title="Basic Information"
+          description="Basic information for court reply documents"
+          icon="Document"
+          variant="card"
+          :columns="1"
       >
         <el-form-item label="Letter Date" prop="letterDate">
-          <el-date-picker 
-            v-model="formData.letterDate" 
-            type="date" 
-            placeholder="e.g. June 23, 2025" 
-            style="width: 100%" 
-            value-format="YYYY-MM-DD"
-            format="MMMM D, YYYY"
+          <el-date-picker
+              v-model="formData.letterDate"
+              type="date"
+              placeholder="e.g. June 23, 2025"
+              style="width: 100%"
+              value-format="YYYY-MM-DD"
+              format="MMMM D, YYYY"
           />
         </el-form-item>
-        
+
         <el-form-item label="Last Date to Respond" prop="respDate">
-          <el-date-picker 
-            v-model="formData.respDate" 
-            type="date" 
-            placeholder="e.g. June 30, 2025" 
-            style="width: 100%" 
-            value-format="YYYY-MM-DD"
-            format="MMMM D, YYYY"
+          <el-date-picker
+              v-model="formData.respDate"
+              type="date"
+              placeholder="e.g. June 30, 2025"
+              style="width: 100%"
+              value-format="YYYY-MM-DD"
+              format="MMMM D, YYYY"
           />
         </el-form-item>
       </FormGroup>
 
       <!-- Opposing Counsel Information -->
       <FormGroup
-        title="Opposing Counsel Information"
-        description="Detailed information of opposing counsel and law firm"
-        icon="Avatar"
-        variant="card"
-        :columns="1"
+          title="Opposing Counsel Information"
+          description="Detailed information of opposing counsel and law firm"
+          icon="Avatar"
+          variant="card"
+          :columns="1"
       >
         <FormField
-          label="Opposing Counsel's Name"
-          v-model="formData.ocName"
-          prop="ocName"
-          type="textarea"
-          placeholder="e.g. Amy Doe\nBryant Doe"
-          :rows="3"
-          required
-          description="Allow line break for multiple counsel names"
+            label="Opposing Counsel's Name"
+            v-model="formData.ocName"
+            prop="ocName"
+            type="textarea"
+            placeholder="e.g. Amy Doe\nBryant Doe"
+            :rows="3"
+            required
+            description="Allow line break for multiple counsel names"
         />
-        
+
         <FormField
-          label="Opposing Firm Name"
-          v-model="formData.ocFirm"
-          prop="ocFirm"
-          type="text"
-          placeholder="e.g. ABC, PC"
-          required
+            label="Opposing Firm Name"
+            v-model="formData.ocFirm"
+            prop="ocFirm"
+            type="text"
+            placeholder="e.g. ABC, PC"
+            required
         />
-        
+
         <FormField
-          label="Opposing Firm Address"
-          v-model="formData.ocAddress"
-          prop="ocAddress"
-          type="textarea"
-          placeholder="e.g. 123 Grand Ave, Los Angeles, CA 90019"
-          :rows="4"
-          required
-          description="Allow line break for complete mailing address"
+            label="Opposing Firm Address"
+            v-model="formData.ocAddress"
+            prop="ocAddress"
+            type="textarea"
+            placeholder="e.g. 123 Grand Ave, Los Angeles, CA 90019"
+            :rows="4"
+            required
+            description="Allow line break for complete mailing address"
         />
       </FormGroup>
 
       <!-- Case Information -->
       <FormGroup
-        title="Case Information"
-        description="Detailed information of the related case"
-        icon="FolderOpened"
-        variant="bordered"
-        :columns="1"
+          title="Case Information"
+          description="Detailed information of the related case"
+          icon="FolderOpened"
+          variant="bordered"
+          :columns="1"
       >
         <FormField
-          label="Case Name"
-          v-model="formData.caseName"
-          prop="caseName"
-          type="text"
-          placeholder="e.g. James Doe v. Chris Wu"
-          required
+            label="Case Name"
+            v-model="formData.caseName"
+            prop="caseName"
+            type="text"
+            placeholder="e.g. James Doe v. Chris Wu"
+            required
         />
-        
+
         <FormField
-          label="Case Number"
-          v-model="formData.caseNumber"
-          prop="caseNumber"
-          type="text"
-          placeholder="e.g. LASC123456"
-          required
+            label="Case Number"
+            v-model="formData.caseNumber"
+            prop="caseNumber"
+            type="text"
+            placeholder="e.g. LASC123456"
+            required
         />
-        
+
         <FormField
-          label="Defendant Name"
-          v-model="formData.defendantName"
-          prop="defendantName"
-          type="text"
-          placeholder="e.g. Chris Wu"
-          required
+            label="Defendant Name"
+            v-model="formData.defendantName"
+            prop="defendantName"
+            type="text"
+            placeholder="e.g. Chris Wu"
+            required
         />
-        
+
         <FormField
-          label="Affirmative Defense Number Subject to Demurrer"
-          v-model="formData.adNumber"
-          prop="adNumber"
-          type="text"
-          placeholder="e.g. First through Twentieth"
-          required
-          description="Enter the range of affirmative defense numbers subject to demurrer"
+            label="Affirmative Defense Number Subject to Demurrer"
+            v-model="formData.adNumber"
+            prop="adNumber"
+            type="text"
+            placeholder="e.g. First through Twentieth"
+            required
+            description="Enter the range of affirmative defense numbers subject to demurrer"
         />
       </FormGroup>
     </el-form>
@@ -129,12 +128,12 @@
 </template>
 
 <script setup>
-import { ref, computed } from 'vue'
+import {ref, computed} from 'vue'
 import FormGroup from '@/components/common/FormGroup.vue'
 import FormField from '@/components/common/FormField.vue'
-import { useFormStore } from '@/stores/formStore'
-import { VALIDATION_RULES } from '@/utils/constants'
-import { formatLegalDate } from '@/utils/calculations'
+import {useFormStore} from '@/stores/formStore'
+import {VALIDATION_RULES} from '@/utils/constants'
+import {formatLegalDate} from '@/utils/calculations'
 
 // 使用表单状态管理
 const formStore = useFormStore()
@@ -172,17 +171,6 @@ const handleFieldChange = (value, field) => {
   }
 }
 
-// 表单提交
-const handleSubmit = async () => {
-  try {
-    const valid = await formRef.value.validate()
-    if (valid) {
-      console.log('回复表单验证通过，可以提交')
-    }
-  } catch (error) {
-    console.log('回复表单验证失败:', error)
-  }
-}
 
 // 暴露方法给父组件
 defineExpose({
@@ -203,4 +191,4 @@ defineExpose({
     font-size: 14px;
   }
 }
-</style> 
+</style>

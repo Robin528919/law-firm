@@ -59,8 +59,6 @@ export const useFormStore = defineStore('form', () => {
     caseName: '',
     caseNumber: '',
     defendantName: '',
-    defendantState: '',
-    defendantEntityType: '',
     adNumber: '',
     respDate: null
   })
