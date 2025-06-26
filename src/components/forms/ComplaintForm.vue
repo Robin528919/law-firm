@@ -5,6 +5,7 @@
       :model="formData"
       :rules="validationRules"
       label-width="160px"
+      label-position="top"
       size="default"
       @submit.prevent="handleSubmit"
     >

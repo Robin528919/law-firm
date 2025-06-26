@@ -277,7 +277,7 @@ const handleSubmit = async () => {
 
 <style scoped>
 .main-content {
-  max-width: 900px;
+  width: 900px;
   margin: 0 auto;
   padding: var(--spacing-lg);
   background: var(--background);
@@ -287,7 +287,7 @@ const handleSubmit = async () => {
 .form-content {
   margin-top: var(--spacing-xl);
   animation: slideIn 0.3s ease-out;
-  max-width: 900px;
+  width: 900px;
   margin-left: auto;
   margin-right: auto;
 }

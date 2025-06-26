@@ -361,11 +361,11 @@ const handleBlur = (event: Event) => {
 }
 
 /* 必填字段样式 */
-.required-field :deep(.el-form-item__label::after) {
-  content: ' *';
+/* .required-field :deep(.el-form-item__label::after) {
+  content: ' ';
   color: var(--danger-color);
   font-weight: bold;
-}
+} */
 
 /* 禁用字段样式 */
 .disabled-field :deep(.el-input__wrapper) {

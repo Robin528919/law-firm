@@ -226,13 +226,13 @@ body {
 }
 
 // 必填字段标识
-.required-field {
-  .el-form-item__label::after {
-    content: ' *';
-    color: var(--danger-color);
-    font-weight: bold;
-  }
-}
+// .required-field {
+//   .el-form-item__label::after {
+//     content: ' *';
+//     color: var(--danger-color);
+//     font-weight: bold;
+//   }
+// }
 
 // 工具提示样式
 .field-tooltip {
