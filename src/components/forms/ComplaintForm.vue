@@ -95,7 +95,7 @@
             placeholder="Select complaint filing date or expected filing date"
             style="width: 100%"
             value-format="YYYY-MM-DD"
-            format="YYYY-MM-DD"
+            format="MMMM D, YYYY"
           />
         </el-form-item>
       </FormGroup>
@@ -171,7 +171,7 @@
             placeholder="e.g. May 1, 2022"
             style="width: 100%"
             value-format="YYYY-MM-DD"
-            format="YYYY-MM-DD"
+            format="MMMM D, YYYY"
           />
         </el-form-item>
 
@@ -182,7 +182,7 @@
             placeholder="e.g. June 23, 2024"
             style="width: 100%"
             value-format="YYYY-MM-DD"
-            format="YYYY-MM-DD"
+            format="MMMM D, YYYY"
           />
         </el-form-item>
 

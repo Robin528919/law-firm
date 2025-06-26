@@ -23,7 +23,7 @@
             placeholder="e.g. June 23, 2025" 
             style="width: 100%" 
             value-format="YYYY-MM-DD"
-            format="YYYY-MM-DD"
+            format="MMMM D, YYYY"
           />
         </el-form-item>
         
@@ -34,7 +34,7 @@
             placeholder="e.g. June 30, 2025" 
             style="width: 100%" 
             value-format="YYYY-MM-DD"
-            format="YYYY-MM-DD"
+            format="MMMM D, YYYY"
           />
         </el-form-item>
       </FormGroup>
