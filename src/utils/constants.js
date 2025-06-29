@@ -231,4 +231,26 @@ export const FIELD_TOOLTIPS = {
   weeklyHours: 'Actual hours worked by employee per week',
   overtimeHours: 'Overtime hours exceeding 40 hours per week',
   damageCalculated: 'This amount is automatically calculated based on input data and cannot be manually modified'
+}
+
+// API 配置
+export const API_CONFIG = {
+  // 环境配置
+  ENVIRONMENT: import.meta.env.MODE || 'development', // development | production
+  
+  // API 端点配置
+  ENDPOINTS: {
+    // 测试环境webhook地址
+    WEBHOOK_TEST: 'https://n8n-jacklaw-u42541.vm.elestio.app/webhook-test/b881c94b-a224-4df4-af9c-c2d5cbe337cd',
+    
+    // 生产环境webhook地址  
+    WEBHOOK_PROD: 'https://n8n-jacklaw-u42541.vm.elestio.app/webhook/b881c94b-a224-4df4-af9c-c2d5cbe337cd'
+  },
+  
+  // 获取当前环境的webhook地址
+  getWebhookUrl() {
+    return this.ENVIRONMENT === 'production' 
+      ? this.ENDPOINTS.WEBHOOK_PROD 
+      : this.ENDPOINTS.WEBHOOK_TEST
+  }
 } 

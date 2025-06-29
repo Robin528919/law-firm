@@ -58,6 +58,7 @@ import ComplaintForm from '@/components/forms/ComplaintForm.vue'
 import AnswerForm from '@/components/forms/AnswerForm.vue'
 import SettlementForm from '@/components/forms/SettlementForm.vue'
 import {useFormStore} from '@/stores/formStore'
+import {API_CONFIG} from '@/utils/constants'
 
 // Use form state management
 const formStore = useFormStore()
@@ -257,7 +258,9 @@ const handleSubmit = async () => {
         // 发送POST请求
         console.log('提交数据', submissionData)
         try {
-          const response = await fetch('https://n8n-jacklaw-u42541.vm.elestio.app/webhook-test/b881c94b-a224-4df4-af9c-c2d5cbe337cd', {
+          const webhookUrl = API_CONFIG.getWebhookUrl()
+          console.log('当前环境:', API_CONFIG.ENVIRONMENT, '使用地址:', webhookUrl)
+          const response = await fetch(webhookUrl, {
             method: 'POST',
             headers: {
               'Content-Type': 'application/json'
