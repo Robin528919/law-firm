@@ -52,15 +52,15 @@ export const useFormStore = defineStore('form', () => {
   
   // 回复表单数据
   const answerForm = ref({
-    letterDate: null,
-    ocName: '',
-    ocFirm: '',
-    ocAddress: '',
-    caseName: '',
-    caseNumber: '',
-    defendantName: '',
-    adNumber: '',
-    respDate: null
+    LetterDate: null,
+    OCName: '',
+    OCFirm: '',
+    OCAddress: '',
+    CaseName: '',
+    CaseNumber: '',
+    DefendantName: '',
+    ADNumber: '',
+    RespDate: null
   })
   
   // 和解协议表单数据
@@ -94,7 +94,8 @@ export const useFormStore = defineStore('form', () => {
   // 格式化的被告名称（回复表单）
   const formattedAnswerDefendantName = computed(() => {
     const form = answerForm.value
-    return formatDefendantName(form.defendantName, form.defendantState, form.defendantEntityType)
+    // 回复表单只有被告名称，没有州和实体类型信息
+    return form.DefendantName || ''
   })
 
   // 格式化的被告名称（和解表单）

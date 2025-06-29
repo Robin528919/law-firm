@@ -15,9 +15,9 @@
           variant="card"
           :columns="1"
       >
-        <el-form-item label="Letter Date" prop="letterDate">
+        <el-form-item label="Letter Date" prop="LetterDate">
           <el-date-picker
-              v-model="formData.letterDate"
+              v-model="formData.LetterDate"
               type="date"
               placeholder="e.g. June 23, 2025"
               style="width: 100%"
@@ -26,9 +26,9 @@
           />
         </el-form-item>
 
-        <el-form-item label="Last Date to Respond" prop="respDate">
+        <el-form-item label="Last Date to Respond" prop="RespDate">
           <el-date-picker
-              v-model="formData.respDate"
+              v-model="formData.RespDate"
               type="date"
               placeholder="e.g. June 30, 2025"
               style="width: 100%"
@@ -48,8 +48,8 @@
       >
         <FormField
             label="Opposing Counsel's Name"
-            v-model="formData.ocName"
-            prop="ocName"
+            v-model="formData.OCName"
+            prop="OCName"
             type="textarea"
             placeholder="e.g. Amy Doe\nBryant Doe"
             :rows="3"
@@ -59,8 +59,8 @@
 
         <FormField
             label="Opposing Firm Name"
-            v-model="formData.ocFirm"
-            prop="ocFirm"
+            v-model="formData.OCFirm"
+            prop="OCFirm"
             type="text"
             placeholder="e.g. ABC, PC"
             required
@@ -68,8 +68,8 @@
 
         <FormField
             label="Opposing Firm Address"
-            v-model="formData.ocAddress"
-            prop="ocAddress"
+            v-model="formData.OCAddress"
+            prop="OCAddress"
             type="textarea"
             placeholder="e.g. 123 Grand Ave, Los Angeles, CA 90019"
             :rows="4"
@@ -88,8 +88,8 @@
       >
         <FormField
             label="Case Name"
-            v-model="formData.caseName"
-            prop="caseName"
+            v-model="formData.CaseName"
+            prop="CaseName"
             type="text"
             placeholder="e.g. James Doe v. Chris Wu"
             required
@@ -97,8 +97,8 @@
 
         <FormField
             label="Case Number"
-            v-model="formData.caseNumber"
-            prop="caseNumber"
+            v-model="formData.CaseNumber"
+            prop="CaseNumber"
             type="text"
             placeholder="e.g. LASC123456"
             required
@@ -106,8 +106,8 @@
 
         <FormField
             label="Defendant Name"
-            v-model="formData.defendantName"
-            prop="defendantName"
+            v-model="formData.DefendantName"
+            prop="DefendantName"
             type="text"
             placeholder="e.g. Chris Wu"
             required
@@ -115,8 +115,8 @@
 
         <FormField
             label="Affirmative Defense Number Subject to Demurrer"
-            v-model="formData.adNumber"
-            prop="adNumber"
+            v-model="formData.ADNumber"
+            prop="ADNumber"
             type="text"
             placeholder="e.g. First through Twentieth"
             required
@@ -144,24 +144,24 @@ const formData = formStore.answerForm
 
 // 验证规则
 const validationRules = {
-  letterDate: [VALIDATION_RULES.required, VALIDATION_RULES.date],
-  ocName: [VALIDATION_RULES.required],
-  ocFirm: [VALIDATION_RULES.required],
-  ocAddress: [VALIDATION_RULES.required],
-  caseName: [VALIDATION_RULES.required],
-  caseNumber: [VALIDATION_RULES.required],
-  defendantName: [VALIDATION_RULES.required],
-  adNumber: [VALIDATION_RULES.required],
-  respDate: [VALIDATION_RULES.required, VALIDATION_RULES.date]
+  LetterDate: [VALIDATION_RULES.required, VALIDATION_RULES.date],
+  OCName: [VALIDATION_RULES.required],
+  OCFirm: [VALIDATION_RULES.required],
+  OCAddress: [VALIDATION_RULES.required],
+  CaseName: [VALIDATION_RULES.required],
+  CaseNumber: [VALIDATION_RULES.required],
+  DefendantName: [VALIDATION_RULES.required],
+  ADNumber: [VALIDATION_RULES.required],
+  RespDate: [VALIDATION_RULES.required, VALIDATION_RULES.date]
 }
 
 // 格式化日期
 const formattedLetterDate = computed(() => {
-  return formData.value?.letterDate ? formatLegalDate(formData.value.letterDate) : 'To be selected'
+  return formData.value?.LetterDate ? formatLegalDate(formData.value.LetterDate) : 'To be selected'
 })
 
 const formattedRespDate = computed(() => {
-  return formData.value?.respDate ? formatLegalDate(formData.value.respDate) : 'To be selected'
+  return formData.value?.RespDate ? formatLegalDate(formData.value.RespDate) : 'To be selected'
 })
 
 // 字段变更处理

@@ -105,8 +105,8 @@ const calculateComplaintProgress = () => {
 // Calculate answer form progress
 const calculateAnswerProgress = () => {
   const requiredFields = [
-    'letterDate', 'ocName', 'ocFirm', 'ocAddress', 'caseName',
-    'caseNumber', 'defendantName', 'adNumber', 'respDate'
+    'LetterDate', 'OCName', 'OCFirm', 'OCAddress', 'CaseName',
+    'CaseNumber', 'DefendantName', 'ADNumber', 'RespDate'
   ]
 
   const filledFields = requiredFields.filter(field => {
