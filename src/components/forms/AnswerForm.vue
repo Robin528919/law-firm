@@ -21,7 +21,7 @@
               type="date"
               placeholder="e.g. June 23, 2025"
               style="width: 100%"
-              value-format="YYYY-MM-DD"
+              value-format="MMMM D, YYYY"
               format="MMMM D, YYYY"
           />
         </el-form-item>
@@ -32,7 +32,7 @@
               type="date"
               placeholder="e.g. June 30, 2025"
               style="width: 100%"
-              value-format="YYYY-MM-DD"
+              value-format="MMMM D, YYYY"
               format="MMMM D, YYYY"
           />
         </el-form-item>

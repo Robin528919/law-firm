@@ -11,7 +11,21 @@ import dayjs from 'dayjs'
  */
 export const formatLegalDate = (date) => {
   if (!date) return ''
-  return dayjs(date).format('MMMM D, YYYY')
+  
+  // 处理不同格式的日期输入
+  let parsedDate
+  if (typeof date === 'string') {
+    // 如果已经是美国格式，直接返回
+    if (/^[A-Za-z]+ \d{1,2}, \d{4}$/.test(date)) {
+      return date
+    }
+    // 否则解析为dayjs对象
+    parsedDate = dayjs(date)
+  } else {
+    parsedDate = dayjs(date)
+  }
+  
+  return parsedDate.format('MMMM D, YYYY')
 }
 
 /**
