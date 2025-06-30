@@ -18,26 +18,26 @@
       >
         <FormField
           label="Plaintiff Name"
-          v-model="formData.plaintiffName"
-          prop="plaintiffName"
+          v-model="formData.PlaintiffName"
+          prop="PlaintiffName"
           type="text"
           placeholder="e.g. James Doe, should be followed by individual designation"
           required
           description="Should be followed by an individual designation; Can add multiple"
-          @change="(value) => handleFieldChange(value, 'plaintiffName')"
+          @change="(value) => handleFieldChange(value, 'PlaintiffName')"
         />
 
         <!-- Defendant Name Complex Field -->
         <div class="defendant-name-group">
           <label class="field-group-label">Defendant Name</label>
           <DefendantNameField
-            :defendant-name="formData.defendantName"
-            :defendant-state="formData.defendantState"
-            :defendant-entity-type="formData.defendantEntityType"
+            :defendant-name="formData.DefendantName"
+            :defendant-state="formData.DefendantState"
+            :defendant-entity-type="formData.DefendantEntityType"
             required
-            @update:defendant-name="(value) => handleFieldChange(value, 'defendantName')"
-            @update:defendant-state="(value) => handleFieldChange(value, 'defendantState')"
-            @update:defendant-entity-type="(value) => handleFieldChange(value, 'defendantEntityType')"
+            @update:defendant-name="(value) => handleFieldChange(value, 'DefendantName')"
+            @update:defendant-state="(value) => handleFieldChange(value, 'DefendantState')"
+            @update:defendant-entity-type="(value) => handleFieldChange(value, 'DefendantEntityType')"
           />
         </div>
       </FormGroup>
@@ -52,8 +52,8 @@
       >
         <FormField
           label="Court Name"
-          v-model="formData.courtName"
-          prop="courtName"
+          v-model="formData.CourtName"
+          prop="CourtName"
           type="text"
           placeholder="e.g. Los Angeles Superior Court"
           required
@@ -61,8 +61,8 @@
 
         <FormField
           label="Case Name (Official)"
-          v-model="formData.caseName"
-          prop="caseName"
+          v-model="formData.CaseName"
+          prop="CaseName"
           type="text"
           placeholder="e.g. James Doe v. Chris Wu"
           required
@@ -70,8 +70,8 @@
 
         <FormField
           label="Case Number"
-          v-model="formData.caseNumber"
-          prop="caseNumber"
+          v-model="formData.CaseNumber"
+          prop="CaseNumber"
           type="text"
           placeholder="e.g. LASC123456"
           description="Need to set default as space"
@@ -88,8 +88,8 @@
       >
         <FormField
           label="Settlement Numerical Amount (without $)"
-          v-model="formData.settlementNumericalAmount"
-          prop="settlementNumericalAmount"
+          v-model="formData.SettlementNumericalAmount"
+          prop="SettlementNumericalAmount"
           type="number"
           placeholder="50,000"
           :min="0"
@@ -101,15 +101,15 @@
         <div class="amount-words-field">
           <FormField
             label="Settlement Written Amount (without Dollars)"
-            v-model="formData.settlementWrittenAmount"
-            prop="settlementWrittenAmount"
+            v-model="formData.SettlementWrittenAmount"
+            prop="SettlementWrittenAmount"
             type="text"
             placeholder="e.g. FIFTY THOUSAND"
             required
             description="Automatically generated based on numerical amount, can be manually edited"
           />
           <el-button
-            v-if="formData.settlementNumericalAmount > 0"
+            v-if="formData.SettlementNumericalAmount > 0"
             type="primary"
             size="small"
             @click="generateAmountWords"
@@ -123,8 +123,8 @@
 
         <FormField
           label="Installment Payments"
-          v-model="formData.installmentPayment"
-          prop="installmentPayment"
+          v-model="formData.InstallmentPayment"
+          prop="InstallmentPayment"
           type="textarea"
           placeholder='e.g. $50,000 payable no later than March 1, 2020'
           :rows="4"
@@ -142,8 +142,8 @@
       >
         <FormField
           label="Defense Counsel Contact Method"
-          v-model="formData.defenseContactMethod"
-          prop="defenseContactMethod"
+          v-model="formData.DefenseContactMethod"
+          prop="DefenseContactMethod"
           type="select"
           placeholder="Select contact method"
           :options="contactMethodOptions"
@@ -165,8 +165,8 @@
 
         <FormField
           label="Defense Counsel Name"
-          v-model="formData.defenseCounselName"
-          prop="defenseCounselName"
+          v-model="formData.DefenseCounselName"
+          prop="DefenseCounselName"
           type="text"
           placeholder="e.g. De Att"
           required
@@ -174,8 +174,8 @@
 
         <FormField
           label="Defense Counsel Firm"
-          v-model="formData.defenseCounselFirm"
-          prop="defenseCounselFirm"
+          v-model="formData.DefenseCounselFirm"
+          prop="DefenseCounselFirm"
           type="text"
           placeholder="e.g. DA, PC"
           required
@@ -183,8 +183,8 @@
 
         <FormField
           label="Defense Firm Address"
-          v-model="formData.defenseFirmAddress"
-          prop="defenseFirmAddress"
+          v-model="formData.DefenseFirmAddress"
+          prop="DefenseFirmAddress"
           type="textarea"
           placeholder="e.g. 123 Hill St, Los Angeles, CA 90018"
           :rows="3"
@@ -202,7 +202,7 @@
       >
         <FormField
           label="Plaintiff"
-          v-model="formData.plaintiffPlurality1"
+          v-model="formData.PlaintiffPlurality1"
           type="text"
           :is-calculated="true"
           description='"Plaintiff" or "Plaintiffs". Need to be automatically applied upon single plaintiff or multiple plaintiff'
@@ -210,7 +210,7 @@
 
         <FormField
           label="Defendant"
-          v-model="formData.defendantPlurality1"
+          v-model="formData.DefendantPlurality1"
           type="text"
           :is-calculated="true"
           description='"Defendant" or "Defendants". Need to be automatically applied upon single defendant or multiple defendants.'
@@ -230,36 +230,36 @@
           <div class="preview-content">
             <div class="agreement-section">
               <strong>Case Information:</strong>
-              <p>{{ formData?.caseName || 'To be entered case name' }}</p>
-              <p>Case Number: {{ formData?.caseNumber || 'To be assigned' }}</p>
-              <p>Court: {{ formData?.courtName || 'To be entered court name' }}</p>
+              <p>{{ formData?.CaseName || 'To be entered case name' }}</p>
+              <p>Case Number: {{ formData?.CaseNumber || 'To be assigned' }}</p>
+              <p>Court: {{ formData?.CourtName || 'To be entered court name' }}</p>
             </div>
 
             <div class="agreement-section">
               <strong>Parties:</strong>
-              <p>{{ formData.plaintiffPlurality1 }}: {{ formData?.plaintiffName || 'To be entered plaintiff' }}</p>
-              <p>{{ formData.defendantPlurality1 }}: {{ formStore.formattedSettlementDefendantName || 'To be entered defendant' }}</p>
+              <p>{{ formData.PlaintiffPlurality1 }}: {{ formData?.PlaintiffName || 'To be entered plaintiff' }}</p>
+              <p>{{ formData.DefendantPlurality1 }}: {{ formStore.formattedSettlementDefendantName || 'To be entered defendant' }}</p>
             </div>
 
             <div class="agreement-section">
               <strong>Settlement Amount:</strong>
-              <p v-if="formData?.settlementNumericalAmount > 0">
-                ${{ formData.settlementNumericalAmount.toLocaleString() }}
-                ({{ formData?.settlementWrittenAmount || 'Written amount to be entered' }} DOLLARS)
+              <p v-if="formData?.SettlementNumericalAmount > 0">
+                ${{ formData.SettlementNumericalAmount.toLocaleString() }}
+                ({{ formData?.SettlementWrittenAmount || 'Written amount to be entered' }} DOLLARS)
               </p>
               <p v-else>To be entered settlement amount</p>
             </div>
 
-            <div class="agreement-section" v-if="formData?.installmentPayment">
+            <div class="agreement-section" v-if="formData?.InstallmentPayment">
               <strong>Payment Arrangement:</strong>
-              <div style="white-space: pre-line;">{{ formData.installmentPayment }}</div>
+              <div style="white-space: pre-line;">{{ formData.InstallmentPayment }}</div>
             </div>
 
             <div class="agreement-section">
               <strong>Defense Counsel Contact Information:</strong>
-              <p>{{ formData?.defenseCounselName || 'To be entered counsel name' }}</p>
-              <p>{{ formData?.defenseCounselFirm || 'To be entered firm' }}</p>
-              <p style="white-space: pre-line;">{{ formData?.defenseFirmAddress || 'To be entered address' }}</p>
+              <p>{{ formData?.DefenseCounselName || 'To be entered counsel name' }}</p>
+              <p>{{ formData?.DefenseCounselFirm || 'To be entered firm' }}</p>
+              <p style="white-space: pre-line;">{{ formData?.DefenseFirmAddress || 'To be entered address' }}</p>
               <p v-if="formattedContactMethod">{{ formattedContactMethod }}</p>
             </div>
           </div>
@@ -294,61 +294,61 @@ const contactMethodOptions = CONTACT_METHOD_OPTIONS
 
 // 验证规则
 const validationRules = {
-  plaintiffName: [VALIDATION_RULES.required],
-  defendantName: [VALIDATION_RULES.required],
-  defendantState: [VALIDATION_RULES.required],
-  defendantEntityType: [VALIDATION_RULES.required],
-  courtName: [VALIDATION_RULES.required],
-  caseName: [VALIDATION_RULES.required],
-  settlementWrittenAmount: [VALIDATION_RULES.required],
-  settlementNumericalAmount: [VALIDATION_RULES.required, VALIDATION_RULES.number],
-  defenseContactMethod: [VALIDATION_RULES.required],
-  defenseCounselName: [VALIDATION_RULES.required],
-  defenseCounselFirm: [VALIDATION_RULES.required],
-  defenseFirmAddress: [VALIDATION_RULES.required]
+  PlaintiffName: [VALIDATION_RULES.required],
+  DefendantName: [VALIDATION_RULES.required],
+  DefendantState: [VALIDATION_RULES.required],
+  DefendantEntityType: [VALIDATION_RULES.required],
+  CourtName: [VALIDATION_RULES.required],
+  CaseName: [VALIDATION_RULES.required],
+  SettlementWrittenAmount: [VALIDATION_RULES.required],
+  SettlementNumericalAmount: [VALIDATION_RULES.required, VALIDATION_RULES.number],
+  DefenseContactMethod: [VALIDATION_RULES.required],
+  DefenseCounselName: [VALIDATION_RULES.required],
+  DefenseCounselFirm: [VALIDATION_RULES.required],
+  DefenseFirmAddress: [VALIDATION_RULES.required]
 }
 
 // 动态联系方式输入
 const showContactInput = computed(() => {
-  return formData.value?.defenseContactMethod && formData.value.defenseContactMethod !== ''
+  return formData.value?.DefenseContactMethod && formData.value.DefenseContactMethod !== ''
 })
 
 const contactInputLabel = computed(() => {
-  return formData.value?.defenseContactMethod === 'email' ? 'Email Address' : 'Fax Number'
+  return formData.value?.DefenseContactMethod === 'email' ? 'Email Address' : 'Fax Number'
 })
 
 const contactInputType = computed(() => {
-  return formData.value?.defenseContactMethod === 'email' ? 'email' : 'text'
+  return formData.value?.DefenseContactMethod === 'email' ? 'email' : 'text'
 })
 
 const contactInputPlaceholder = computed(() => {
-  return formData.value?.defenseContactMethod === 'email'
+  return formData.value?.DefenseContactMethod === 'email'
     ? 'Enter email address'
     : 'Enter fax number (format: 123-456-7890)'
 })
 
 const contactInputProp = computed(() => {
-  return formData.value?.defenseContactMethod === 'email' ? 'defenseEmail' : 'defenseFax'
+  return formData.value?.DefenseContactMethod === 'email' ? 'DefenseEmail' : 'DefenseFax'
 })
 
 const contactInputValue = computed({
   get: () => {
-    return formData.value?.defenseContactMethod === 'email'
-      ? formData.value.defenseEmail || ''
-      : formData.value.defenseFax || ''
+    return formData.value?.DefenseContactMethod === 'email'
+      ? formData.value.DefenseEmail || ''
+      : formData.value.DefenseFax || ''
   },
   set: (value) => {
-    const field = formData.value?.defenseContactMethod === 'email' ? 'defenseEmail' : 'defenseFax'
+    const field = formData.value?.DefenseContactMethod === 'email' ? 'DefenseEmail' : 'DefenseFax'
     formStore.updateSettlementForm(field, value)
   }
 })
 
 // 格式化的联系方式显示
 const formattedContactMethod = computed(() => {
-  if (!formData.value?.defenseContactMethod) return ''
+  if (!formData.value?.DefenseContactMethod) return ''
 
-  const method = formData.value.defenseContactMethod
-  const value = method === 'email' ? formData.value.defenseEmail : formData.value.defenseFax
+  const method = formData.value.DefenseContactMethod
+  const value = method === 'email' ? formData.value.DefenseEmail : formData.value.DefenseFax
 
   if (!value) return ''
 
@@ -358,11 +358,11 @@ const formattedContactMethod = computed(() => {
 
 // 监听原告和被告名称变化，自动更新复数形式
 watchEffect(() => {
-  const plaintiffPlurality = getPlurality(formData.value?.plaintiffName || '')
-  formStore.updateSettlementForm('plaintiffPlurality1', plaintiffPlurality.form1)
+  const plaintiffPlurality = getPlurality(formData.value?.PlaintiffName || '')
+  formStore.updateSettlementForm('PlaintiffPlurality1', plaintiffPlurality.form1)
 
   const defendantPlurality = getPlurality(formStore.formattedSettlementDefendantName || '')
-  formStore.updateSettlementForm('defendantPlurality1', defendantPlurality.form1Defendant)
+  formStore.updateSettlementForm('DefendantPlurality1', defendantPlurality.form1Defendant)
 })
 
 // 表单提交
@@ -392,21 +392,21 @@ const handleFieldChange = (value, field) => {
 }
 
 const handleAmountChange = (value) => {
-  formStore.updateSettlementForm('settlementNumericalAmount', value)
+  formStore.updateSettlementForm('SettlementNumericalAmount', value)
   // 自动生成大写金额
   if (value && value > 0) {
     const wordsAmount = convertAmountToWords(value)
-    formStore.updateSettlementForm('settlementWrittenAmount', wordsAmount)
+    formStore.updateSettlementForm('SettlementWrittenAmount', wordsAmount)
   } else {
-    formStore.updateSettlementForm('settlementWrittenAmount', '')
+    formStore.updateSettlementForm('SettlementWrittenAmount', '')
   }
 }
 
 const handleContactMethodChange = (value) => {
-  formStore.updateSettlementForm('defenseContactMethod', value)
+  formStore.updateSettlementForm('DefenseContactMethod', value)
   // 清空之前的联系方式输入
-  formStore.updateSettlementForm('defenseEmail', '')
-  formStore.updateSettlementForm('defenseFax', '')
+  formStore.updateSettlementForm('DefenseEmail', '')
+  formStore.updateSettlementForm('DefenseFax', '')
 }
 
 const handleContactInputChange = (value) => {
@@ -414,10 +414,10 @@ const handleContactInputChange = (value) => {
 }
 
 const generateAmountWords = () => {
-  const amount = formData.value?.settlementNumericalAmount
+  const amount = formData.value?.SettlementNumericalAmount
   if (amount && amount > 0) {
     const wordsAmount = convertAmountToWords(amount)
-    formStore.updateSettlementForm('settlementWrittenAmount', wordsAmount)
+    formStore.updateSettlementForm('SettlementWrittenAmount', wordsAmount)
   }
 }
 </script>

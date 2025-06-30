@@ -121,9 +121,9 @@ const calculateAnswerProgress = () => {
 // Calculate settlement agreement form progress
 const calculateSettlementProgress = () => {
   const requiredFields = [
-    'plaintiffName', 'defendantName', 'defendantState', 'defendantEntityType', 'courtName', 'caseName',
-    'settlementWrittenAmount', 'settlementNumericalAmount', 'defenseContactMethod',
-    'defenseCounselName', 'defenseCounselFirm', 'defenseFirmAddress'
+    'PlaintiffName', 'DefendantName', 'DefendantState', 'DefendantEntityType', 'CourtName', 'CaseName',
+    'SettlementWrittenAmount', 'SettlementNumericalAmount', 'DefenseContactMethod',
+    'DefenseCounselName', 'DefenseCounselFirm', 'DefenseFirmAddress'
   ]
 
   const filledFields = requiredFields.filter(field => {

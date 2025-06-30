@@ -65,24 +65,24 @@ export const useFormStore = defineStore('form', () => {
   
   // 和解协议表单数据
   const settlementForm = ref({
-    plaintiffName: '',
-    defendantName: '',
-    defendantState: '',
-    defendantEntityType: '',
-    courtName: '',
-    caseName: '',
-    caseNumber: ' ', // 默认空格
-    settlementWrittenAmount: '',
-    settlementNumericalAmount: 0,
-    installmentPayment: '',
-    defenseContactMethod: '',
-    defenseEmail: '',
-    defenseFax: '',
-    defenseCounselName: '',
-    defenseCounselFirm: '',
-    defenseFirmAddress: '',
-    plaintiffPlurality1: 'Plaintiff',
-    defendantPlurality1: 'Defendant'
+    PlaintiffName: '',
+    DefendantName: '',
+    DefendantState: '',
+    DefendantEntityType: '',
+    CourtName: '',
+    CaseName: '',
+    CaseNumber: ' ', // 默认空格
+    SettlementWrittenAmount: '',
+    SettlementNumericalAmount: 0,
+    InstallmentPayment: '',
+    DefenseContactMethod: '',
+    DefenseEmail: '',
+    DefenseFax: '',
+    DefenseCounselName: '',
+    DefenseCounselFirm: '',
+    DefenseFirmAddress: '',
+    PlaintiffPlurality1: 'Plaintiff',
+    DefendantPlurality1: 'Defendant'
   })
   
   // 格式化的被告名称（起诉表单）
@@ -101,7 +101,7 @@ export const useFormStore = defineStore('form', () => {
   // 格式化的被告名称（和解表单）
   const formattedSettlementDefendantName = computed(() => {
     const form = settlementForm.value
-    return formatDefendantName(form.defendantName, form.defendantState, form.defendantEntityType)
+    return formatDefendantName(form.DefendantName, form.DefendantState, form.DefendantEntityType)
   })
 
   // 起诉表单的计算字段
@@ -290,7 +290,7 @@ export const useFormStore = defineStore('form', () => {
       })
     } else if (targetType === 'settlement') {
       Object.keys(settlementForm.value).forEach(key => {
-        if (key === 'caseNumber') {
+        if (key === 'CaseNumber') {
           settlementForm.value[key] = ' '
         } else if (typeof settlementForm.value[key] === 'string') {
           settlementForm.value[key] = ''
