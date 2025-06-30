@@ -16,6 +16,9 @@
         <!-- Settlement agreement form -->
         <SettlementForm v-if="formStore.currentFormType === 'settlement'" ref="settlementFormRef"/>
 
+        <!-- Demurrer form -->
+        <DemurrerForm v-if="formStore.currentFormType === 'demurrer'" ref="demurrerFormRef"/>
+
         <!-- Form action buttons -->
         <FormActions
             variant="default"
@@ -57,6 +60,7 @@ import FormActions from '@/components/common/FormActions.vue'
 import ComplaintForm from '@/components/forms/ComplaintForm.vue'
 import AnswerForm from '@/components/forms/AnswerForm.vue'
 import SettlementForm from '@/components/forms/SettlementForm.vue'
+import DemurrerForm from '@/components/forms/DemurrerForm.vue'
 import {useFormStore} from '@/stores/formStore'
 import {API_CONFIG} from '@/utils/constants'
 
@@ -67,6 +71,7 @@ const formStore = useFormStore()
 const complaintFormRef = ref()
 const answerFormRef = ref()
 const settlementFormRef = ref()
+const demurrerFormRef = ref()
 
 // Current form completion progress
 const currentFormProgress = computed(() => {
@@ -77,6 +82,8 @@ const currentFormProgress = computed(() => {
       return calculateAnswerProgress()
     case 'settlement':
       return calculateSettlementProgress()
+    case 'demurrer':
+      return calculateDemurrerProgress()
     default:
       return 0
   }
@@ -136,6 +143,25 @@ const calculateSettlementProgress = () => {
   return Math.round((filledFields / requiredFields.length) * 100)
 }
 
+// Calculate demurrer form progress
+const calculateDemurrerProgress = () => {
+  const requiredFields = [
+    'PlaintiffName', 'DefendantName', 'CourtLocation', 'CourtName', 'CourtAddress',
+    'HearingDate', 'HearingTime', 'HearingDept', 'ResID', 'CaseNumber',
+    'JudgeName', 'ComplaintFilingDate', 'AnswerFilingDate', 'ExecutedDate',
+    'CaseType', 'SelectedCauses', 'ChosenAD', 'MnCDate', 'MnCRespDate'
+  ]
+
+  const filledFields = requiredFields.filter(field => {
+    const value = formStore.demurrerForm[field]
+    if (Array.isArray(value)) return value.length > 0
+    if (typeof value === 'string') return value.trim() !== ''
+    return value !== null && value !== undefined
+  }).length
+
+  return Math.round((filledFields / requiredFields.length) * 100)
+}
+
 // Get current form reference
 const getCurrentFormRef = () => {
   switch (formStore.currentFormType) {
@@ -145,6 +171,8 @@ const getCurrentFormRef = () => {
       return answerFormRef.value
     case 'settlement':
       return settlementFormRef.value
+    case 'demurrer':
+      return demurrerFormRef.value
     default:
       return null
   }

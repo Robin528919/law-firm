@@ -18,6 +18,11 @@ export const FORM_TYPES = [
     value: 'settlement',
     label: 'Settlement Agreement (Payments) Form',
     description: 'Create settlement agreement and payment arrangement documents'
+  },
+  {
+    value: 'demurrer',
+    label: 'Demurrer Motion Form',
+    description: 'Create demurrer motion against affirmative defenses'
   }
 ]
 
@@ -232,6 +237,24 @@ export const FIELD_TOOLTIPS = {
   overtimeHours: 'Overtime hours exceeding 40 hours per week',
   damageCalculated: 'This amount is automatically calculated based on input data and cannot be manually modified'
 }
+
+// 案件类型选项（用于 Demurrer 表单）
+export const CASE_TYPE_OPTIONS = [
+  { label: 'Wage and Hour', value: 'wage and hour' },
+  { label: 'Discrimination', value: 'discrimination' },
+  { label: 'Harassment', value: 'harassment' },
+  { label: 'Retaliation', value: 'retaliation' },
+  { label: 'Wrongful Termination', value: 'wrongful termination' }
+]
+
+// Demurrer 起诉原因选项（从 CAUSES_OF_ACTION 中提取，去掉括号内容，格式化为编号列表）
+export const DEMURRER_CAUSES_OPTIONS = CAUSES_OF_ACTION.map((cause, index) => {
+  const cleanLabel = cause.label.split('(')[0].trim()
+  return {
+    label: `${index + 1})${cleanLabel}`,
+    value: `${index + 1})${cleanLabel}`
+  }
+})
 
 // API 配置
 export const API_CONFIG = {

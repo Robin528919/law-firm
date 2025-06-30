@@ -102,6 +102,8 @@ const getCurrentFormData = () => {
       return formStore.answerForm.value // 修复：获取ref的value
     case 'settlement':
       return formStore.settlementForm.value // 修复：获取ref的value
+    case 'demurrer':
+      return formStore.demurrerForm.value // 添加demurrer支持
     default:
       return {}
   }

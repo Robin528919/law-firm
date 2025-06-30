@@ -84,6 +84,35 @@ export const useFormStore = defineStore('form', () => {
     PlaintiffPlurality1: 'Plaintiff',
     DefendantPlurality1: 'Defendant'
   })
+
+  // Demurrer 表单数据
+  const demurrerForm = ref({
+    PlaintiffName: '',
+    DefendantName: '',
+    PlaintiffPlurality1: 'Plaintiff',
+    DefendantPlurality1: 'Defendant',
+    CourtLocation: '',
+    CourtName: '',
+    CourtAddress: '',
+    HearingDate: null,
+    HearingTime: '',
+    HearingDept: '',
+    ResID: '',
+    ComplaintFilingDate: null,
+    TrialDate: 'Not Set',
+    JudgeName: '',
+    CaseNumber: '',
+    ExecutedDate: null,
+    CaseType: '',
+    SelectedCauses: [],
+    AnswerFilingDate: null,
+    ChosenAD: '',
+    ServiceInfo: '',
+    ServerName: '',
+    MnCDate: null,
+    MnCRespDate: null,
+    MnCResp: ''
+  })
   
   // 格式化的被告名称（起诉表单）
   const formattedComplaintDefendantName = computed(() => {
@@ -102,6 +131,13 @@ export const useFormStore = defineStore('form', () => {
   const formattedSettlementDefendantName = computed(() => {
     const form = settlementForm.value
     return formatDefendantName(form.DefendantName, form.DefendantState, form.DefendantEntityType)
+  })
+
+  // 格式化的被告名称（Demurrer表单）
+  const formattedDemurrerDefendantName = computed(() => {
+    const form = demurrerForm.value
+    // Demurrer表单只有被告名称，没有州和实体类型信息
+    return form.DefendantName || ''
   })
 
   // 起诉表单的计算字段
@@ -258,6 +294,10 @@ export const useFormStore = defineStore('form', () => {
   const updateSettlementForm = (field, value) => {
     settlementForm.value[field] = value
   }
+
+  const updateDemurrerForm = (field, value) => {
+    demurrerForm.value[field] = value
+  }
   
   const updateSubmissionEmail = (email) => {
     submissionEmail.value = email
@@ -300,6 +340,22 @@ export const useFormStore = defineStore('form', () => {
           settlementForm.value[key] = null
         }
       })
+    } else if (targetType === 'demurrer') {
+      Object.keys(demurrerForm.value).forEach(key => {
+        if (key === 'TrialDate') {
+          demurrerForm.value[key] = 'Not Set'
+        } else if (key === 'PlaintiffPlurality1') {
+          demurrerForm.value[key] = 'Plaintiff'
+        } else if (key === 'DefendantPlurality1') {
+          demurrerForm.value[key] = 'Defendant'
+        } else if (typeof demurrerForm.value[key] === 'string') {
+          demurrerForm.value[key] = ''
+        } else if (Array.isArray(demurrerForm.value[key])) {
+          demurrerForm.value[key] = []
+        } else {
+          demurrerForm.value[key] = null
+        }
+      })
     }
   }
   
@@ -311,7 +367,8 @@ export const useFormStore = defineStore('form', () => {
       forms: {
         complaint: complaintForm.value,
         answer: answerForm.value,
-        settlement: settlementForm.value
+        settlement: settlementForm.value,
+        demurrer: demurrerForm.value
       }
     }
     
@@ -340,6 +397,9 @@ export const useFormStore = defineStore('form', () => {
       }
       if (data.forms.settlement) {
         Object.assign(settlementForm.value, data.forms.settlement)
+      }
+      if (data.forms.demurrer) {
+        Object.assign(demurrerForm.value, data.forms.demurrer)
       }
     }
   }
@@ -375,6 +435,8 @@ export const useFormStore = defineStore('form', () => {
         return answerForm.value
       case 'settlement':
         return settlementForm.value
+      case 'demurrer':
+        return demurrerForm.value
       default:
         return {}
     }
@@ -445,6 +507,7 @@ export const useFormStore = defineStore('form', () => {
     complaintForm,
     answerForm,
     settlementForm,
+    demurrerForm,
     formErrors,
     isLoading,
     
@@ -453,6 +516,7 @@ export const useFormStore = defineStore('form', () => {
     formattedComplaintDefendantName,
     formattedAnswerDefendantName,
     formattedSettlementDefendantName,
+    formattedDemurrerDefendantName,
     isFormValid,
     
     // 方法
@@ -460,6 +524,7 @@ export const useFormStore = defineStore('form', () => {
     updateComplaintForm,
     updateAnswerForm,
     updateSettlementForm,
+    updateDemurrerForm,
     updateSubmissionEmail,
     resetForm,
     resetCurrentForm,
