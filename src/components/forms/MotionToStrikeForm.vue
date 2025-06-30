@@ -24,7 +24,7 @@
           type="text"
           placeholder="e.g. James Doe"
           required
-          description="原告姓名，多个原告用逗号分隔"
+          description="Multiple plaintiffs separated by commas"
           @change="handlePlaintiffNameChange"
         />
 
@@ -35,7 +35,7 @@
           type="text"
           placeholder="e.g. Chris Wu"
           required
-          description="被告姓名，多个被告用逗号分隔"
+          description="Multiple defendants separated by commas"
           @change="handleDefendantNameChange"
         />
 
@@ -46,7 +46,7 @@
           type="text"
           placeholder="e.g. LOS ANGELES"
           required
-          description="法院所在县名，使用全大写字母"
+          description="County name where the court is located, use all capital letters"
         />
 
         <FormField
@@ -56,7 +56,7 @@
           type="text"
           placeholder="e.g. STANLEY MOSK COURTHOUSE"
           required
-          description="法院名称"
+          description="Court name"
         />
 
         <FormField
@@ -67,7 +67,7 @@
           placeholder="e.g. 111 North Hill Street, Room 307 Los Angeles, CA 90012"
           :rows="2"
           required
-          description="法院详细地址"
+          description="Detailed court address"
         />
 
         <FormField
@@ -76,7 +76,7 @@
           prop="CaseNumber"
           type="text"
           placeholder="e.g. LASC123456"
-          description="案件编号"
+          description="Case number"
         />
 
         <FormField
@@ -85,7 +85,7 @@
           prop="JudgeName"
           type="text"
           placeholder="e.g. Michael Doe"
-          description="法官姓名，不需要包含 'Hon.'"
+          description="Judge name without 'Hon.'"
         />
       </FormGroup>
 
@@ -128,7 +128,7 @@
           type="text"
           placeholder="e.g. 26"
           required
-          description="听证部门号码"
+          description="Hearing department number"
         />
 
         <FormField
@@ -138,7 +138,7 @@
           type="text"
           placeholder="e.g. 354359308862"
           required
-          description="预约ID号码"
+          description="Reservation ID number"
         />
       </FormGroup>
 
@@ -203,7 +203,7 @@
           multiple
           :options="motionCausesOptions"
           placeholder="Select multiple causes"
-          description="从complaint automation sheet选择多个起诉原因"
+          description="Select multiple causes from complaint automation sheet"
           required
         />
 
@@ -245,7 +245,7 @@
           type="text"
           placeholder="e.g. First through Twenty-First"
           required
-          description="受异议影响的积极抗辩范围"
+          description="Range of affirmative defenses subject to the motion"
         />
       </FormGroup>
 
@@ -264,7 +264,7 @@
           type="textarea"
           placeholder="Counsel name, Firm Name, Address, Phone Number, Fax Number, Email Address, etc"
           :rows="4"
-          description="律师姓名、事务所名称、地址、电话、传真、邮箱等服务信息"
+          description="Counsel name, firm name, address, phone, fax, email and other service information"
         />
 
         <FormField
@@ -273,7 +273,7 @@
           prop="ServerName"
           type="text"
           placeholder="Who will serve the document"
-          description="文件送达人姓名"
+          description="Name of document server"
         />
       </FormGroup>
 
@@ -314,7 +314,7 @@
           type="textarea"
           placeholder="e.g. On July 21, 2025, Defendant's Counsel sent a letter for clarification"
           :rows="4"
-          description="被告的回应，可以包含多段对话往来"
+          description="Defendant's response, can include multiple correspondence exchanges"
         />
       </FormGroup>
 
@@ -332,7 +332,7 @@
           type="text"
           :is-calculated="true"
           :display-value="calculations.plaintiffPlurality1"
-          description="Plaintiff 或 Plaintiffs - 根据原告数量自动判断"
+          description="Plaintiff or Plaintiffs - automatically determined based on number of plaintiffs"
         />
 
         <FormField
@@ -341,7 +341,7 @@
           type="text"
           :is-calculated="true"
           :display-value="calculations.defendantPlurality1"
-          description="Defendant 或 Defendants - 根据被告数量自动判断"
+          description="Defendant or Defendants - automatically determined based on number of defendants"
         />
 
         <FormField
@@ -350,7 +350,7 @@
           type="text"
           :is-calculated="true"
           :display-value="calculations.executedDate"
-          description="当前日期，格式：June 15, 2025"
+          description="Current date, format: June 15, 2025"
         />
       </FormGroup>
     </el-form>
@@ -419,7 +419,7 @@ const validationRules = {
 
 // 初始化 Trial Date 状态
 watch(() => formData.TrialDate, (newValue) => {
-  if (newValue === 'Not Set') {
+  if (newValue === 'Not Set' || !newValue) {
     trialDateMode.value = 'notSet'
     trialDateValue.value = null
   } else {
@@ -446,14 +446,21 @@ const handleTrialDateChange = (value) => {
 // 原告姓名变更处理
 const handlePlaintiffNameChange = (value) => {
   formStore.updateMotionToStrikeForm('PlaintiffName', value)
-  // 计算复数形式会自动更新
 }
 
 // 被告姓名变更处理
 const handleDefendantNameChange = (value) => {
   formStore.updateMotionToStrikeForm('DefendantName', value)
-  // 计算复数形式会自动更新
 }
+
+// 监听名称变化，自动更新复数字段
+watch(() => formData.PlaintiffName, () => {
+  formStore.updateMotionToStrikeForm('PlaintiffPlurality1', calculations.value.plaintiffPlurality1)
+}, { immediate: true })
+
+watch(() => formData.DefendantName, () => {
+  formStore.updateMotionToStrikeForm('DefendantPlurality1', calculations.value.defendantPlurality1)
+}, { immediate: true })
 
 // 表单提交处理
 const handleSubmit = () => {

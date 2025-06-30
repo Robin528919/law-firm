@@ -118,17 +118,17 @@ export const useFormStore = defineStore('form', () => {
   const motionToStrikeForm = ref({
     PlaintiffName: '',
     DefendantName: '',
-    PlaintiffPlurality1: 'Plaintiff',
-    DefendantPlurality1: 'Defendant',
-    CourtLocation: 'LOS ANGELES',
-    CourtName: 'STANLEY MOSK COURTHOUSE',
-    CourtAddress: '111 North Hill Street, Room 307 Los Angeles, CA 90012',
+    PlaintiffPlurality1: '',
+    DefendantPlurality1: '',
+    CourtLocation: '',
+    CourtName: '',
+    CourtAddress: '',
     HearingDate: null,
-    HearingTime: '8:30 AM',
-    HearingDept: '26',
-    ResID: '354359308862',
+    HearingTime: '',
+    HearingDept: '',
+    ResID: '',
     ComplaintFilingDate: null,
-    TrialDate: 'Not Set',
+    TrialDate: '',
     JudgeName: '',
     CaseNumber: '',
     ExecutedDate: null,
@@ -180,9 +180,9 @@ export const useFormStore = defineStore('form', () => {
   const motionToStrikeCalculations = computed(() => {
     const form = motionToStrikeForm.value
     
-    // 复数形式计算
-    const plaintiffPlurality = calculations.getPlurality(form.PlaintiffName)
-    const defendantPlurality = calculations.getPlurality(form.DefendantName)
+    // 复数形式计算 - 只有当有姓名输入时才计算
+    const plaintiffPlurality = form.PlaintiffName ? calculations.getPlurality(form.PlaintiffName) : { form1: '' }
+    const defendantPlurality = form.DefendantName ? calculations.getPlurality(form.DefendantName) : { form1Defendant: '' }
     
     // 执行日期 - 当前日期
     const executedDate = formatLegalDate(new Date())
@@ -419,25 +419,7 @@ export const useFormStore = defineStore('form', () => {
       })
     } else if (targetType === 'motionToStrike') {
       Object.keys(motionToStrikeForm.value).forEach(key => {
-        if (key === 'TrialDate') {
-          motionToStrikeForm.value[key] = 'Not Set'
-        } else if (key === 'PlaintiffPlurality1') {
-          motionToStrikeForm.value[key] = 'Plaintiff'
-        } else if (key === 'DefendantPlurality1') {
-          motionToStrikeForm.value[key] = 'Defendant'
-        } else if (key === 'CourtLocation') {
-          motionToStrikeForm.value[key] = 'LOS ANGELES'
-        } else if (key === 'CourtName') {
-          motionToStrikeForm.value[key] = 'STANLEY MOSK COURTHOUSE'
-        } else if (key === 'CourtAddress') {
-          motionToStrikeForm.value[key] = '111 North Hill Street, Room 307 Los Angeles, CA 90012'
-        } else if (key === 'HearingTime') {
-          motionToStrikeForm.value[key] = '8:30 AM'
-        } else if (key === 'HearingDept') {
-          motionToStrikeForm.value[key] = '26'
-        } else if (key === 'ResID') {
-          motionToStrikeForm.value[key] = '354359308862'
-        } else if (typeof motionToStrikeForm.value[key] === 'string') {
+        if (typeof motionToStrikeForm.value[key] === 'string') {
           motionToStrikeForm.value[key] = ''
         } else if (Array.isArray(motionToStrikeForm.value[key])) {
           motionToStrikeForm.value[key] = []
