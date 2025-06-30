@@ -467,6 +467,18 @@ const handleSubmit = () => {
   // 表单提交逻辑在父组件中处理
 }
 
+// 表单验证方法
+const validate = async () => {
+  if (!formRef.value) return false
+  try {
+    await formRef.value.validate()
+    return true
+  } catch (error) {
+    console.log('Motion to Strike 表单验证失败:', error)
+    return false
+  }
+}
+
 // 重置表单方法
 const resetForm = () => {
   formStore.resetForm('motionToStrike')
@@ -476,6 +488,7 @@ const resetForm = () => {
 
 // 暴露方法给父组件
 defineExpose({
+  validate,
   resetForm
 })
 </script>

@@ -293,60 +293,53 @@ const handleSubmit = async () => {
   const progress = currentFormProgress.value
   if (progress < 100) {
     ElMessage.warning(`Form completion is ${progress}%. It is recommended to complete all required fields before submitting.`)
-    return
+    // 继续执行，不阻止提交
   }
 
-  // 验证表单
+  // 准备提交数据，包含邮箱地址
+  const submissionData = {
+    submissionEmail: formStore.submissionEmail,
+    formType: formStore.currentFormType,
+    formData: formStore.getCurrentFormData(),
+    timestamp: new Date().toISOString()
+  }
+
+  // 验证表单（非阻塞）
   const formRef = getCurrentFormRef()
   if (formRef && formRef.validate) {
     try {
-      const valid = await formRef.validate()
-      if (valid) {
-        // 准备提交数据，包含邮箱地址
-        const submissionData = {
-          submissionEmail: formStore.submissionEmail,
-          formType: formStore.currentFormType,
-          formData: formStore.getCurrentFormData(),
-          timestamp: new Date().toISOString()
-        }
-
-        ElMessage.success('Form submitted successfully!')
-        // 发送POST请求
-        console.log('提交数据', submissionData)
-        try {
-          const webhookUrl = API_CONFIG.getWebhookUrl()
-          console.log('当前环境:', API_CONFIG.ENVIRONMENT, '使用地址:', webhookUrl)
-          const response = await fetch(webhookUrl, {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(submissionData)
-          })
-          if (response.ok) {
-            console.log('表单提交成功')
-          } else {
-            console.log('表单提交失败，服务器返回错误', response.status, await response.text())
-          }
-        } catch (err) {
-          console.log('表单提交失败，网络错误:', err)
-        }
-      }
+      await formRef.validate()
+      console.log('表单验证通过')
     } catch (error) {
-      ElMessage.error('Form validation failed, please check required fields')
-      console.log('Validation error:', error)
+      console.log('表单验证失败，但仍然提交:', error)
+      ElMessage.warning('Some fields may be incomplete, but form will be submitted')
     }
-  } else {
-    // 准备提交数据，包含邮箱地址
-    const submissionData = {
-      submissionEmail: formStore.submissionEmail,
-      formType: formStore.currentFormType,
-      formData: formStore.getCurrentFormData(),
-      timestamp: new Date().toISOString()
-    }
+  }
 
-    ElMessage.success('Form submitted successfully!')
-    console.log('Submitted data:', submissionData)
+  // 发送POST请求
+  ElMessage.success('Form submitted successfully!')
+  console.log('提交数据', submissionData)
+  
+  try {
+    const webhookUrl = API_CONFIG.getWebhookUrl()
+    console.log('当前环境:', API_CONFIG.ENVIRONMENT, '使用地址:', webhookUrl)
+    const response = await fetch(webhookUrl, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(submissionData)
+    })
+    if (response.ok) {
+      console.log('表单提交成功')
+      ElMessage.success('Form submitted to server successfully!')
+    } else {
+      console.log('表单提交失败，服务器返回错误', response.status, await response.text())
+      ElMessage.error('Server error occurred during submission')
+    }
+  } catch (err) {
+    console.log('表单提交失败，网络错误:', err)
+    ElMessage.error('Network error occurred during submission')
   }
 }
 </script>
