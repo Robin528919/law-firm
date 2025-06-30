@@ -23,6 +23,11 @@ export const FORM_TYPES = [
     value: 'demurrer',
     label: 'Demurrer Motion Form',
     description: 'Create demurrer motion against affirmative defenses'
+  },
+  {
+    value: 'motionToStrike',
+    label: 'Motion to Strike Form',
+    description: 'Create motion to strike document'
   }
 ]
 

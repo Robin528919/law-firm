@@ -113,6 +113,35 @@ export const useFormStore = defineStore('form', () => {
     MnCRespDate: null,
     MnCResp: ''
   })
+
+  // Motion to Strike 表单数据
+  const motionToStrikeForm = ref({
+    PlaintiffName: '',
+    DefendantName: '',
+    PlaintiffPlurality1: 'Plaintiff',
+    DefendantPlurality1: 'Defendant',
+    CourtLocation: 'LOS ANGELES',
+    CourtName: 'STANLEY MOSK COURTHOUSE',
+    CourtAddress: '111 North Hill Street, Room 307 Los Angeles, CA 90012',
+    HearingDate: null,
+    HearingTime: '8:30 AM',
+    HearingDept: '26',
+    ResID: '354359308862',
+    ComplaintFilingDate: null,
+    TrialDate: 'Not Set',
+    JudgeName: '',
+    CaseNumber: '',
+    ExecutedDate: null,
+    CaseType: '',
+    SelectedCauses: [],
+    AnswerFilingDate: null,
+    ChosenAD: '',
+    ServiceInfo: '',
+    ServerName: '',
+    MnCDate: null,
+    MnCRespDate: null,
+    MnCResp: ''
+  })
   
   // 格式化的被告名称（起诉表单）
   const formattedComplaintDefendantName = computed(() => {
@@ -138,6 +167,34 @@ export const useFormStore = defineStore('form', () => {
     const form = demurrerForm.value
     // Demurrer表单只有被告名称，没有州和实体类型信息
     return form.DefendantName || ''
+  })
+
+  // 格式化的被告名称（Motion to Strike表单）
+  const formattedMotionToStrikeDefendantName = computed(() => {
+    const form = motionToStrikeForm.value
+    // Motion to Strike表单只有被告名称，没有州和实体类型信息
+    return form.DefendantName || ''
+  })
+
+  // Motion to Strike 表单的计算字段
+  const motionToStrikeCalculations = computed(() => {
+    const form = motionToStrikeForm.value
+    
+    // 复数形式计算
+    const plaintiffPlurality = calculations.getPlurality(form.PlaintiffName)
+    const defendantPlurality = calculations.getPlurality(form.DefendantName)
+    
+    // 执行日期 - 当前日期
+    const executedDate = formatLegalDate(new Date())
+    
+    return {
+      // 复数形式
+      plaintiffPlurality1: plaintiffPlurality.form1,
+      defendantPlurality1: defendantPlurality.form1Defendant,
+      
+      // 执行日期
+      executedDate
+    }
   })
 
   // 起诉表单的计算字段
@@ -298,6 +355,10 @@ export const useFormStore = defineStore('form', () => {
   const updateDemurrerForm = (field, value) => {
     demurrerForm.value[field] = value
   }
+
+  const updateMotionToStrikeForm = (field, value) => {
+    motionToStrikeForm.value[field] = value
+  }
   
   const updateSubmissionEmail = (email) => {
     submissionEmail.value = email
@@ -356,6 +417,34 @@ export const useFormStore = defineStore('form', () => {
           demurrerForm.value[key] = null
         }
       })
+    } else if (targetType === 'motionToStrike') {
+      Object.keys(motionToStrikeForm.value).forEach(key => {
+        if (key === 'TrialDate') {
+          motionToStrikeForm.value[key] = 'Not Set'
+        } else if (key === 'PlaintiffPlurality1') {
+          motionToStrikeForm.value[key] = 'Plaintiff'
+        } else if (key === 'DefendantPlurality1') {
+          motionToStrikeForm.value[key] = 'Defendant'
+        } else if (key === 'CourtLocation') {
+          motionToStrikeForm.value[key] = 'LOS ANGELES'
+        } else if (key === 'CourtName') {
+          motionToStrikeForm.value[key] = 'STANLEY MOSK COURTHOUSE'
+        } else if (key === 'CourtAddress') {
+          motionToStrikeForm.value[key] = '111 North Hill Street, Room 307 Los Angeles, CA 90012'
+        } else if (key === 'HearingTime') {
+          motionToStrikeForm.value[key] = '8:30 AM'
+        } else if (key === 'HearingDept') {
+          motionToStrikeForm.value[key] = '26'
+        } else if (key === 'ResID') {
+          motionToStrikeForm.value[key] = '354359308862'
+        } else if (typeof motionToStrikeForm.value[key] === 'string') {
+          motionToStrikeForm.value[key] = ''
+        } else if (Array.isArray(motionToStrikeForm.value[key])) {
+          motionToStrikeForm.value[key] = []
+        } else {
+          motionToStrikeForm.value[key] = null
+        }
+      })
     }
   }
   
@@ -368,7 +457,8 @@ export const useFormStore = defineStore('form', () => {
         complaint: complaintForm.value,
         answer: answerForm.value,
         settlement: settlementForm.value,
-        demurrer: demurrerForm.value
+        demurrer: demurrerForm.value,
+        motionToStrike: motionToStrikeForm.value
       }
     }
     
@@ -400,6 +490,9 @@ export const useFormStore = defineStore('form', () => {
       }
       if (data.forms.demurrer) {
         Object.assign(demurrerForm.value, data.forms.demurrer)
+      }
+      if (data.forms.motionToStrike) {
+        Object.assign(motionToStrikeForm.value, data.forms.motionToStrike)
       }
     }
   }
@@ -437,6 +530,8 @@ export const useFormStore = defineStore('form', () => {
         return settlementForm.value
       case 'demurrer':
         return demurrerForm.value
+      case 'motionToStrike':
+        return motionToStrikeForm.value
       default:
         return {}
     }
@@ -508,15 +603,18 @@ export const useFormStore = defineStore('form', () => {
     answerForm,
     settlementForm,
     demurrerForm,
+    motionToStrikeForm,
     formErrors,
     isLoading,
     
     // 计算属性
     complaintCalculations,
+    motionToStrikeCalculations,
     formattedComplaintDefendantName,
     formattedAnswerDefendantName,
     formattedSettlementDefendantName,
     formattedDemurrerDefendantName,
+    formattedMotionToStrikeDefendantName,
     isFormValid,
     
     // 方法
@@ -525,6 +623,7 @@ export const useFormStore = defineStore('form', () => {
     updateAnswerForm,
     updateSettlementForm,
     updateDemurrerForm,
+    updateMotionToStrikeForm,
     updateSubmissionEmail,
     resetForm,
     resetCurrentForm,

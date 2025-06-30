@@ -19,6 +19,9 @@
         <!-- Demurrer form -->
         <DemurrerForm v-if="formStore.currentFormType === 'demurrer'" ref="demurrerFormRef"/>
 
+        <!-- Motion to Strike form -->
+        <MotionToStrikeForm v-if="formStore.currentFormType === 'motionToStrike'" ref="motionToStrikeFormRef"/>
+
         <!-- Form action buttons -->
         <FormActions
             variant="default"
@@ -61,6 +64,7 @@ import ComplaintForm from '@/components/forms/ComplaintForm.vue'
 import AnswerForm from '@/components/forms/AnswerForm.vue'
 import SettlementForm from '@/components/forms/SettlementForm.vue'
 import DemurrerForm from '@/components/forms/DemurrerForm.vue'
+import MotionToStrikeForm from '@/components/forms/MotionToStrikeForm.vue'
 import {useFormStore} from '@/stores/formStore'
 import {API_CONFIG} from '@/utils/constants'
 
@@ -72,6 +76,7 @@ const complaintFormRef = ref()
 const answerFormRef = ref()
 const settlementFormRef = ref()
 const demurrerFormRef = ref()
+const motionToStrikeFormRef = ref()
 
 // Current form completion progress
 const currentFormProgress = computed(() => {
@@ -84,6 +89,8 @@ const currentFormProgress = computed(() => {
       return calculateSettlementProgress()
     case 'demurrer':
       return calculateDemurrerProgress()
+    case 'motionToStrike':
+      return calculateMotionToStrikeProgress()
     default:
       return 0
   }
@@ -162,6 +169,25 @@ const calculateDemurrerProgress = () => {
   return Math.round((filledFields / requiredFields.length) * 100)
 }
 
+// Calculate motion to strike form progress
+const calculateMotionToStrikeProgress = () => {
+  const requiredFields = [
+    'PlaintiffName', 'DefendantName', 'CourtLocation', 'CourtName', 'CourtAddress',
+    'HearingDate', 'HearingTime', 'HearingDept', 'ResID', 'ComplaintFilingDate',
+    'CaseType', 'SelectedCauses', 'AnswerFilingDate', 'ExecutedDate', 
+    'ChosenAD', 'MnCDate', 'MnCRespDate'
+  ]
+
+  const filledFields = requiredFields.filter(field => {
+    const value = formStore.motionToStrikeForm[field]
+    if (Array.isArray(value)) return value.length > 0
+    if (typeof value === 'string') return value.trim() !== ''
+    return value !== null && value !== undefined
+  }).length
+
+  return Math.round((filledFields / requiredFields.length) * 100)
+}
+
 // Get current form reference
 const getCurrentFormRef = () => {
   switch (formStore.currentFormType) {
@@ -173,6 +199,8 @@ const getCurrentFormRef = () => {
       return settlementFormRef.value
     case 'demurrer':
       return demurrerFormRef.value
+    case 'motionToStrike':
+      return motionToStrikeFormRef.value
     default:
       return null
   }
