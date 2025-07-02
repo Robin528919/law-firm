@@ -265,8 +265,14 @@ export const DEMURRER_CAUSES_OPTIONS = CAUSES_OF_ACTION.map((cause, index) => {
 export const API_CONFIG = {
   // 环境配置
   ENVIRONMENT: import.meta.env.MODE || 'development', // development | production
+  APP_ENV: import.meta.env.VITE_APP_ENV || 'development',
+  APP_NAME: import.meta.env.VITE_APP_NAME || 'Law Firm Forms',
+  DEBUG: import.meta.env.VITE_DEBUG === 'true',
   
-  // API 端点配置
+  // API 端点配置 - 从环境变量读取
+  WEBHOOK_URL: import.meta.env.VITE_API_WEBHOOK_URL,
+  
+  // 备用配置（兼容原有代码）
   ENDPOINTS: {
     // 测试环境webhook地址
     WEBHOOK_TEST: 'https://n8n-jacklaw-u42541.vm.elestio.app/webhook-test/b881c94b-a224-4df4-af9c-c2d5cbe337cd',
@@ -277,8 +283,21 @@ export const API_CONFIG = {
   
   // 获取当前环境的webhook地址
   getWebhookUrl() {
+    // 优先使用环境变量中的配置
+    if (this.WEBHOOK_URL) {
+      return this.WEBHOOK_URL
+    }
+    
+    // 兼容原有逻辑
     return this.ENVIRONMENT === 'production' 
       ? this.ENDPOINTS.WEBHOOK_PROD 
       : this.ENDPOINTS.WEBHOOK_TEST
+  },
+  
+  // 调试日志输出
+  log(...args) {
+    if (this.DEBUG) {
+      console.log('[API_CONFIG]', ...args)
+    }
   }
 } 

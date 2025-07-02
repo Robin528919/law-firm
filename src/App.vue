@@ -318,11 +318,21 @@ const handleSubmit = async () => {
 
   // 发送POST请求
   ElMessage.success('Form submitted successfully!')
-  console.log('提交数据', submissionData)
+  
+  // 使用新的调试配置输出详细信息
+  API_CONFIG.log('=== 表单提交信息 ===')
+  API_CONFIG.log('环境信息:', {
+    MODE: API_CONFIG.ENVIRONMENT,
+    APP_ENV: API_CONFIG.APP_ENV,
+    APP_NAME: API_CONFIG.APP_NAME,
+    DEBUG: API_CONFIG.DEBUG
+  })
+  API_CONFIG.log('提交数据:', submissionData)
   
   try {
     const webhookUrl = API_CONFIG.getWebhookUrl()
-    console.log('当前环境:', API_CONFIG.ENVIRONMENT, '使用地址:', webhookUrl)
+    API_CONFIG.log('Webhook URL:', webhookUrl)
+    
     const response = await fetch(webhookUrl, {
       method: 'POST',
       headers: {
@@ -330,15 +340,17 @@ const handleSubmit = async () => {
       },
       body: JSON.stringify(submissionData)
     })
+    
     if (response.ok) {
-      console.log('表单提交成功')
-      ElMessage.success('Form submitted to server successfully!')
+      API_CONFIG.log('表单提交成功', response.status)
+      ElMessage.success(`Form submitted to server successfully! (${API_CONFIG.APP_ENV})`)
     } else {
-      console.log('表单提交失败，服务器返回错误', response.status, await response.text())
-      ElMessage.error('Server error occurred during submission')
+      const errorText = await response.text()
+      API_CONFIG.log('表单提交失败，服务器返回错误', response.status, errorText)
+      ElMessage.error(`Server error occurred during submission (${response.status})`)
     }
   } catch (err) {
-    console.log('表单提交失败，网络错误:', err)
+    API_CONFIG.log('表单提交失败，网络错误:', err)
     ElMessage.error('Network error occurred during submission')
   }
 }
