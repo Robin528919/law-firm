@@ -1,0 +1,289 @@
+{
+  "name": "Complaint/Damages",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "b881c94b-a224-4df4-af9c-c2d5cbe337cd",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [
+        -660,
+        -460
+      ],
+      "id": "c0f38aec-a3c8-47b0-b9fe-deda94184a16",
+      "name": "Webhook",
+      "webhookId": "b881c94b-a224-4df4-af9c-c2d5cbe337cd",
+      "notes": "Complaint/Damages"
+    },
+    {
+      "parameters": {
+        "url": "=https://api.carbone.io/render/{{ $json[\"data\"][\"renderId\"] }}",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpBearerAuth",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "carbone-version"
+            },
+            {
+              "name": "User-Agent",
+              "value": "Apifox/1.0.0 (https://apifox.com)"
+            },
+            {
+              "name": "Authorization",
+              "value": "Bearer test_eyJhbGciOiJFUzUxMiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiIxMTc0ODU5NTEzNDk2MjgzNDI3IiwiYXVkIjoiY2FyYm9uZSIsImV4cCI6MjQxMTc2OTM2OCwiZGF0YSI6eyJ0eXBlIjoidGVzdCJ9fQ.AKADhvkK8YkFcjZo2DOXrxq29pVwicDzHVGRPEgu64AH6BT9Llh5KXvESXZOlU1Uk8nlaW_aVsartAwwYi47xSsVAdguG832QGL-NahR2RxgDAeecg3MWawiks23xlKWIzJk5npnMC7cGbV47pSlmChImGw8JKhbigJJv3dBLPXYj60F"
+            },
+            {
+              "name": "Accept",
+              "value": "*/*"
+            },
+            {
+              "name": "Host",
+              "value": "api.carbone.io"
+            },
+            {
+              "name": "Connection",
+              "value": "keep-alive"
+            }
+          ]
+        },
+        "options": {
+          "redirect": {
+            "redirect": {}
+          },
+          "response": {
+            "response": {
+              "responseFormat": "file"
+            }
+          }
+        }
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        220,
+        -460
+      ],
+      "id": "5075ceb7-2647-4211-92ca-f2b5f0734c96",
+      "name": "下载文件",
+      "credentials": {
+        "httpBearerAuth": {
+          "id": "3w0MG48afEMdXUPz",
+          "name": "Bearer Auth account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "=https://api.carbone.io/render/{{ $json.templateId }}",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpBearerAuth",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {}
+          ]
+        },
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "convertTo",
+              "value": "pdf"
+            },
+            {
+              "name": "timezone",
+              "value": "Europe/Paris"
+            },
+            {
+              "name": "lang",
+              "value": "en-us"
+            },
+            {
+              "name": "data",
+              "value": "={{ $json.body.formData }}"
+            }
+          ]
+        },
+        "options": {
+          "redirect": {
+            "redirect": {}
+          }
+        }
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        0,
+        -460
+      ],
+      "id": "2edee40d-5661-4738-a674-1860c2a23004",
+      "name": "生成文档",
+      "credentials": {
+        "httpBearerAuth": {
+          "id": "3w0MG48afEMdXUPz",
+          "name": "Bearer Auth account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "a0f75a58-c453-4e0c-97d3-7e0d94276c4a",
+              "name": "body",
+              "value": "={{ $json.body }}",
+              "type": "object"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        -440,
+        -460
+      ],
+      "id": "b1d50edb-127a-40e7-aeea-955b394565bf",
+      "name": "Edit Fields"
+    },
+    {
+      "parameters": {
+        "jsCode": "// ---------- Code 节点：Run Once (All Items) ----------\n\nconst output = [];\n\nconst inputItems = $input.all();   // 先拿一遍，后面需要索引\n\nfor (let idx = 0; idx < inputItems.length; idx++) {\n    const item = inputItems[idx];\n    const {formData, formType} = item.json.body;\n    console.log(\"item.json\", item.json.body)\n    console.log(\"formData\", formData)\n    console.log(\"formType\", formType)\n    // ① 根据 formType 选择 templateIds\n    let templateIds;\n    if (formType === 'complaint') {\n        templateIds = [\n            '41da9300137fbddc1a684fca397fb1e0362902ac528e21a66a73abfe3b3783e1',\n            'abd3a284f8d122ac4c233aeebdb4462f570792e21477dffad283ecabca1e2e49',\n        ];\n    } else if (formType === 'answer') {\n        templateIds = [\n            '253036470b30a42e5d587370279f9fb9780066366bc0a8bc7c248d6f87801e1d',\n        ];\n    } else if (formType === 'settlement') {\n        templateIds = [\n            '253036470b30a42e5d587370279f9fb9780066366bc0a8bc7c248d6f87801e1d',\n        ];\n    } else if (formType === 'demurrer') {\n        templateIds = [\n            '10cb4c4629c9c347a73ec78a36d64c946d7dadb295049d15c202fac7922bcbd2',\n            '8a84c243aa273569f0180cb12e6b71b3da276d320180b77b8d530baba3bf323c',\n            '81717929a11601a416e3bee6555416dd3466efbf42f1d9057d7589acaa178381',\n        ];\n    } else if (formType === 'motionToStrike') {\n        templateIds = [\n            'be2476066f00d3a76e4a0da8b331c1f1500a0dbe4bf0bb6eefa16f7d6e59af61',\n            'b12b89cc4b830f77281b014c7e002c7b1c09efb5ebb1124520ef21462b3e70dc',\n            'dff282f1306ed3fffd709c4de62acff21b6d7ee8c957c6465e55160b1d071b78',\n        ];\n    } else {\n        throw new Error(`未知的 formType: ${formType}`);\n    }\n\n    // ② 拆分成多条输出；每条附带 pairedItem\n    for (const id of templateIds) {\n        output.push({\n            json: {\n                ...item.json,     // 保留所有原字段\n                templateId: id,   // 单个 id\n            },\n            pairedItem: {       // 告诉 n8n：它来自第 idx 条输入\n                item: idx,\n            },\n        });\n    }\n}\n\nreturn output;\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -220,
+        -460
+      ],
+      "id": "d1e0cab4-3b7e-4ea6-bc46-627be55e6677",
+      "name": "Code"
+    },
+    {
+      "parameters": {
+        "fromEmail": "robin528919@gmail.com",
+        "toEmail": "=1514149460@qq.com",
+        "subject": "法律文档 - {{ $json.fileCount }} 个文件",
+        "options": {
+          "attachments": "={{ $json.attachmentNames }}"
+        }
+      },
+      "type": "n8n-nodes-base.emailSend",
+      "typeVersion": 2.1,
+      "position": [
+        660,
+        -460
+      ],
+      "id": "15c23aaa-86b8-46b3-8906-047d4a3664ad",
+      "name": "发送邮件",
+      "webhookId": "2dab1a29-add1-4784-af55-512b40dd7f5f",
+      "credentials": {
+        "smtp": {
+          "id": "g9UApp4PhDXfqXKF",
+          "name": "SMTP account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "// 合并多个下载的文件到一个项目的二进制数据中\nconst items = $input.all();\nconst outputItem = {\n  json: {\n    fileCount: items.length,\n    message: `处理了 ${items.length} 个文件`\n  },\n  binary: {}\n};\n\nconsole.log('开始处理', items.length, '个文件');\n\n// 将每个文件作为单独的二进制属性添加\nfor (let i = 0; i < items.length; i++) {\n  const item = items[i];\n  const binaryData = item.binary;\n  \n  console.log(`处理文件 ${i + 1}:`, Object.keys(binaryData || {}));\n  \n  if (binaryData) {\n    // 查找二进制数据\n    let fileData = null;\n    \n    // 检查常见的二进制数据键\n    if (binaryData.data) {\n      fileData = binaryData.data;\n    } else {\n      // 获取第一个键的数据\n      const keys = Object.keys(binaryData);\n      if (keys.length > 0) {\n        fileData = binaryData[keys[0]];\n      }\n    }\n    \n    if (fileData) {\n      // 根据表单类型和模板生成文件名\n      const formType = item.json.body?.formType || 'document';\n      const templateId = item.json.templateId || 'unknown';\n      const shortTemplateId = templateId.substring(0, 8);\n      const propertyName = `file_${i}`;\n      const fileName = `${formType}_${shortTemplateId}_${i + 1}.pdf`;\n      \n      // 添加到输出项的二进制数据中\n      outputItem.binary[propertyName] = {\n        data: fileData.data || fileData,\n        mimeType: fileData.mimeType || 'application/pdf',\n        fileName: fileName,\n        fileExtension: 'pdf'\n      };\n      \n      console.log(`添加文件 ${propertyName}: ${fileName}`);\n    } else {\n      console.log(`文件 ${i + 1} 没有找到二进制数据`);\n    }\n  }\n}\n\n// 生成附件名称列表（用于Send Email节点）\nconst attachmentNames = Object.keys(outputItem.binary);\noutputItem.json.attachmentNames = attachmentNames.join(',');\n\nconsole.log(`生成了 ${attachmentNames.length} 个附件:`, attachmentNames);\n\nreturn [outputItem];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        440,
+        -460
+      ],
+      "id": "28051023-9184-4084-bc2f-156dd7c3f62c",
+      "name": "处理附件"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Webhook": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "生成文档": {
+      "main": [
+        [
+          {
+            "node": "下载文件",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "下载文件": {
+      "main": [
+        [
+          {
+            "node": "处理附件",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields": {
+      "main": [
+        [
+          {
+            "node": "Code",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code": {
+      "main": [
+        [
+          {
+            "node": "生成文档",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "处理附件": {
+      "main": [
+        [
+          {
+            "node": "发送邮件",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "cb632484-78c2-4881-8b7c-8822996b6756",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "12ebc04d3aaafd2f3e28ae3cf8a37a9b38e85b98ccaecf7cfa95b8942516673e"
+  },
+  "id": "ex5GgfQ0mALJ5lvk",
+  "tags": []
+}
