@@ -10,10 +10,10 @@
       "type": "n8n-nodes-base.webhook",
       "typeVersion": 2,
       "position": [
-        -660,
-        -460
+        420,
+        -60
       ],
-      "id": "c0f38aec-a3c8-47b0-b9fe-deda94184a16",
+      "id": "4a728091-40eb-4a90-bed3-bb263adc58fa",
       "name": "Webhook",
       "webhookId": "b881c94b-a224-4df4-af9c-c2d5cbe337cd",
       "notes": "Complaint/Damages"
@@ -65,10 +65,10 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
       "position": [
-        220,
-        -460
+        1300,
+        -60
       ],
-      "id": "5075ceb7-2647-4211-92ca-f2b5f0734c96",
+      "id": "6a4a082a-53a8-4540-b374-d776ed4431f2",
       "name": "下载文件",
       "credentials": {
         "httpBearerAuth": {
@@ -119,10 +119,10 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
       "position": [
-        0,
-        -460
+        1080,
+        -60
       ],
-      "id": "2edee40d-5661-4738-a674-1860c2a23004",
+      "id": "8c3ee4d3-5ded-437d-a002-07ec8f411573",
       "name": "生成文档",
       "credentials": {
         "httpBearerAuth": {
@@ -148,10 +148,10 @@
       "type": "n8n-nodes-base.set",
       "typeVersion": 3.4,
       "position": [
-        -440,
-        -460
+        640,
+        -60
       ],
-      "id": "b1d50edb-127a-40e7-aeea-955b394565bf",
+      "id": "b56e753c-f814-4e89-8c01-1a6206302671",
       "name": "Edit Fields"
     },
     {
@@ -161,17 +161,18 @@
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        -220,
-        -460
+        860,
+        -60
       ],
-      "id": "d1e0cab4-3b7e-4ea6-bc46-627be55e6677",
+      "id": "b4637b35-9763-4180-a19b-2a1a9818c0be",
       "name": "Code"
     },
     {
       "parameters": {
         "fromEmail": "robin528919@gmail.com",
-        "toEmail": "=1514149460@qq.com",
-        "subject": "法律文档 - {{ $json.fileCount }} 个文件",
+        "toEmail": "={{ $('Edit Fields').first().json.body.submissionEmail }}",
+        "subject": "=法律文档 - {{ $json.fileCount }} 个文件",
+        "text": "您好，\n\n您提交的法律文档已生成完成。附件中包含了 {{ $json.fileCount }} 个PDF文件。\n\n{{ $json.message }}\n\n如有任何问题，请联系我们。\n\n此邮件由系统自动发送。",
         "options": {
           "attachments": "={{ $json.attachmentNames }}"
         }
@@ -179,10 +180,10 @@
       "type": "n8n-nodes-base.emailSend",
       "typeVersion": 2.1,
       "position": [
-        660,
-        -460
+        1740,
+        -60
       ],
-      "id": "15c23aaa-86b8-46b3-8906-047d4a3664ad",
+      "id": "f96ac4a6-d047-41f0-a360-9c2304f8dbcc",
       "name": "发送邮件",
       "webhookId": "2dab1a29-add1-4784-af55-512b40dd7f5f",
       "credentials": {
@@ -194,15 +195,15 @@
     },
     {
       "parameters": {
-        "jsCode": "// 合并多个下载的文件到一个项目的二进制数据中\nconst items = $input.all();\nconst outputItem = {\n  json: {\n    fileCount: items.length,\n    message: `处理了 ${items.length} 个文件`\n  },\n  binary: {}\n};\n\nconsole.log('开始处理', items.length, '个文件');\n\n// 将每个文件作为单独的二进制属性添加\nfor (let i = 0; i < items.length; i++) {\n  const item = items[i];\n  const binaryData = item.binary;\n  \n  console.log(`处理文件 ${i + 1}:`, Object.keys(binaryData || {}));\n  \n  if (binaryData) {\n    // 查找二进制数据\n    let fileData = null;\n    \n    // 检查常见的二进制数据键\n    if (binaryData.data) {\n      fileData = binaryData.data;\n    } else {\n      // 获取第一个键的数据\n      const keys = Object.keys(binaryData);\n      if (keys.length > 0) {\n        fileData = binaryData[keys[0]];\n      }\n    }\n    \n    if (fileData) {\n      // 根据表单类型和模板生成文件名\n      const formType = item.json.body?.formType || 'document';\n      const templateId = item.json.templateId || 'unknown';\n      const shortTemplateId = templateId.substring(0, 8);\n      const propertyName = `file_${i}`;\n      const fileName = `${formType}_${shortTemplateId}_${i + 1}.pdf`;\n      \n      // 添加到输出项的二进制数据中\n      outputItem.binary[propertyName] = {\n        data: fileData.data || fileData,\n        mimeType: fileData.mimeType || 'application/pdf',\n        fileName: fileName,\n        fileExtension: 'pdf'\n      };\n      \n      console.log(`添加文件 ${propertyName}: ${fileName}`);\n    } else {\n      console.log(`文件 ${i + 1} 没有找到二进制数据`);\n    }\n  }\n}\n\n// 生成附件名称列表（用于Send Email节点）\nconst attachmentNames = Object.keys(outputItem.binary);\noutputItem.json.attachmentNames = attachmentNames.join(',');\n\nconsole.log(`生成了 ${attachmentNames.length} 个附件:`, attachmentNames);\n\nreturn [outputItem];"
+        "jsCode": "// 合并多个下载的文件到一个项目的二进制数据中\nconst items = $input.all();\nconst outputItem = {\n  json: {\n    fileCount: items.length,\n    message: `处理了 ${items.length} 个文件`\n  },\n  binary: {}\n};\n\nconsole.log('开始处理', items.length, '个文件');\nconsole.log('第一个项目的完整数据:', JSON.stringify(items[0], null, 2));\n\n// 将每个文件作为单独的二进制属性添加\nfor (let i = 0; i < items.length; i++) {\n  const item = items[i];\n  const binaryData = item.binary;\n  \n  console.log(`\\n=== 处理文件 ${i + 1} ===`);\n  console.log('Binary keys:', Object.keys(binaryData || {}));\n  \n  if (binaryData) {\n    // 查找二进制数据 - 检查所有可能的键\n    const binaryKeys = Object.keys(binaryData);\n    let fileData = null;\n    let actualKey = null;\n    \n    // 常见的二进制数据键名\n    const possibleKeys = ['data', 'file', 'binary', 'attachment', 'document'];\n    \n    // 首先检查常见键名\n    for (const key of possibleKeys) {\n      if (binaryData[key]) {\n        fileData = binaryData[key];\n        actualKey = key;\n        break;\n      }\n    }\n    \n    // 如果没找到，使用第一个可用的键\n    if (!fileData && binaryKeys.length > 0) {\n      actualKey = binaryKeys[0];\n      fileData = binaryData[actualKey];\n    }\n    \n    console.log(`使用键名: ${actualKey}`);\n    console.log('FileData 类型:', typeof fileData);\n    console.log('FileData 结构:', fileData ? Object.keys(fileData) : 'null');\n    \n    if (fileData) {\n      // 根据表单类型和模板生成文件名\n      const formType = item.json.body?.formType || 'document';\n      const templateId = item.json.templateId || 'unknown';\n      const shortTemplateId = templateId.substring(0, 8);\n      const propertyName = `file_${i}`;\n      const fileName = `${formType}_${shortTemplateId}_${i + 1}.pdf`;\n      \n      console.log(`准备复制文件数据到 ${propertyName}`);\n      \n      // 直接复制完整的二进制数据对象\n      outputItem.binary[propertyName] = {\n        ...fileData,  // 复制所有原始属性\n        fileName: fileName,  // 覆盖文件名\n        fileExtension: 'pdf'  // 确保扩展名\n      };\n      \n      console.log(`✅ 成功添加文件 ${propertyName}: ${fileName}`);\n      console.log(`文件大小: ${fileData.data ? fileData.data.length : 'unknown'} bytes`);\n    } else {\n      console.log(`❌ 文件 ${i + 1} 没有找到有效的二进制数据`);\n    }\n  } else {\n    console.log(`❌ 文件 ${i + 1} 没有 binary 属性`);\n  }\n}\n\n// 生成附件名称列表（用于Send Email节点）\nconst attachmentNames = Object.keys(outputItem.binary);\noutputItem.json.attachmentNames = attachmentNames.join(',');\n\n// 从第一个文件的数据中获取 submissionEmail\nif (items.length > 0 && items[0].json.body) {\n  outputItem.json.submissionEmail = items[0].json.body.submissionEmail;\n  console.log('\\n📧 获取到提交邮箱:', outputItem.json.submissionEmail);\n}\n\nconsole.log(`\\n📎 最终生成了 ${attachmentNames.length} 个附件:`, attachmentNames);\nconsole.log('输出项的二进制键:', Object.keys(outputItem.binary));\n\nreturn [outputItem];"
       },
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        440,
-        -460
+        1520,
+        -60
       ],
-      "id": "28051023-9184-4084-bc2f-156dd7c3f62c",
+      "id": "e1aaa117-6590-4983-a8c8-262ef1d091f7",
       "name": "处理附件"
     }
   ],
@@ -279,7 +280,7 @@
   "settings": {
     "executionOrder": "v1"
   },
-  "versionId": "cb632484-78c2-4881-8b7c-8822996b6756",
+  "versionId": "8b10b721-8a56-41a5-b47d-8d99c3bc4d56",
   "meta": {
     "templateCredsSetupCompleted": true,
     "instanceId": "12ebc04d3aaafd2f3e28ae3cf8a37a9b38e85b98ccaecf7cfa95b8942516673e"
