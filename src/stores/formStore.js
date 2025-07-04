@@ -142,6 +142,20 @@ export const useFormStore = defineStore('form', () => {
     MnCRespDate: null,
     MnCResp: ''
   })
+
+  // Request for Production 表单数据
+  const requestForProductionForm = ref({
+    PlaintiffName: '',
+    CaseNumber: '',
+    DefendantName: '',
+    JudgeName: '',
+    ComplaintFilingDate: null,
+    LetterDate: null,
+    TrialDate: '',
+    ExecutedDate: null,
+    OCName: '',
+    OCFirm: ''
+  })
   
   // 格式化的被告名称（起诉表单）
   const formattedComplaintDefendantName = computed(() => {
@@ -173,6 +187,13 @@ export const useFormStore = defineStore('form', () => {
   const formattedMotionToStrikeDefendantName = computed(() => {
     const form = motionToStrikeForm.value
     // Motion to Strike表单只有被告名称，没有州和实体类型信息
+    return form.DefendantName || ''
+  })
+
+  // 格式化的被告名称（Request for Production表单）
+  const formattedRequestForProductionDefendantName = computed(() => {
+    const form = requestForProductionForm.value
+    // Request for Production表单只有被告名称，没有州和实体类型信息
     return form.DefendantName || ''
   })
 
@@ -359,6 +380,10 @@ export const useFormStore = defineStore('form', () => {
   const updateMotionToStrikeForm = (field, value) => {
     motionToStrikeForm.value[field] = value
   }
+
+  const updateRequestForProductionForm = (field, value) => {
+    requestForProductionForm.value[field] = value
+  }
   
   const updateSubmissionEmail = (email) => {
     submissionEmail.value = email
@@ -427,6 +452,16 @@ export const useFormStore = defineStore('form', () => {
           motionToStrikeForm.value[key] = null
         }
       })
+    } else if (targetType === 'requestForProduction') {
+      Object.keys(requestForProductionForm.value).forEach(key => {
+        if (typeof requestForProductionForm.value[key] === 'string') {
+          requestForProductionForm.value[key] = ''
+        } else if (Array.isArray(requestForProductionForm.value[key])) {
+          requestForProductionForm.value[key] = []
+        } else {
+          requestForProductionForm.value[key] = null
+        }
+      })
     }
   }
   
@@ -440,7 +475,8 @@ export const useFormStore = defineStore('form', () => {
         answer: answerForm.value,
         settlement: settlementForm.value,
         demurrer: demurrerForm.value,
-        motionToStrike: motionToStrikeForm.value
+        motionToStrike: motionToStrikeForm.value,
+        requestForProduction: requestForProductionForm.value
       }
     }
     
@@ -475,6 +511,9 @@ export const useFormStore = defineStore('form', () => {
       }
       if (data.forms.motionToStrike) {
         Object.assign(motionToStrikeForm.value, data.forms.motionToStrike)
+      }
+      if (data.forms.requestForProduction) {
+        Object.assign(requestForProductionForm.value, data.forms.requestForProduction)
       }
     }
   }
@@ -514,6 +553,8 @@ export const useFormStore = defineStore('form', () => {
         return demurrerForm.value
       case 'motionToStrike':
         return motionToStrikeForm.value
+      case 'requestForProduction':
+        return requestForProductionForm.value
       default:
         return {}
     }
@@ -586,6 +627,7 @@ export const useFormStore = defineStore('form', () => {
     settlementForm,
     demurrerForm,
     motionToStrikeForm,
+    requestForProductionForm,
     formErrors,
     isLoading,
     
@@ -597,6 +639,7 @@ export const useFormStore = defineStore('form', () => {
     formattedSettlementDefendantName,
     formattedDemurrerDefendantName,
     formattedMotionToStrikeDefendantName,
+    formattedRequestForProductionDefendantName,
     isFormValid,
     
     // 方法
@@ -606,6 +649,7 @@ export const useFormStore = defineStore('form', () => {
     updateSettlementForm,
     updateDemurrerForm,
     updateMotionToStrikeForm,
+    updateRequestForProductionForm,
     updateSubmissionEmail,
     resetForm,
     resetCurrentForm,

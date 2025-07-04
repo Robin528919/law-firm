@@ -22,6 +22,9 @@
         <!-- Motion to Strike form -->
         <MotionToStrikeForm v-if="formStore.currentFormType === 'motionToStrike'" ref="motionToStrikeFormRef"/>
 
+        <!-- Request for Production form -->
+        <RequestForProductionForm v-if="formStore.currentFormType === 'requestForProduction'" ref="requestForProductionFormRef"/>
+
         <!-- Form action buttons -->
         <FormActions
             variant="default"
@@ -65,6 +68,7 @@ import AnswerForm from '@/components/forms/AnswerForm.vue'
 import SettlementForm from '@/components/forms/SettlementForm.vue'
 import DemurrerForm from '@/components/forms/DemurrerForm.vue'
 import MotionToStrikeForm from '@/components/forms/MotionToStrikeForm.vue'
+import RequestForProductionForm from '@/components/forms/RequestForProductionForm.vue'
 import {useFormStore} from '@/stores/formStore'
 import {API_CONFIG} from '@/utils/constants'
 
@@ -77,6 +81,7 @@ const answerFormRef = ref()
 const settlementFormRef = ref()
 const demurrerFormRef = ref()
 const motionToStrikeFormRef = ref()
+const requestForProductionFormRef = ref()
 
 // Current form completion progress
 const currentFormProgress = computed(() => {
@@ -91,6 +96,8 @@ const currentFormProgress = computed(() => {
       return calculateDemurrerProgress()
     case 'motionToStrike':
       return calculateMotionToStrikeProgress()
+    case 'requestForProduction':
+      return calculateRequestForProductionProgress()
     default:
       return 0
   }
@@ -188,6 +195,23 @@ const calculateMotionToStrikeProgress = () => {
   return Math.round((filledFields / requiredFields.length) * 100)
 }
 
+// Calculate request for production form progress
+const calculateRequestForProductionProgress = () => {
+  const requiredFields = [
+    'PlaintiffName', 'CaseNumber', 'DefendantName', 'JudgeName',
+    'ComplaintFilingDate', 'LetterDate', 'ExecutedDate', 
+    'OCName', 'OCFirm'
+  ]
+
+  const filledFields = requiredFields.filter(field => {
+    const value = formStore.requestForProductionForm[field]
+    if (typeof value === 'string') return value.trim() !== ''
+    return value !== null && value !== undefined
+  }).length
+
+  return Math.round((filledFields / requiredFields.length) * 100)
+}
+
 // Get current form reference
 const getCurrentFormRef = () => {
   switch (formStore.currentFormType) {
@@ -201,6 +225,8 @@ const getCurrentFormRef = () => {
       return demurrerFormRef.value
     case 'motionToStrike':
       return motionToStrikeFormRef.value
+    case 'requestForProduction':
+      return requestForProductionFormRef.value
     default:
       return null
   }

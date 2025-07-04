@@ -28,6 +28,11 @@ export const FORM_TYPES = [
     value: 'motionToStrike',
     label: 'Motion to Strike Form',
     description: 'Create motion to strike document'
+  },
+  {
+    value: 'requestForProduction',
+    label: 'Request for Production Form',
+    description: 'Create request for production of documents'
   }
 ]
 
