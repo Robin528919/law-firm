@@ -33,6 +33,11 @@ export const FORM_TYPES = [
     value: 'requestForProduction',
     label: 'Request for Production Form',
     description: 'Create request for production of documents'
+  },
+  {
+    value: 'pmpDepo',
+    label: 'PMP Depo Form',
+    description: 'Create PMP deposition related documents'
   }
 ]
 

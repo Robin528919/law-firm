@@ -25,6 +25,9 @@
         <!-- Request for Production form -->
         <RequestForProductionForm v-if="formStore.currentFormType === 'requestForProduction'" ref="requestForProductionFormRef"/>
 
+        <!-- PMP Depo form -->
+        <PmpDepoForm v-if="formStore.currentFormType === 'pmpDepo'" ref="pmpDepoFormRef"/>
+
         <!-- Form action buttons -->
         <FormActions
             variant="default"
@@ -69,6 +72,7 @@ import SettlementForm from '@/components/forms/SettlementForm.vue'
 import DemurrerForm from '@/components/forms/DemurrerForm.vue'
 import MotionToStrikeForm from '@/components/forms/MotionToStrikeForm.vue'
 import RequestForProductionForm from '@/components/forms/RequestForProductionForm.vue'
+import PmpDepoForm from '@/components/forms/PmpDepoForm.vue'
 import {useFormStore} from '@/stores/formStore'
 import {API_CONFIG} from '@/utils/constants'
 
@@ -82,6 +86,7 @@ const settlementFormRef = ref()
 const demurrerFormRef = ref()
 const motionToStrikeFormRef = ref()
 const requestForProductionFormRef = ref()
+const pmpDepoFormRef = ref()
 
 // Current form completion progress
 const currentFormProgress = computed(() => {
@@ -98,6 +103,8 @@ const currentFormProgress = computed(() => {
       return calculateMotionToStrikeProgress()
     case 'requestForProduction':
       return calculateRequestForProductionProgress()
+    case 'pmpDepo':
+      return calculatePmpDepoProgress()
     default:
       return 0
   }
@@ -212,6 +219,22 @@ const calculateRequestForProductionProgress = () => {
   return Math.round((filledFields / requiredFields.length) * 100)
 }
 
+// Calculate pmp depo form progress
+const calculatePmpDepoProgress = () => {
+  const requiredFields = [
+    'PlaintiffName', 'CaseNumber', 'DefendantName', 'OCName', 
+    'OCFirm', 'OCAddress', 'MnCDate', 'LetterDate'
+  ]
+
+  const filledFields = requiredFields.filter(field => {
+    const value = formStore.pmpDepoForm[field]
+    if (typeof value === 'string') return value.trim() !== ''
+    return value !== null && value !== undefined
+  }).length
+
+  return Math.round((filledFields / requiredFields.length) * 100)
+}
+
 // Get current form reference
 const getCurrentFormRef = () => {
   switch (formStore.currentFormType) {
@@ -227,6 +250,8 @@ const getCurrentFormRef = () => {
       return motionToStrikeFormRef.value
     case 'requestForProduction':
       return requestForProductionFormRef.value
+    case 'pmpDepo':
+      return pmpDepoFormRef.value
     default:
       return null
   }

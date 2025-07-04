@@ -156,6 +156,18 @@ export const useFormStore = defineStore('form', () => {
     OCName: '',
     OCFirm: ''
   })
+
+  // PMP Depo 表单数据
+  const pmpDepoForm = ref({
+    PlaintiffName: '',
+    CaseNumber: '',
+    DefendantName: '',
+    OCName: '',
+    OCFirm: '',
+    OCAddress: '',
+    MnCDate: '',
+    LetterDate: null
+  })
   
   // 格式化的被告名称（起诉表单）
   const formattedComplaintDefendantName = computed(() => {
@@ -194,6 +206,13 @@ export const useFormStore = defineStore('form', () => {
   const formattedRequestForProductionDefendantName = computed(() => {
     const form = requestForProductionForm.value
     // Request for Production表单只有被告名称，没有州和实体类型信息
+    return form.DefendantName || ''
+  })
+
+  // 格式化的被告名称（PMP Depo表单）
+  const formattedPmpDepoDefendantName = computed(() => {
+    const form = pmpDepoForm.value
+    // PMP Depo表单只有被告名称，没有州和实体类型信息
     return form.DefendantName || ''
   })
 
@@ -384,6 +403,10 @@ export const useFormStore = defineStore('form', () => {
   const updateRequestForProductionForm = (field, value) => {
     requestForProductionForm.value[field] = value
   }
+
+  const updatePmpDepoForm = (field, value) => {
+    pmpDepoForm.value[field] = value
+  }
   
   const updateSubmissionEmail = (email) => {
     submissionEmail.value = email
@@ -462,6 +485,16 @@ export const useFormStore = defineStore('form', () => {
           requestForProductionForm.value[key] = null
         }
       })
+    } else if (targetType === 'pmpDepo') {
+      Object.keys(pmpDepoForm.value).forEach(key => {
+        if (typeof pmpDepoForm.value[key] === 'string') {
+          pmpDepoForm.value[key] = ''
+        } else if (Array.isArray(pmpDepoForm.value[key])) {
+          pmpDepoForm.value[key] = []
+        } else {
+          pmpDepoForm.value[key] = null
+        }
+      })
     }
   }
   
@@ -476,7 +509,8 @@ export const useFormStore = defineStore('form', () => {
         settlement: settlementForm.value,
         demurrer: demurrerForm.value,
         motionToStrike: motionToStrikeForm.value,
-        requestForProduction: requestForProductionForm.value
+        requestForProduction: requestForProductionForm.value,
+        pmpDepo: pmpDepoForm.value
       }
     }
     
@@ -514,6 +548,9 @@ export const useFormStore = defineStore('form', () => {
       }
       if (data.forms.requestForProduction) {
         Object.assign(requestForProductionForm.value, data.forms.requestForProduction)
+      }
+      if (data.forms.pmpDepo) {
+        Object.assign(pmpDepoForm.value, data.forms.pmpDepo)
       }
     }
   }
@@ -555,6 +592,8 @@ export const useFormStore = defineStore('form', () => {
         return motionToStrikeForm.value
       case 'requestForProduction':
         return requestForProductionForm.value
+      case 'pmpDepo':
+        return pmpDepoForm.value
       default:
         return {}
     }
@@ -628,6 +667,7 @@ export const useFormStore = defineStore('form', () => {
     demurrerForm,
     motionToStrikeForm,
     requestForProductionForm,
+    pmpDepoForm,
     formErrors,
     isLoading,
     
@@ -640,6 +680,7 @@ export const useFormStore = defineStore('form', () => {
     formattedDemurrerDefendantName,
     formattedMotionToStrikeDefendantName,
     formattedRequestForProductionDefendantName,
+    formattedPmpDepoDefendantName,
     isFormValid,
     
     // 方法
@@ -650,6 +691,7 @@ export const useFormStore = defineStore('form', () => {
     updateDemurrerForm,
     updateMotionToStrikeForm,
     updateRequestForProductionForm,
+    updatePmpDepoForm,
     updateSubmissionEmail,
     resetForm,
     resetCurrentForm,
