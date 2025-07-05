@@ -118,16 +118,41 @@
           />
         </el-form-item>
       </FormGroup>
+
+      <!-- 开发测试工具 -->
+      <FormGroup
+        v-if="isDevelopmentMode"
+        title="Development Tools"
+        description="Testing utilities for development purposes"
+        icon="Tools"
+        variant="bordered"
+        :columns="1"
+      >
+        <div class="test-tools">
+          <el-button
+            @click="fillTestData"
+            type="warning"
+            icon="DocumentCopy"
+            size="default"
+            :loading="fillingTestData"
+          >
+            Fill Test Data
+          </el-button>
+          <div class="test-info">
+            <small>Environment: {{ API_CONFIG.ENVIRONMENT }} | App Env: {{ API_CONFIG.APP_ENV }}</small>
+          </div>
+        </div>
+      </FormGroup>
     </el-form>
   </div>
 </template>
 
 <script setup>
-import { ref } from 'vue'
+import { ref, computed } from 'vue'
 import FormGroup from '@/components/common/FormGroup.vue'
 import FormField from '@/components/common/FormField.vue'
 import { useFormStore } from '@/stores/formStore'
-import { VALIDATION_RULES } from '@/utils/constants'
+import { VALIDATION_RULES, PMP_DEPO_TEST_DATA, API_CONFIG } from '@/utils/constants'
 
 // 使用表单状态管理
 const formStore = useFormStore()
@@ -135,6 +160,12 @@ const formRef = ref()
 
 // 表单数据 - 直接使用 ref，支持双向绑定
 const formData = formStore.pmpDepoForm
+
+// 开发测试相关状态
+const isDevelopmentMode = computed(() => {
+  return API_CONFIG.ENVIRONMENT === 'development' || API_CONFIG.APP_ENV === 'development' || API_CONFIG.DEBUG
+})
+const fillingTestData = ref(false)
 
 // 验证规则
 const validationRules = {
@@ -165,6 +196,28 @@ const validate = async () => {
   }
 }
 
+// 填充测试数据方法
+const fillTestData = async () => {
+  fillingTestData.value = true
+  
+  try {
+    // 填充所有测试数据
+    Object.keys(PMP_DEPO_TEST_DATA).forEach(key => {
+      formData[key] = PMP_DEPO_TEST_DATA[key]
+    })
+    
+    // 短暂延迟模拟加载过程
+    await new Promise(resolve => setTimeout(resolve, 300))
+    
+    console.log('PMP Depo 测试数据已填充:', formData)
+    
+  } catch (error) {
+    console.error('填充测试数据时出错:', error)
+  } finally {
+    fillingTestData.value = false
+  }
+}
+
 // 重置表单方法
 const resetForm = () => {
   formStore.resetForm('pmpDepo')
@@ -173,7 +226,8 @@ const resetForm = () => {
 // 暴露方法给父组件
 defineExpose({
   validate,
-  resetForm
+  resetForm,
+  fillTestData
 })
 </script>
 
@@ -181,5 +235,32 @@ defineExpose({
 .pmp-depo-form {
   max-width: 100%;
   margin: 0 auto;
+}
+
+/* Test tools styles */
+.test-tools {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 12px;
+}
+
+.test-info {
+  color: var(--el-text-color-regular);
+  font-size: 12px;
+  background-color: var(--el-fill-color-lighter);
+  padding: 6px 10px;
+  border-radius: 4px;
+  border: 1px solid var(--el-border-color-lighter);
+}
+
+.test-tools .el-button {
+  background-color: var(--el-color-warning-light-7);
+  border-color: var(--el-color-warning-light-5);
+}
+
+.test-tools .el-button:hover {
+  background-color: var(--el-color-warning-light-5);
+  border-color: var(--el-color-warning);
 }
 </style> 

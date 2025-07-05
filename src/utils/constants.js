@@ -293,6 +293,18 @@ export const NTC_OF_DEPO_TEST_DATA = {
   ServerName: 'Professional Process Service, Inc.'
 }
 
+// PMP Depo 表单测试数据
+export const PMP_DEPO_TEST_DATA = {
+  PlaintiffName: 'JUSTINO VALERIANO JIMENEZ',
+  CaseNumber: '20STCV09196',
+  DefendantName: 'CASA LEADERS HP, INC',
+  OCName: 'Abraham Sandoval',
+  OCFirm: 'SANDOVAL LAW, APC',
+  OCAddress: '3435 Wilshire Boulevard, Suite 1620, Los Angeles, California 90010',
+  MnCDate: 'September 17, 2020, September 22, 2020, September 24, 2020',
+  LetterDate: '2024-01-15'
+}
+
 // API 配置
 export const API_CONFIG = {
   // 环境配置
