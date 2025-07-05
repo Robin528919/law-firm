@@ -38,6 +38,11 @@ export const FORM_TYPES = [
     value: 'pmpDepo',
     label: 'PMP Depo Form',
     description: 'Create PMP deposition related documents'
+  },
+  {
+    value: 'ntcOfDepo',
+    label: 'NTC of Depo Form',
+    description: 'Create notice of deposition documents'
   }
 ]
 
@@ -270,6 +275,23 @@ export const DEMURRER_CAUSES_OPTIONS = CAUSES_OF_ACTION.map((cause, index) => {
     value: `${index + 1})${cleanLabel}`
   }
 })
+
+// NTC of Depo 表单测试数据
+export const NTC_OF_DEPO_TEST_DATA = {
+  PlaintiffNames: ['JUSTINO VALERIANO JIMENEZ', 'MARIA ELENA RODRIGUEZ'],
+  DefendantNames: ['CASA LEADERS HP, INC', 'LEADERSHIP CONSTRUCTION LLC'],
+  CourtName: 'STANLEY MOSK COURTHOUSE',
+  CaseNumber: '20STCV09196',
+  JudgeName: 'Hon. Rafael A. Ongkeko, Dept. \'73\'',
+  HearingDate: '2024-03-15',
+  HearingTime: '10:30 AM',
+  ComplaintFilingDate: '2023-12-01',
+  TrialDate: 'Not Set',
+  LetterDate: '2024-01-15',
+  ExecutedDate: '2024-02-01',
+  RequestNumber: 1,
+  ServerName: 'Professional Process Service, Inc.'
+}
 
 // API 配置
 export const API_CONFIG = {

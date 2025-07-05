@@ -168,6 +168,25 @@ export const useFormStore = defineStore('form', () => {
     MnCDate: '',
     LetterDate: null
   })
+
+  // NTC of Depo 表单数据
+  const ntcOfDepoForm = ref({
+    PlaintiffNames: [''],
+    DefendantNames: [''],
+    PlaintiffPlurality1: '',
+    DefendantPlurality1: '',
+    CourtName: '',
+    CaseNumber: '',
+    JudgeName: '',
+    HearingTime: '',
+    HearingDate: null,
+    ComplaintFilingDate: null,
+    TrialDate: '',
+    RequestNumber: 1,
+    LetterDate: null,
+    ExecutedDate: null,
+    ServerName: ''
+  })
   
   // 格式化的被告名称（起诉表单）
   const formattedComplaintDefendantName = computed(() => {
@@ -216,6 +235,13 @@ export const useFormStore = defineStore('form', () => {
     return form.DefendantName || ''
   })
 
+  // 格式化的被告名称（NTC of Depo表单）
+  const formattedNtcOfDepoDefendantName = computed(() => {
+    const form = ntcOfDepoForm.value
+    // NTC of Depo表单只有被告名称，没有州和实体类型信息
+    return form.DefendantName || ''
+  })
+
   // Motion to Strike 表单的计算字段
   const motionToStrikeCalculations = computed(() => {
     const form = motionToStrikeForm.value
@@ -234,9 +260,28 @@ export const useFormStore = defineStore('form', () => {
       
       // 执行日期
       executedDate
-    }
+        }
   })
 
+  // NTC of Depo 表单的计算字段
+  const ntcOfDepoCalculations = computed(() => {
+    const form = ntcOfDepoForm.value
+    
+    // 将数组格式的名称转换为字符串用于复数计算
+    const plaintiffNamesString = form.PlaintiffNames?.filter(name => name.trim()).join(', ') || ''
+    const defendantNamesString = form.DefendantNames?.filter(name => name.trim()).join(', ') || ''
+    
+    // 复数形式计算 - 只有当有姓名输入时才计算
+    const plaintiffPlurality = plaintiffNamesString ? calculations.getPlurality(plaintiffNamesString) : { form1: '' }
+    const defendantPlurality = defendantNamesString ? calculations.getPlurality(defendantNamesString) : { form1Defendant: '' }
+    
+    return {
+      // 复数形式
+      plaintiffPlurality1: plaintiffPlurality.form1,
+      defendantPlurality1: defendantPlurality.form1Defendant
+    }
+  })
+  
   // 起诉表单的计算字段
   const complaintCalculations = computed(() => {
     const form = complaintForm.value
@@ -407,6 +452,10 @@ export const useFormStore = defineStore('form', () => {
   const updatePmpDepoForm = (field, value) => {
     pmpDepoForm.value[field] = value
   }
+
+  const updateNtcOfDepoForm = (field, value) => {
+    ntcOfDepoForm.value[field] = value
+  }
   
   const updateSubmissionEmail = (email) => {
     submissionEmail.value = email
@@ -495,6 +544,20 @@ export const useFormStore = defineStore('form', () => {
           pmpDepoForm.value[key] = null
         }
       })
+    } else if (targetType === 'ntcOfDepo') {
+      Object.keys(ntcOfDepoForm.value).forEach(key => {
+        if (key === 'RequestNumber') {
+          ntcOfDepoForm.value[key] = 1
+        } else if (key === 'PlaintiffNames' || key === 'DefendantNames') {
+          ntcOfDepoForm.value[key] = ['']
+        } else if (typeof ntcOfDepoForm.value[key] === 'string') {
+          ntcOfDepoForm.value[key] = ''
+        } else if (Array.isArray(ntcOfDepoForm.value[key])) {
+          ntcOfDepoForm.value[key] = []
+        } else {
+          ntcOfDepoForm.value[key] = null
+        }
+      })
     }
   }
   
@@ -510,7 +573,8 @@ export const useFormStore = defineStore('form', () => {
         demurrer: demurrerForm.value,
         motionToStrike: motionToStrikeForm.value,
         requestForProduction: requestForProductionForm.value,
-        pmpDepo: pmpDepoForm.value
+        pmpDepo: pmpDepoForm.value,
+        ntcOfDepo: ntcOfDepoForm.value
       }
     }
     
@@ -551,6 +615,9 @@ export const useFormStore = defineStore('form', () => {
       }
       if (data.forms.pmpDepo) {
         Object.assign(pmpDepoForm.value, data.forms.pmpDepo)
+      }
+      if (data.forms.ntcOfDepo) {
+        Object.assign(ntcOfDepoForm.value, data.forms.ntcOfDepo)
       }
     }
   }
@@ -594,6 +661,8 @@ export const useFormStore = defineStore('form', () => {
         return requestForProductionForm.value
       case 'pmpDepo':
         return pmpDepoForm.value
+      case 'ntcOfDepo':
+        return ntcOfDepoForm.value
       default:
         return {}
     }
@@ -668,12 +737,14 @@ export const useFormStore = defineStore('form', () => {
     motionToStrikeForm,
     requestForProductionForm,
     pmpDepoForm,
+    ntcOfDepoForm,
     formErrors,
     isLoading,
     
     // 计算属性
     complaintCalculations,
     motionToStrikeCalculations,
+    ntcOfDepoCalculations,
     formattedComplaintDefendantName,
     formattedAnswerDefendantName,
     formattedSettlementDefendantName,
@@ -681,6 +752,7 @@ export const useFormStore = defineStore('form', () => {
     formattedMotionToStrikeDefendantName,
     formattedRequestForProductionDefendantName,
     formattedPmpDepoDefendantName,
+    formattedNtcOfDepoDefendantName,
     isFormValid,
     
     // 方法
@@ -692,6 +764,7 @@ export const useFormStore = defineStore('form', () => {
     updateMotionToStrikeForm,
     updateRequestForProductionForm,
     updatePmpDepoForm,
+    updateNtcOfDepoForm,
     updateSubmissionEmail,
     resetForm,
     resetCurrentForm,

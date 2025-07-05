@@ -28,6 +28,9 @@
         <!-- PMP Depo form -->
         <PmpDepoForm v-if="formStore.currentFormType === 'pmpDepo'" ref="pmpDepoFormRef"/>
 
+        <!-- NTC of Depo form -->
+        <NtcOfDepoForm v-if="formStore.currentFormType === 'ntcOfDepo'" ref="ntcOfDepoFormRef"/>
+
         <!-- Form action buttons -->
         <FormActions
             variant="default"
@@ -73,6 +76,7 @@ import DemurrerForm from '@/components/forms/DemurrerForm.vue'
 import MotionToStrikeForm from '@/components/forms/MotionToStrikeForm.vue'
 import RequestForProductionForm from '@/components/forms/RequestForProductionForm.vue'
 import PmpDepoForm from '@/components/forms/PmpDepoForm.vue'
+import NtcOfDepoForm from '@/components/forms/NtcOfDepoForm.vue'
 import {useFormStore} from '@/stores/formStore'
 import {API_CONFIG} from '@/utils/constants'
 
@@ -87,6 +91,7 @@ const demurrerFormRef = ref()
 const motionToStrikeFormRef = ref()
 const requestForProductionFormRef = ref()
 const pmpDepoFormRef = ref()
+const ntcOfDepoFormRef = ref()
 
 // Current form completion progress
 const currentFormProgress = computed(() => {
@@ -105,6 +110,8 @@ const currentFormProgress = computed(() => {
       return calculateRequestForProductionProgress()
     case 'pmpDepo':
       return calculatePmpDepoProgress()
+    case 'ntcOfDepo':
+      return calculateNtcOfDepoProgress()
     default:
       return 0
   }
@@ -235,6 +242,25 @@ const calculatePmpDepoProgress = () => {
   return Math.round((filledFields / requiredFields.length) * 100)
 }
 
+// Calculate ntc of depo form progress
+const calculateNtcOfDepoProgress = () => {
+  const requiredFields = [
+    'PlaintiffNames', 'DefendantNames', 'CourtName', 'CaseNumber', 'JudgeName',
+    'HearingDate', 'HearingTime', 'ComplaintFilingDate', 'LetterDate', 
+    'ExecutedDate', 'RequestNumber', 'ServerName'
+  ]
+
+  const filledFields = requiredFields.filter(field => {
+    const value = formStore.ntcOfDepoForm[field]
+    if (Array.isArray(value)) return value.filter(name => name.trim()).length > 0
+    if (typeof value === 'string') return value.trim() !== ''
+    if (typeof value === 'number') return value > 0
+    return value !== null && value !== undefined
+  }).length
+
+  return Math.round((filledFields / requiredFields.length) * 100)
+}
+
 // Get current form reference
 const getCurrentFormRef = () => {
   switch (formStore.currentFormType) {
@@ -252,6 +278,8 @@ const getCurrentFormRef = () => {
       return requestForProductionFormRef.value
     case 'pmpDepo':
       return pmpDepoFormRef.value
+    case 'ntcOfDepo':
+      return ntcOfDepoFormRef.value
     default:
       return null
   }
