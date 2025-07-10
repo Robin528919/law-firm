@@ -523,6 +523,31 @@
           description="Complaint Filing Date - 4 years in June 16, 2025 format"
         />
       </FormGroup>
+
+      <!-- 开发测试工具 -->
+      <FormGroup
+        v-if="isDevelopmentMode"
+        title="Development Tools"
+        description="Testing utilities for development purposes"
+        icon="Tools"
+        variant="bordered"
+        :columns="1"
+      >
+        <div class="test-tools">
+          <el-button
+            @click="fillTestData"
+            type="warning"
+            icon="DocumentCopy"
+            size="default"
+            :loading="fillingTestData"
+          >
+            Fill Test Data
+          </el-button>
+          <div class="test-info">
+            <small>Environment: {{ API_CONFIG.ENVIRONMENT }} | App Env: {{ API_CONFIG.APP_ENV }}</small>
+          </div>
+        </div>
+      </FormGroup>
     </el-form>
   </div>
 </template>
@@ -537,7 +562,9 @@ import {
   CAUSES_OF_ACTION,
   PAY_PERIOD_OPTIONS,
   FIELD_TOOLTIPS,
-  VALIDATION_RULES
+  VALIDATION_RULES,
+  API_CONFIG,
+  COMPLAINT_TEST_DATA
 } from '@/utils/constants'
 
 // 使用表单状态管理
@@ -549,6 +576,12 @@ const formData = formStore.complaintForm
 
 // 计算字段
 const calculations = computed(() => formStore.complaintCalculations)
+
+// 开发测试相关状态
+const isDevelopmentMode = computed(() => {
+  return API_CONFIG.ENVIRONMENT === 'development' || API_CONFIG.APP_ENV === 'development' || API_CONFIG.DEBUG
+})
+const fillingTestData = ref(false)
 
 // 验证规则
 const validationRules = {
@@ -616,10 +649,33 @@ const handleSubmit = async () => {
   }
 }
 
+// 填充测试数据方法
+const fillTestData = async () => {
+  fillingTestData.value = true
+  
+  try {
+    // 填充所有测试数据
+    Object.keys(COMPLAINT_TEST_DATA).forEach(key => {
+      formData[key] = COMPLAINT_TEST_DATA[key]
+    })
+    
+    // 短暂延迟模拟加载过程
+    await new Promise(resolve => setTimeout(resolve, 300))
+    
+    console.log('Complaint 测试数据已填充:', formData)
+    
+  } catch (error) {
+    console.error('填充测试数据时出错:', error)
+  } finally {
+    fillingTestData.value = false
+  }
+}
+
 // 暴露方法给父组件
 defineExpose({
   validate: () => formRef.value?.validate(),
   resetForm: () => formRef.value?.resetFields(),
+  fillTestData,
   formRef
 })
 </script>
@@ -671,5 +727,32 @@ defineExpose({
   .complaint-form :deep(.el-form-item__label) {
     font-size: 14px;
   }
+}
+
+/* Test tools styles */
+.test-tools {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 12px;
+}
+
+.test-info {
+  color: var(--el-text-color-regular);
+  font-size: 12px;
+  background-color: var(--el-fill-color-lighter);
+  padding: 6px 10px;
+  border-radius: 4px;
+  border: 1px solid var(--el-border-color-lighter);
+}
+
+.test-tools .el-button {
+  background-color: var(--el-color-warning-light-7);
+  border-color: var(--el-color-warning-light-5);
+}
+
+.test-tools .el-button:hover {
+  background-color: var(--el-color-warning-light-5);
+  border-color: var(--el-color-warning);
 }
 </style>

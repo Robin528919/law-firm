@@ -305,6 +305,51 @@ export const PMP_DEPO_TEST_DATA = {
   LetterDate: '2024-01-15'
 }
 
+// Request for Production 表单测试数据
+export const REQUEST_FOR_PRODUCTION_TEST_DATA = {
+  PlaintiffNames: ['JUSTINO VALERIANO JIMENEZ', 'MARIA ELENA RODRIGUEZ'],
+  CaseNumber: '20STCV09196',
+  DefendantNames: ['CASA LEADERS HP, INC', 'LEADERSHIP CONSTRUCTION LLC'],
+  JudgeName: 'Hon. Rafael A. Ongkeko, Dept. \'73\'',
+  ComplaintFilingDate: '2023-12-01',
+  LetterDate: '2024-01-15',
+  TrialDate: 'March 20, 2025',
+  ExecutedDate: '2024-02-01',
+  OCName: 'Abraham Sandoval',
+  OCFirm: 'SANDOVAL LAW, APC'
+}
+
+// Complaint/Damages 表单测试数据
+export const COMPLAINT_TEST_DATA = {
+  plaintiffName: 'James Doe, an individual',
+  plaintiffJob: 'Chef',
+  defendantName: 'ABC Restaurant Corp',
+  defendantState: 'CA',
+  defendantEntityType: 'corporation',
+  courtLocation: 'LOS ANGELES',
+  courtName: 'STANLEY MOSK COURTHOUSE',
+  caseNumber: 'LASC123456',
+  judgeName: 'Michael Doe',
+  complaintFilingDate: '2024-06-23',
+  selectedCauses: ['unpaid_wages', 'meal_periods', 'rest_periods', 'overtime_wages', 'waiting_time_penalties'],
+  plaintiffResidence: 'Los Angeles, California',
+  defendantBusinessType: 'restaurant',
+  defendantBusinessAddress: '123 Broadway, Los Angeles, CA 90016',
+  employmentStartDate: '2022-05-01',
+  employmentEndDate: '2024-06-23',
+  hourlyRate: 25,
+  unpaidHours: 300,
+  weeklyHours: 80,
+  doubleOvertimeHours: 5,
+  iwcOrder: 5,
+  payPeriods: 20,
+  payPeriodInterval: 'weekly',
+  missedMealBreaks: 5,
+  missedRestBreaks: 5,
+  businessExpenseType: 'Gas',
+  businessExpenseAmount: 1000
+}
+
 // API 配置
 export const API_CONFIG = {
   // 环境配置

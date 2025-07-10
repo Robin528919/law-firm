@@ -145,9 +145,9 @@ export const useFormStore = defineStore('form', () => {
 
   // Request for Production 表单数据
   const requestForProductionForm = ref({
-    PlaintiffName: '',
+    PlaintiffNames: [''],
     CaseNumber: '',
-    DefendantName: '',
+    DefendantNames: [''],
     JudgeName: '',
     ComplaintFilingDate: null,
     LetterDate: null,
@@ -224,8 +224,9 @@ export const useFormStore = defineStore('form', () => {
   // 格式化的被告名称（Request for Production表单）
   const formattedRequestForProductionDefendantName = computed(() => {
     const form = requestForProductionForm.value
-    // Request for Production表单只有被告名称，没有州和实体类型信息
-    return form.DefendantName || ''
+    // Request for Production表单数组格式的名称
+    const defendantNamesString = form.DefendantNames?.filter(name => name.trim()).join(', ') || ''
+    return defendantNamesString
   })
 
   // 格式化的被告名称（PMP Depo表单）
@@ -266,6 +267,25 @@ export const useFormStore = defineStore('form', () => {
   // NTC of Depo 表单的计算字段
   const ntcOfDepoCalculations = computed(() => {
     const form = ntcOfDepoForm.value
+    
+    // 将数组格式的名称转换为字符串用于复数计算
+    const plaintiffNamesString = form.PlaintiffNames?.filter(name => name.trim()).join(', ') || ''
+    const defendantNamesString = form.DefendantNames?.filter(name => name.trim()).join(', ') || ''
+    
+    // 复数形式计算 - 只有当有姓名输入时才计算
+    const plaintiffPlurality = plaintiffNamesString ? calculations.getPlurality(plaintiffNamesString) : { form1: '' }
+    const defendantPlurality = defendantNamesString ? calculations.getPlurality(defendantNamesString) : { form1Defendant: '' }
+    
+    return {
+      // 复数形式
+      plaintiffPlurality1: plaintiffPlurality.form1,
+      defendantPlurality1: defendantPlurality.form1Defendant
+    }
+  })
+
+  // Request for Production 表单的计算字段
+  const requestForProductionCalculations = computed(() => {
+    const form = requestForProductionForm.value
     
     // 将数组格式的名称转换为字符串用于复数计算
     const plaintiffNamesString = form.PlaintiffNames?.filter(name => name.trim()).join(', ') || ''
@@ -526,7 +546,9 @@ export const useFormStore = defineStore('form', () => {
       })
     } else if (targetType === 'requestForProduction') {
       Object.keys(requestForProductionForm.value).forEach(key => {
-        if (typeof requestForProductionForm.value[key] === 'string') {
+        if (key === 'PlaintiffNames' || key === 'DefendantNames') {
+          requestForProductionForm.value[key] = ['']
+        } else if (typeof requestForProductionForm.value[key] === 'string') {
           requestForProductionForm.value[key] = ''
         } else if (Array.isArray(requestForProductionForm.value[key])) {
           requestForProductionForm.value[key] = []
@@ -745,6 +767,7 @@ export const useFormStore = defineStore('form', () => {
     complaintCalculations,
     motionToStrikeCalculations,
     ntcOfDepoCalculations,
+    requestForProductionCalculations,
     formattedComplaintDefendantName,
     formattedAnswerDefendantName,
     formattedSettlementDefendantName,

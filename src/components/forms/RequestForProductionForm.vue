@@ -17,15 +17,38 @@
         variant="card"
         :columns="1"
       >
-        <FormField
-          label="Plaintiff Name"
-          v-model="formData.PlaintiffName"
-          prop="PlaintiffName"
-          type="text"
-          placeholder="e.g. JUSTINO VALERIANO JIMENEZ"
-          required
-          description="Name of the plaintiff in the case"
-        />
+        <!-- Plaintiff Names Array -->
+        <el-form-item label="Plaintiff Names" prop="PlaintiffNames" required>
+          <div class="array-field">
+            <div v-for="(name, index) in formData.PlaintiffNames" :key="index" class="array-item">
+              <el-input
+                v-model="formData.PlaintiffNames[index]"
+                :placeholder="`Plaintiff ${index + 1} name (e.g. JUSTINO VALERIANO JIMENEZ)`"
+                @input="handlePlaintiffNamesChange"
+              />
+              <el-button
+                v-if="formData.PlaintiffNames.length > 1"
+                @click="removePlaintiffName(index)"
+                type="danger"
+                icon="Remove"
+                size="small"
+                text
+                class="remove-btn"
+              />
+            </div>
+            <el-button
+              @click="addPlaintiffName"
+              type="primary"
+              icon="Plus"
+              size="small"
+              text
+              class="add-btn"
+            >
+              Add Plaintiff
+            </el-button>
+          </div>
+          <div class="field-description">Names of all plaintiffs in the case. Each name will be automatically formatted with ", an individual,"</div>
+        </el-form-item>
 
         <FormField
           label="Case Number"
@@ -37,15 +60,38 @@
           description="Court case number"
         />
 
-        <FormField
-          label="Defendant Name"
-          v-model="formData.DefendantName"
-          prop="DefendantName"
-          type="text"
-          placeholder="e.g. CASA LEADERS HP, INC"
-          required
-          description="Name of the defendant in the case"
-        />
+        <!-- Defendant Names Array -->
+        <el-form-item label="Defendant Names" prop="DefendantNames" required>
+          <div class="array-field">
+            <div v-for="(name, index) in formData.DefendantNames" :key="index" class="array-item">
+              <el-input
+                v-model="formData.DefendantNames[index]"
+                :placeholder="`Defendant ${index + 1} name (e.g. CASA LEADERS HP, INC)`"
+                @input="handleDefendantNamesChange"
+              />
+              <el-button
+                v-if="formData.DefendantNames.length > 1"
+                @click="removeDefendantName(index)"
+                type="danger"
+                icon="Remove"
+                size="small"
+                text
+                class="remove-btn"
+              />
+            </div>
+            <el-button
+              @click="addDefendantName"
+              type="primary"
+              icon="Plus"
+              size="small"
+              text
+              class="add-btn"
+            >
+              Add Defendant
+            </el-button>
+          </div>
+          <div class="field-description">Names of all defendants in the case</div>
+        </el-form-item>
 
         <FormField
           label="Judge Name"
@@ -152,16 +198,41 @@
           description="Name of the opposing law firm"
         />
       </FormGroup>
+
+      <!-- 开发测试工具 -->
+      <FormGroup
+        v-if="isDevelopmentMode"
+        title="Development Tools"
+        description="Testing utilities for development purposes"
+        icon="Tools"
+        variant="bordered"
+        :columns="1"
+      >
+        <div class="test-tools">
+          <el-button
+            @click="fillTestData"
+            type="warning"
+            icon="DocumentCopy"
+            size="default"
+            :loading="fillingTestData"
+          >
+            Fill Test Data
+          </el-button>
+          <div class="test-info">
+            <small>Environment: {{ API_CONFIG.ENVIRONMENT }} | App Env: {{ API_CONFIG.APP_ENV }}</small>
+          </div>
+        </div>
+      </FormGroup>
     </el-form>
   </div>
 </template>
 
 <script setup>
-import { ref, watch } from 'vue'
+import { ref, watch, computed } from 'vue'
 import FormGroup from '@/components/common/FormGroup.vue'
 import FormField from '@/components/common/FormField.vue'
 import { useFormStore } from '@/stores/formStore'
-import { VALIDATION_RULES } from '@/utils/constants'
+import { VALIDATION_RULES, REQUEST_FOR_PRODUCTION_TEST_DATA, API_CONFIG } from '@/utils/constants'
 
 // 使用表单状态管理
 const formStore = useFormStore()
@@ -170,15 +241,48 @@ const formRef = ref()
 // 表单数据 - 直接使用 ref，支持双向绑定
 const formData = formStore.requestForProductionForm
 
+// 计算字段
+const calculations = computed(() => formStore.requestForProductionCalculations)
+
 // Trial Date 相关状态
 const trialDateMode = ref('notSet')
 const trialDateValue = ref(null)
 
+// 开发测试相关状态
+const isDevelopmentMode = computed(() => {
+  return API_CONFIG.ENVIRONMENT === 'development' || API_CONFIG.APP_ENV === 'development' || API_CONFIG.DEBUG
+})
+const fillingTestData = ref(false)
+
 // 验证规则
 const validationRules = {
-  PlaintiffName: [VALIDATION_RULES.required],
+  PlaintiffNames: [
+    {
+      required: true,
+      validator: (rule, value, callback) => {
+        if (!value || !Array.isArray(value) || value.filter(name => name.trim()).length === 0) {
+          callback(new Error('At least one plaintiff name is required'))
+        } else {
+          callback()
+        }
+      },
+      trigger: 'blur'
+    }
+  ],
+  DefendantNames: [
+    {
+      required: true,
+      validator: (rule, value, callback) => {
+        if (!value || !Array.isArray(value) || value.filter(name => name.trim()).length === 0) {
+          callback(new Error('At least one defendant name is required'))
+        } else {
+          callback()
+        }
+      },
+      trigger: 'blur'
+    }
+  ],
   CaseNumber: [VALIDATION_RULES.required],
-  DefendantName: [VALIDATION_RULES.required],
   JudgeName: [VALIDATION_RULES.required],
   ComplaintFilingDate: [VALIDATION_RULES.required, VALIDATION_RULES.date],
   LetterDate: [VALIDATION_RULES.required, VALIDATION_RULES.date],
@@ -213,6 +317,44 @@ const handleTrialDateChange = (value) => {
   formStore.updateRequestForProductionForm('TrialDate', value)
 }
 
+// 原告姓名数组处理方法
+const addPlaintiffName = () => {
+  formData.PlaintiffNames.push('')
+}
+
+const removePlaintiffName = (index) => {
+  if (formData.PlaintiffNames.length > 1) {
+    formData.PlaintiffNames.splice(index, 1)
+    handlePlaintiffNamesChange()
+  }
+}
+
+const handlePlaintiffNamesChange = () => {
+  // 触发复数计算更新（如果存在）
+  if (calculations.value && calculations.value.plaintiffPlurality1) {
+    formStore.updateRequestForProductionForm('PlaintiffPlurality1', calculations.value.plaintiffPlurality1)
+  }
+}
+
+// 被告姓名数组处理方法
+const addDefendantName = () => {
+  formData.DefendantNames.push('')
+}
+
+const removeDefendantName = (index) => {
+  if (formData.DefendantNames.length > 1) {
+    formData.DefendantNames.splice(index, 1)
+    handleDefendantNamesChange()
+  }
+}
+
+const handleDefendantNamesChange = () => {
+  // 触发复数计算更新（如果存在）
+  if (calculations.value && calculations.value.defendantPlurality1) {
+    formStore.updateRequestForProductionForm('DefendantPlurality1', calculations.value.defendantPlurality1)
+  }
+}
+
 // 表单提交处理
 const handleSubmit = () => {
   // 表单提交逻辑在父组件中处理
@@ -230,17 +372,68 @@ const validate = async () => {
   }
 }
 
+// 填充测试数据方法
+const fillTestData = async () => {
+  fillingTestData.value = true
+  
+  try {
+    // 填充数组格式的测试数据（等待转换完成后的字段）
+    Object.keys(REQUEST_FOR_PRODUCTION_TEST_DATA).forEach(key => {
+      if (key === 'PlaintiffNames' || key === 'DefendantNames') {
+        // 如果表单还没有转换为数组格式，暂时填充字符串
+        if (Array.isArray(formData[key])) {
+          formData[key] = [...REQUEST_FOR_PRODUCTION_TEST_DATA[key]]
+        } else {
+          // 将数组转换为逗号分隔的字符串以兼容当前格式
+          const fieldName = key === 'PlaintiffNames' ? 'PlaintiffName' : 'DefendantName'
+          formData[fieldName] = REQUEST_FOR_PRODUCTION_TEST_DATA[key].join(', ')
+        }
+      } else {
+        // 其他字段直接赋值
+        formData[key] = REQUEST_FOR_PRODUCTION_TEST_DATA[key]
+      }
+    })
+    
+    // 处理 Trial Date 特殊逻辑
+    if (REQUEST_FOR_PRODUCTION_TEST_DATA.TrialDate === 'Not Set') {
+      trialDateMode.value = 'notSet'
+      trialDateValue.value = null
+    } else {
+      trialDateMode.value = 'date'
+      trialDateValue.value = REQUEST_FOR_PRODUCTION_TEST_DATA.TrialDate
+    }
+    
+    // 短暂延迟模拟加载过程
+    await new Promise(resolve => setTimeout(resolve, 300))
+    
+    console.log('Request for Production 测试数据已填充:', formData)
+    
+  } catch (error) {
+    console.error('填充测试数据时出错:', error)
+  } finally {
+    fillingTestData.value = false
+  }
+}
+
 // 重置表单方法
 const resetForm = () => {
   formStore.resetForm('requestForProduction')
   trialDateMode.value = 'notSet'
   trialDateValue.value = null
+  // 确保数组字段正确重置
+  if (!formData.PlaintiffNames || formData.PlaintiffNames.length === 0) {
+    formData.PlaintiffNames = ['']
+  }
+  if (!formData.DefendantNames || formData.DefendantNames.length === 0) {
+    formData.DefendantNames = ['']
+  }
 }
 
 // 暴露方法给父组件
 defineExpose({
   validate,
-  resetForm
+  resetForm,
+  fillTestData
 })
 </script>
 
@@ -261,5 +454,75 @@ defineExpose({
   border-radius: 4px;
   margin-top: 8px;
   color: var(--el-text-color-regular);
+}
+
+/* Test tools styles */
+.test-tools {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 12px;
+}
+
+.test-info {
+  color: var(--el-text-color-regular);
+  font-size: 12px;
+  background-color: var(--el-fill-color-lighter);
+  padding: 6px 10px;
+  border-radius: 4px;
+  border: 1px solid var(--el-border-color-lighter);
+}
+
+.test-tools .el-button {
+  background-color: var(--el-color-warning-light-7);
+  border-color: var(--el-color-warning-light-5);
+}
+
+.test-tools .el-button:hover {
+  background-color: var(--el-color-warning-light-5);
+  border-color: var(--el-color-warning);
+}
+
+/* Array field styles */
+.array-field {
+  width: 100%;
+}
+
+.array-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 8px;
+}
+
+.array-item .el-input {
+  flex: 1;
+}
+
+.remove-btn {
+  color: var(--el-color-danger);
+  padding: 4px 8px;
+  min-width: auto;
+}
+
+.remove-btn:hover {
+  background-color: var(--el-color-danger-light-9);
+}
+
+.add-btn {
+  color: var(--el-color-primary);
+  padding: 4px 8px;
+  margin-top: 4px;
+}
+
+.add-btn:hover {
+  background-color: var(--el-color-primary-light-9);
+}
+
+.field-description {
+  font-size: 12px;
+  color: var(--el-text-color-regular);
+  margin-top: 4px;
+  line-height: 1.4;
 }
 </style> 

@@ -212,13 +212,14 @@ const calculateMotionToStrikeProgress = () => {
 // Calculate request for production form progress
 const calculateRequestForProductionProgress = () => {
   const requiredFields = [
-    'PlaintiffName', 'CaseNumber', 'DefendantName', 'JudgeName',
+    'PlaintiffNames', 'CaseNumber', 'DefendantNames', 'JudgeName',
     'ComplaintFilingDate', 'LetterDate', 'ExecutedDate', 
     'OCName', 'OCFirm'
   ]
 
   const filledFields = requiredFields.filter(field => {
     const value = formStore.requestForProductionForm[field]
+    if (Array.isArray(value)) return value.filter(name => name.trim()).length > 0
     if (typeof value === 'string') return value.trim() !== ''
     return value !== null && value !== undefined
   }).length
