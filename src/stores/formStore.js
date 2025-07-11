@@ -2,6 +2,7 @@ import { defineStore } from 'pinia'
 import { ref, computed } from 'vue'
 import * as calculations from '@/utils/calculations'
 import { formatLegalDate, formatDefendantName } from '@/utils/calculations'
+import { getInitialCausesObject } from '@/utils/constants'
 
 export const useFormStore = defineStore('form', () => {
   // 当前选中的表单类型
@@ -25,7 +26,7 @@ export const useFormStore = defineStore('form', () => {
     ComplaintFilingDate: null,
     
     // 选择字段
-    SelectedCauses: [],
+    SelectedCauses: getInitialCausesObject(),
     PayPeriodInterval: '',
     
     // 地址信息
@@ -488,6 +489,8 @@ export const useFormStore = defineStore('form', () => {
       Object.keys(complaintForm.value).forEach(key => {
         if (key === 'CaseNumber') {
           complaintForm.value[key] = ' '
+        } else if (key === 'SelectedCauses') {
+          complaintForm.value[key] = getInitialCausesObject()
         } else if (typeof complaintForm.value[key] === 'string') {
           complaintForm.value[key] = ''
         } else if (typeof complaintForm.value[key] === 'number') {

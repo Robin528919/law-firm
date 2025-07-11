@@ -108,14 +108,20 @@
         variant="bordered"
         :columns="1"
       >
-        <FormField
-          label="Causes of Action"
-          v-model="formData.SelectedCauses"
-          prop="SelectedCauses"
-          type="checkbox"
-          :options="CAUSES_OF_ACTION"
-          required
-        />
+        <el-form-item label="Causes of Action" prop="SelectedCauses" required>
+          <div class="causes-checkbox-group">
+            <el-checkbox
+              v-for="cause in CAUSES_OF_ACTION"
+              :key="cause.value"
+              v-model="formData.SelectedCauses[cause.value]"
+              :label="cause.value"
+              class="cause-checkbox"
+              @change="handleCauseChange"
+            >
+              {{ cause.label }}
+            </el-checkbox>
+          </div>
+        </el-form-item>
       </FormGroup>
 
       <!-- Address Information -->
@@ -593,7 +599,20 @@ const validationRules = {
   CourtLocation: [VALIDATION_RULES.required],
   CourtName: [VALIDATION_RULES.required],
   ComplaintFilingDate: [VALIDATION_RULES.required, VALIDATION_RULES.date],
-  SelectedCauses: [VALIDATION_RULES.required],
+  SelectedCauses: [
+    {
+      required: true,
+      validator: (rule, value, callback) => {
+        const hasSelected = Object.values(value || {}).some(v => v === true)
+        if (!hasSelected) {
+          callback(new Error('Please select at least one cause of action'))
+        } else {
+          callback()
+        }
+      },
+      trigger: 'change'
+    }
+  ],
   PlaintiffResidence: [VALIDATION_RULES.required],
   DefendantBusinessType: [VALIDATION_RULES.required],
   DefendantBusinessAddress: [VALIDATION_RULES.required],
@@ -613,6 +632,12 @@ const handleFieldChange = (value, field) => {
   if (field) {
     formStore.updateComplaintForm(field, value)
   }
+}
+
+// 处理案由选择变更
+const handleCauseChange = () => {
+  // 触发表单验证
+  formRef.value?.validateField('SelectedCauses')
 }
 
 // 处理 Plaintiff Name 失去焦点事件，自动添加 ", an individual"
@@ -754,5 +779,47 @@ defineExpose({
 .test-tools .el-button:hover {
   background-color: var(--el-color-warning-light-5);
   border-color: var(--el-color-warning);
+}
+
+/* Causes of Action checkbox styles */
+.causes-checkbox-group {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  width: 100%;
+}
+
+.cause-checkbox {
+  display: flex !important;
+  align-items: flex-start;
+  margin-right: 0 !important;
+  margin-bottom: 0 !important;
+  line-height: 1.4;
+  white-space: normal;
+  word-wrap: break-word;
+}
+
+.cause-checkbox :deep(.el-checkbox__label) {
+  padding-left: 8px;
+  line-height: 1.4;
+  white-space: normal;
+  word-wrap: break-word;
+  max-width: calc(100% - 30px);
+}
+
+.cause-checkbox :deep(.el-checkbox__input) {
+  margin-top: 2px;
+  flex-shrink: 0;
+}
+
+@media (max-width: 768px) {
+  .causes-checkbox-group {
+    gap: 10px;
+  }
+  
+  .cause-checkbox :deep(.el-checkbox__label) {
+    font-size: 14px;
+    max-width: calc(100% - 25px);
+  }
 }
 </style>

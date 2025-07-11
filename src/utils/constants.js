@@ -46,114 +46,102 @@ export const FORM_TYPES = [
   }
 ]
 
-// 起诉原因选项（根据加州劳动法）
+// 起诉原因选项（根据加州劳动法）- 专为 Complaint/Damages Form 使用
 export const CAUSES_OF_ACTION = [
   {
-    value: 'unpaid_wages',
-    label: 'FAILURE TO PAY ALL WAGES',
-    description: '[California Labor Code §§ 201-202, 218, 218.5, 1194, 1194.2]'
+    value: 'cause_01',
+    label: 'FAILURE TO PAY ALL WAGES [California Labor Code §§ 201-202, 218, 218.5, 1194, 1194.2]'
   },
   {
-    value: 'meal_periods',
-    label: 'FAILURE TO PROVIDE MEAL PERIODS',
-    description: '[Labor Code §§ 226.7(a), 512]'
+    value: 'cause_03',
+    label: 'FAILURE TO PROVIDE MEAL PERIODS [Labor Code §§ 226.7(a), 512]'
   },
   {
-    value: 'rest_periods',
-    label: 'FAILURE TO PROVIDE REST PERIODS',
-    description: '[Labor Code §§ 226.7(a), 512]'
+    value: 'cause_04',
+    label: 'FAILURE TO PROVIDE REST PERIODS [Labor Code §§ 226.7(a), 512]'
   },
   {
-    value: 'overtime_wages',
-    label: 'FAILURE TO PAY OVERTIME WAGES',
-    description: '[Labor Code §§ 510 and 1194 et seq.]'
+    value: 'cause_05',
+    label: 'FAILURE TO PAY OVERTIME WAGES [Labor Code §§ 510 and 1194 et seq.]'
   },
   {
-    value: 'waiting_time_penalties',
-    label: 'FAILURE TO PAY WAGES DUE UPON TERMINATION: WAITING TIME PENALTIES',
-    description: '[Labor Code §§ 201, 202 and 203]'
+    value: 'cause_06',
+    label: 'FAILURE TO PAY WAGES DUE UPON TERMINATION: WAITING TIME PENALTIES [Labor Code §§ 201, 202 and 203]'
   },
   {
-    value: 'wage_statements',
-    label: 'FAILURE TO ISSUE ACCURATE ITEMIZED WAGE STATEMENTS',
-    description: '[Labor Code § 226 et seq.]'
+    value: 'cause_07',
+    label: 'FAILURE TO ISSUE ACCURATE ITEMIZED WAGE STATEMENTS [Labor Code § 226 et seq.]'
   },
   {
-    value: 'unfair_business_practices',
-    label: 'UNLAWFUL/UNFAIR BUSINESS PRACTICES',
-    description: '[Business and Professions Code § 17200 et seq.]'
+    value: 'cause_08',
+    label: 'UNLAWFUL/UNFAIR BUSINESS PRACTICES [Business and Professions Code § 17200 et seq.]'
   },
   {
-    value: 'work_expenses',
-    label: 'FAILURE TO REMIBURSE WORK RELATED EXPENSES',
-    description: '[Labor Code § 2802]'
+    value: 'cause_09',
+    label: 'FAILURE TO REMIBURSE WORK RELATED EXPENSES [Labor Code § 2802]'
   },
   {
-    value: 'workers_comp_retaliation',
-    label: 'RETALIATION FOR FILING A WORKERS\' COMPENSATION CLAIM',
-    description: '[Labor Code § 132(a)]'
+    value: 'cause_10',
+    label: 'RETALIATION FOR FILING A WORKERS\' COMPENSATION CLAIM [Labor Code § 132(a)]'
   },
   {
-    value: 'disability_discrimination',
-    label: 'DISCRIMINATION BASED ON DISABILITY OR RELATED MEDICAL CONDITION',
-    description: '[Government Code § 12940 et seq.]'
+    value: 'cause_11',
+    label: 'DISCRIMINATION BASED ON DISABILITY OR RELATED MEDICAL CONDITION [Government Code § 12940 et seq.]'
   },
   {
-    value: 'reasonable_accommodation',
-    label: 'FAILURE TO PROVIDE REASONABLE ACCOMMODATION FOR DISABILITY / MEDICAL CONDITION',
-    description: '[Govt. Code § 12940 et seq.]'
+    value: 'cause_12',
+    label: 'FAILURE TO PROVIDE REASONABLE ACCOMMODATION FOR DISABILITY / MEDICAL CONDITION [Govt. Code § 12940 et seq.]'
   },
   {
-    value: 'interactive_process',
-    label: 'FAILURE TO ENTER INTO AN INTERACTIVE PROCESS',
-    description: '[Govt. Code § 12940 et seq.]'
+    value: 'cause_13',
+    label: 'FAILURE TO ENTER INTO AN INTERACTIVE PROCESS [Govt. Code § 12940 et seq.]'
   },
   {
-    value: 'medical_leave_retaliation',
-    label: 'RETALIATION: UNLAWFUL DISCHARGE FOR TAKING MEDICAL LEAVE AND REQUEST FOR ACCOMMODATION',
-    description: '[Govt. Code § 12940 et seq.]'
+    value: 'cause_14',
+    label: 'RETALIATION: UNLAWFUL DISCHARGE FOR TAKING MEDICAL LEAVE AND REQUEST FOR ACCOMMODATION [Govt. Code § 12940 et seq.]'
   },
   {
-    value: 'sex_race_discrimination',
-    label: 'DISCRIMINATION BASED UPON SEX AND/OR RACE/ETHNICITY – DISPARATE IMPACT',
-    description: '[CAL. GOV. CODE §§ 12940, ET SEQ.]'
+    value: 'cause_15',
+    label: 'DISCRIMINATION BASED UPON SEX AND/OR RACE/ETHNICITY – DISPARATE IMPACT [CAL. GOV. CODE §§ 12940, ET SEQ.]'
   },
   {
-    value: 'prevent_discrimination',
-    label: 'FAILURE TO PREVENT DISCRIMINATION AND HARASSMENT',
-    description: '[Government Code § 12940 et seq.]'
+    value: 'cause_16',
+    label: 'FAILURE TO PREVENT DISCRIMINATION AND HARASSMENT [Government Code § 12940 et seq.]'
   },
   {
-    value: 'whistleblower_retaliation',
-    label: 'WHISTLEBLOWER RETALIATION',
-    description: '[Cal. Lab. Code § 1102.5]'
+    value: 'cause_17',
+    label: 'WHISTLEBLOWER RETALIATION [Cal. Lab. Code § 1102.5]'
   },
   {
-    value: 'wrongful_termination',
-    label: 'WRONGFUL TERMINATION IN VIOLATION OF PUBLIC POLICY',
-    description: ''
+    value: 'cause_18',
+    label: 'WRONGFUL TERMINATION IN VIOLATION OF PUBLIC POLICY'
   },
   {
-    value: 'sexual_harassment',
-    label: 'SEXUAL HARASSMENT (HOSTILE WORK ENVIRONMENT)',
-    description: '[Government Code § 12940 et seq.]'
+    value: 'cause_19',
+    label: 'SEXUAL HARASSMENT (HOSTILE WORK ENVIRONMENT) [Government Code § 12940 et seq.]'
   },
   {
-    value: 'feha_retaliation',
-    label: 'RETALIATION IN VIOLATION OF FEHA',
-    description: '[Cal. Gov. Code §§ 12940, et seq.]'
+    value: 'cause_20',
+    label: 'RETALIATION IN VIOLATION OF FEHA [Cal. Gov. Code §§ 12940, et seq.]'
   },
   {
-    value: 'intentional_emotional_distress',
-    label: 'INTENTIONAL INFLICTION OF EMOTIONAL DISTRESS',
-    description: ''
+    value: 'cause_21',
+    label: 'INTENTIONAL INFLICTION OF EMOTIONAL DISTRESS'
   },
   {
-    value: 'negligent_emotional_distress',
-    label: 'NEGLIGENT INFLICTION OF EMOTIONAL DISTRESS',
-    description: ''
+    value: 'cause_22',
+    label: 'NEGLIGENT INFLICTION OF EMOTIONAL DISTRESS'
   }
 ]
+
+// 初始化案由对象 - 所有案由默认为 false
+export const getInitialCausesObject = () => {
+  const causesObject = {}
+  CAUSES_OF_ACTION.forEach(cause => {
+    causesObject[cause.value] = false
+  })
+  return causesObject
+}
 
 // Pay Period Options
 export const PAY_PERIOD_OPTIONS = [
@@ -331,7 +319,29 @@ export const COMPLAINT_TEST_DATA = {
   CaseNumber: 'LASC123456',
   JudgeName: 'Michael Doe',
   ComplaintFilingDate: '2024-06-23',
-  SelectedCauses: ['unpaid_wages', 'meal_periods', 'rest_periods', 'overtime_wages', 'waiting_time_penalties'],
+  SelectedCauses: {
+    cause_01: true,  // FAILURE TO PAY ALL WAGES
+    cause_03: true,  // FAILURE TO PROVIDE MEAL PERIODS  
+    cause_04: true,  // FAILURE TO PROVIDE REST PERIODS
+    cause_05: true,  // FAILURE TO PAY OVERTIME WAGES
+    cause_06: true,  // FAILURE TO PAY WAGES DUE UPON TERMINATION: WAITING TIME PENALTIES
+    cause_07: false,
+    cause_08: false,
+    cause_09: false,
+    cause_10: false,
+    cause_11: false,
+    cause_12: false,
+    cause_13: false,
+    cause_14: false,
+    cause_15: false,
+    cause_16: false,
+    cause_17: false,
+    cause_18: false,
+    cause_19: false,
+    cause_20: false,
+    cause_21: false,
+    cause_22: false
+  },
   PlaintiffResidence: 'Los Angeles, California',
   DefendantBusinessType: 'restaurant',
   DefendantBusinessAddress: '123 Broadway, Los Angeles, CA 90016',
