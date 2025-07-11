@@ -148,9 +148,9 @@ export const getInitialCausesObject = () => {
 
 // 英文序号数组
 export const ORDINAL_NUMBERS = [
-  'first', 'second', 'third', 'fourth', 'fifth', 'sixth', 'seventh', 'eighth', 
-  'ninth', 'tenth', 'eleventh', 'twelfth', 'thirteenth', 'fourteenth', 'fifteenth', 
-  'sixteenth', 'seventeenth', 'eighteenth', 'nineteenth', 'twentieth', 'twenty-first', 'twenty-second'
+  'FIRST', 'SECOND', 'THIRD', 'FOURTH', 'FIFTH', 'SIXTH', 'SEVENTH', 'EIGHTH', 
+  'NINTH', 'TENTH', 'ELEVENTH', 'TWELFTH', 'THIRTEENTH', 'FOURTEENTH', 'FIFTEENTH', 
+  'SIXTEENTH', 'SEVENTEENTH', 'EIGHTEENTH', 'NINETEENTH', 'TWENTIETH', 'TWENTY-FIRST', 'TWENTY-SECOND'
 ]
 
 // 更新案由序号
@@ -354,11 +354,11 @@ export const COMPLAINT_TEST_DATA = {
   JudgeName: 'Michael Doe',
   ComplaintFilingDate: '2024-06-23',
   SelectedCauses: {
-    cause_01: { selected: true, order: "first" },   // FAILURE TO PAY ALL WAGES
-    cause_03: { selected: true, order: "second" },  // FAILURE TO PROVIDE MEAL PERIODS  
-    cause_04: { selected: true, order: "third" },   // FAILURE TO PROVIDE REST PERIODS
-    cause_05: { selected: true, order: "fourth" },  // FAILURE TO PAY OVERTIME WAGES
-    cause_06: { selected: true, order: "fifth" },   // FAILURE TO PAY WAGES DUE UPON TERMINATION: WAITING TIME PENALTIES
+    cause_01: { selected: true, order: "FIRST" },   // FAILURE TO PAY ALL WAGES
+    cause_03: { selected: true, order: "SECOND" },  // FAILURE TO PROVIDE MEAL PERIODS  
+    cause_04: { selected: true, order: "THIRD" },   // FAILURE TO PROVIDE REST PERIODS
+    cause_05: { selected: true, order: "FOURTH" },  // FAILURE TO PAY OVERTIME WAGES
+    cause_06: { selected: true, order: "FIFTH" },   // FAILURE TO PAY WAGES DUE UPON TERMINATION: WAITING TIME PENALTIES
     cause_07: { selected: false, order: "" },
     cause_08: { selected: false, order: "" },
     cause_09: { selected: false, order: "" },
