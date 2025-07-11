@@ -134,12 +134,46 @@ export const CAUSES_OF_ACTION = [
   }
 ]
 
-// 初始化案由对象 - 所有案由默认为 false
+// 初始化案由对象 - 所有案由默认为 { selected: false, order: "" }
 export const getInitialCausesObject = () => {
   const causesObject = {}
   CAUSES_OF_ACTION.forEach(cause => {
-    causesObject[cause.value] = false
+    causesObject[cause.value] = {
+      selected: false,
+      order: ""
+    }
   })
+  return causesObject
+}
+
+// 英文序号数组
+export const ORDINAL_NUMBERS = [
+  'first', 'second', 'third', 'fourth', 'fifth', 'sixth', 'seventh', 'eighth', 
+  'ninth', 'tenth', 'eleventh', 'twelfth', 'thirteenth', 'fourteenth', 'fifteenth', 
+  'sixteenth', 'seventeenth', 'eighteenth', 'nineteenth', 'twentieth', 'twenty-first', 'twenty-second'
+]
+
+// 更新案由序号
+export const updateCausesOrder = (causesObject) => {
+  // 获取所有选中的案由，按照 CAUSES_OF_ACTION 的顺序
+  const selectedCauses = CAUSES_OF_ACTION
+    .map(cause => cause.value)
+    .filter(causeKey => causesObject[causeKey]?.selected === true)
+  
+  // 重置所有序号
+  Object.keys(causesObject).forEach(key => {
+    if (causesObject[key]) {
+      causesObject[key].order = ""
+    }
+  })
+  
+  // 为选中的案由分配序号
+  selectedCauses.forEach((causeKey, index) => {
+    if (causesObject[causeKey] && index < ORDINAL_NUMBERS.length) {
+      causesObject[causeKey].order = ORDINAL_NUMBERS[index]
+    }
+  })
+  
   return causesObject
 }
 
@@ -320,27 +354,27 @@ export const COMPLAINT_TEST_DATA = {
   JudgeName: 'Michael Doe',
   ComplaintFilingDate: '2024-06-23',
   SelectedCauses: {
-    cause_01: true,  // FAILURE TO PAY ALL WAGES
-    cause_03: true,  // FAILURE TO PROVIDE MEAL PERIODS  
-    cause_04: true,  // FAILURE TO PROVIDE REST PERIODS
-    cause_05: true,  // FAILURE TO PAY OVERTIME WAGES
-    cause_06: true,  // FAILURE TO PAY WAGES DUE UPON TERMINATION: WAITING TIME PENALTIES
-    cause_07: false,
-    cause_08: false,
-    cause_09: false,
-    cause_10: false,
-    cause_11: false,
-    cause_12: false,
-    cause_13: false,
-    cause_14: false,
-    cause_15: false,
-    cause_16: false,
-    cause_17: false,
-    cause_18: false,
-    cause_19: false,
-    cause_20: false,
-    cause_21: false,
-    cause_22: false
+    cause_01: { selected: true, order: "first" },   // FAILURE TO PAY ALL WAGES
+    cause_03: { selected: true, order: "second" },  // FAILURE TO PROVIDE MEAL PERIODS  
+    cause_04: { selected: true, order: "third" },   // FAILURE TO PROVIDE REST PERIODS
+    cause_05: { selected: true, order: "fourth" },  // FAILURE TO PAY OVERTIME WAGES
+    cause_06: { selected: true, order: "fifth" },   // FAILURE TO PAY WAGES DUE UPON TERMINATION: WAITING TIME PENALTIES
+    cause_07: { selected: false, order: "" },
+    cause_08: { selected: false, order: "" },
+    cause_09: { selected: false, order: "" },
+    cause_10: { selected: false, order: "" },
+    cause_11: { selected: false, order: "" },
+    cause_12: { selected: false, order: "" },
+    cause_13: { selected: false, order: "" },
+    cause_14: { selected: false, order: "" },
+    cause_15: { selected: false, order: "" },
+    cause_16: { selected: false, order: "" },
+    cause_17: { selected: false, order: "" },
+    cause_18: { selected: false, order: "" },
+    cause_19: { selected: false, order: "" },
+    cause_20: { selected: false, order: "" },
+    cause_21: { selected: false, order: "" },
+    cause_22: { selected: false, order: "" }
   },
   PlaintiffResidence: 'Los Angeles, California',
   DefendantBusinessType: 'restaurant',

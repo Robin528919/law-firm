@@ -132,7 +132,7 @@ const calculateComplaintProgress = () => {
     const value = formStore.complaintForm[field]
     if (field === 'SelectedCauses') {
       // 检查是否至少选择了一个案由
-      return Object.values(value || {}).some(v => v === true)
+      return Object.values(value || {}).some(v => v?.selected === true)
     }
     if (Array.isArray(value)) return value.length > 0
     if (typeof value === 'string') return value.trim() !== ''

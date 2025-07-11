@@ -113,12 +113,17 @@
             <el-checkbox
               v-for="cause in CAUSES_OF_ACTION"
               :key="cause.value"
-              v-model="formData.SelectedCauses[cause.value]"
+              v-model="formData.SelectedCauses[cause.value].selected"
               :label="cause.value"
               class="cause-checkbox"
               @change="handleCauseChange"
             >
-              {{ cause.label }}
+              <span class="cause-label">
+                {{ cause.label }}
+                <span v-if="formData.SelectedCauses[cause.value].order" class="cause-order">
+                  ({{ formData.SelectedCauses[cause.value].order }})
+                </span>
+              </span>
             </el-checkbox>
           </div>
         </el-form-item>
@@ -570,7 +575,8 @@ import {
   FIELD_TOOLTIPS,
   VALIDATION_RULES,
   API_CONFIG,
-  COMPLAINT_TEST_DATA
+  COMPLAINT_TEST_DATA,
+  updateCausesOrder
 } from '@/utils/constants'
 
 // 使用表单状态管理
@@ -603,7 +609,7 @@ const validationRules = {
     {
       required: true,
       validator: (rule, value, callback) => {
-        const hasSelected = Object.values(value || {}).some(v => v === true)
+        const hasSelected = Object.values(value || {}).some(v => v?.selected === true)
         if (!hasSelected) {
           callback(new Error('Please select at least one cause of action'))
         } else {
@@ -636,6 +642,9 @@ const handleFieldChange = (value, field) => {
 
 // 处理案由选择变更
 const handleCauseChange = () => {
+  // 更新案由序号
+  updateCausesOrder(formData.SelectedCauses)
+  
   // 触发表单验证
   formRef.value?.validateField('SelectedCauses')
 }
@@ -812,6 +821,19 @@ defineExpose({
   flex-shrink: 0;
 }
 
+/* Cause label and order styling */
+.cause-label {
+  display: block;
+  line-height: 1.4;
+}
+
+.cause-order {
+  color: var(--el-color-primary);
+  font-weight: 600;
+  margin-left: 8px;
+  font-size: 0.9em;
+}
+
 @media (max-width: 768px) {
   .causes-checkbox-group {
     gap: 10px;
@@ -820,6 +842,11 @@ defineExpose({
   .cause-checkbox :deep(.el-checkbox__label) {
     font-size: 14px;
     max-width: calc(100% - 25px);
+  }
+  
+  .cause-order {
+    font-size: 0.85em;
+    margin-left: 6px;
   }
 }
 </style>
