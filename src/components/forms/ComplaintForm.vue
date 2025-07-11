@@ -19,20 +19,20 @@
       >
         <FormField
           label="Plaintiff Name"
-          v-model="formData.plaintiffName"
-          prop="plaintiffName"
+          v-model="formData.PlaintiffName"
+          prop="PlaintiffName"
           type="text"
           placeholder="e.g. James Doe, should be followed by individual designation"
           required
           description="Multiple plaintiffs separated by commas. Each name should be followed by an individual designation"
-          @change="(value) => handleFieldChange(value, 'plaintiffName')"
+          @change="(value) => handleFieldChange(value, 'PlaintiffName')"
           @blur="handlePlaintiffNameBlur"
         />
 
         <FormField
           label="Plaintiff's Job"
-          v-model="formData.plaintiffJob"
-          prop="plaintiffJob"
+          v-model="formData.PlaintiffJob"
+          prop="PlaintiffJob"
           type="text"
           placeholder="e.g. Chef"
           required
@@ -42,20 +42,20 @@
         <div class="defendant-name-group">
           <label class="field-group-label">Defendant Name</label>
           <DefendantNameField
-            :defendant-name="formData.defendantName"
-            :defendant-state="formData.defendantState"
-            :defendant-entity-type="formData.defendantEntityType"
+            :defendant-name="formData.DefendantName"
+            :defendant-state="formData.DefendantState"
+            :defendant-entity-type="formData.DefendantEntityType"
             required
-            @update:defendant-name="(value) => handleFieldChange(value, 'defendantName')"
-            @update:defendant-state="(value) => handleFieldChange(value, 'defendantState')"
-            @update:defendant-entity-type="(value) => handleFieldChange(value, 'defendantEntityType')"
+            @update:defendant-name="(value) => handleFieldChange(value, 'DefendantName')"
+            @update:defendant-state="(value) => handleFieldChange(value, 'DefendantState')"
+            @update:defendant-entity-type="(value) => handleFieldChange(value, 'DefendantEntityType')"
           />
         </div>
 
         <FormField
           label="Court Location (County)"
-          v-model="formData.courtLocation"
-          prop="courtLocation"
+          v-model="formData.CourtLocation"
+          prop="CourtLocation"
           type="text"
           placeholder="e.g. LOS ANGELES (All Capital)"
           required
@@ -64,8 +64,8 @@
 
         <FormField
           label="Court Name"
-          v-model="formData.courtName"
-          prop="courtName"
+          v-model="formData.CourtName"
+          prop="CourtName"
           type="text"
           placeholder="e.g. STANLEY MOSK COURTHOUSE"
           required
@@ -73,8 +73,8 @@
 
         <FormField
           label="Case Number"
-          v-model="formData.caseNumber"
-          prop="caseNumber"
+          v-model="formData.CaseNumber"
+          prop="CaseNumber"
           type="text"
           placeholder="e.g. LASC123456"
           description="Need to set default as space"
@@ -82,15 +82,15 @@
 
         <FormField
           label="Judge Name"
-          v-model="formData.judgeName"
-          prop="judgeName"
+          v-model="formData.JudgeName"
+          prop="JudgeName"
           type="text"
           placeholder="e.g. Michael Doe"
         />
 
-        <el-form-item label="Complaint Filing Date" prop="complaintFilingDate">
+        <el-form-item label="Complaint Filing Date" prop="ComplaintFilingDate">
           <el-date-picker
-            v-model="formData.complaintFilingDate"
+            v-model="formData.ComplaintFilingDate"
             type="date"
             placeholder="Select complaint filing date or expected filing date"
             style="width: 100%"
@@ -110,8 +110,8 @@
       >
         <FormField
           label="Causes of Action"
-          v-model="formData.selectedCauses"
-          prop="selectedCauses"
+          v-model="formData.SelectedCauses"
+          prop="SelectedCauses"
           type="checkbox"
           :options="CAUSES_OF_ACTION"
           required
@@ -128,8 +128,8 @@
       >
         <FormField
           label="Plaintiff Residence (County, State)"
-          v-model="formData.plaintiffResidence"
-          prop="plaintiffResidence"
+          v-model="formData.PlaintiffResidence"
+          prop="PlaintiffResidence"
           type="text"
           placeholder="e.g. Los Angeles, California"
           required
@@ -137,8 +137,8 @@
 
         <FormField
           label="Defendant Business Type"
-          v-model="formData.defendantBusinessType"
-          prop="defendantBusinessType"
+          v-model="formData.DefendantBusinessType"
+          prop="DefendantBusinessType"
           type="text"
           placeholder="e.g. restaurant"
           required
@@ -146,8 +146,8 @@
 
         <FormField
           label="Defendant's Detailed Business Address"
-          v-model="formData.defendantBusinessAddress"
-          prop="defendantBusinessAddress"
+          v-model="formData.DefendantBusinessAddress"
+          prop="DefendantBusinessAddress"
           type="textarea"
           placeholder="e.g. 123 Broadway, Los Angeles, CA 90016 (Where the plaintiff worked)"
           :rows="3"
@@ -164,9 +164,9 @@
         variant="card"
         :columns="1"
       >
-        <el-form-item label="Start Date of the Employment" prop="employmentStartDate">
+        <el-form-item label="Start Date of the Employment" prop="EmploymentStartDate">
           <el-date-picker
-            v-model="formData.employmentStartDate"
+            v-model="formData.EmploymentStartDate"
             type="date"
             placeholder="e.g. May 1, 2022"
             style="width: 100%"
@@ -175,9 +175,9 @@
           />
         </el-form-item>
 
-        <el-form-item label="End Date of the Employment" prop="employmentEndDate">
+        <el-form-item label="End Date of the Employment" prop="EmploymentEndDate">
           <el-date-picker
-            v-model="formData.employmentEndDate"
+            v-model="formData.EmploymentEndDate"
             type="date"
             placeholder="e.g. June 23, 2024"
             style="width: 100%"
@@ -188,50 +188,50 @@
 
         <FormField
           label="Plaintiff's Hourly Rate"
-          v-model="formData.hourlyRate"
-          prop="hourlyRate"
+          v-model="formData.HourlyRate"
+          prop="HourlyRate"
           type="number"
           placeholder="25"
           :min="0"
           :precision="2"
           required
           description="Need to be used to calculate unpaid wages, overtime, etc"
-          @change="(value) => handleFieldChange(value, 'hourlyRate')"
+          @change="(value) => handleFieldChange(value, 'HourlyRate')"
         />
 
         <FormField
           label="Unpaid Hours"
-          v-model="formData.unpaidHours"
-          prop="unpaidHours"
+          v-model="formData.UnpaidHours"
+          prop="UnpaidHours"
           type="number"
           placeholder="300"
           :min="0"
           :precision="1"
           required
-          @change="(value) => handleFieldChange(value, 'unpaidHours')"
+          @change="(value) => handleFieldChange(value, 'UnpaidHours')"
         />
 
         <FormField
           label="How Many Actual Hours Did the Plaintiff Work Per Week"
-          v-model="formData.weeklyHours"
-          prop="weeklyHours"
+          v-model="formData.WeeklyHours"
+          prop="WeeklyHours"
           type="number"
           placeholder="80"
           :min="0"
           :precision="1"
           required
-          @change="(value) => handleFieldChange(value, 'weeklyHours')"
+          @change="(value) => handleFieldChange(value, 'WeeklyHours')"
         />
 
         <FormField
           label="How Many 2 * Overtime Hours Did the Plaintiff Work Per Week"
-          v-model="formData.doubleOvertimeHours"
-          prop="doubleOvertimeHours"
+          v-model="formData.DoubleOvertimeHours"
+          prop="DoubleOvertimeHours"
           type="number"
           placeholder="5"
           :min="0"
           :precision="1"
-          @change="(value) => handleFieldChange(value, 'doubleOvertimeHours')"
+          @change="(value) => handleFieldChange(value, 'DoubleOvertimeHours')"
         />
       </FormGroup>
 
@@ -245,8 +245,8 @@
       >
         <FormField
           label="Pay Period Interval"
-          v-model="formData.payPeriodInterval"
-          prop="payPeriodInterval"
+          v-model="formData.PayPeriodInterval"
+          prop="PayPeriodInterval"
           type="select"
           placeholder="Select pay period interval"
           :options="PAY_PERIOD_OPTIONS"
@@ -256,8 +256,8 @@
 
         <FormField
           label="What is the Applicable IWC Order (Number)"
-          v-model="formData.iwcOrder"
-          prop="iwcOrder"
+          v-model="formData.IwcOrder"
+          prop="IwcOrder"
           type="number"
           placeholder="5"
           :min="1"
@@ -267,55 +267,55 @@
 
         <FormField
           label="Payperiods"
-          v-model="formData.payPeriods"
-          prop="payPeriods"
+          v-model="formData.PayPeriods"
+          prop="PayPeriods"
           type="number"
           placeholder="20"
           :min="1"
           :precision="0"
           required
-          @change="(value) => handleFieldChange(value, 'payPeriods')"
+          @change="(value) => handleFieldChange(value, 'PayPeriods')"
         />
 
         <FormField
           label="How Many Missed Meal Breaks Per Week"
-          v-model="formData.missedMealBreaks"
-          prop="missedMealBreaks"
+          v-model="formData.MissedMealBreaks"
+          prop="MissedMealBreaks"
           type="number"
           placeholder="5"
           :min="0"
           :precision="0"
-          @change="(value) => handleFieldChange(value, 'missedMealBreaks')"
+          @change="(value) => handleFieldChange(value, 'MissedMealBreaks')"
         />
 
         <FormField
           label="How Many Missed Rest Breaks Per Week"
-          v-model="formData.missedRestBreaks"
-          prop="missedRestBreaks"
+          v-model="formData.MissedRestBreaks"
+          prop="MissedRestBreaks"
           type="number"
           placeholder="5"
           :min="0"
           :precision="0"
-          @change="(value) => handleFieldChange(value, 'missedRestBreaks')"
+          @change="(value) => handleFieldChange(value, 'MissedRestBreaks')"
         />
 
         <FormField
           label="What is the Type of Unpaid Expense"
-          v-model="formData.businessExpenseType"
-          prop="businessExpenseType"
+          v-model="formData.BusinessExpenseType"
+          prop="BusinessExpenseType"
           type="text"
           placeholder="e.g. Gas"
         />
 
         <FormField
           label="What is the Amount of Unreimbursed Business Expense"
-          v-model="formData.businessExpenseAmount"
-          prop="businessExpenseAmount"
+          v-model="formData.BusinessExpenseAmount"
+          prop="BusinessExpenseAmount"
           type="number"
           placeholder="1,000"
           :min="0"
           :precision="2"
-          @change="(value) => handleFieldChange(value, 'businessExpenseAmount')"
+          @change="(value) => handleFieldChange(value, 'BusinessExpenseAmount')"
         />
       </FormGroup>
 
@@ -585,26 +585,26 @@ const fillingTestData = ref(false)
 
 // 验证规则
 const validationRules = {
-  plaintiffName: [VALIDATION_RULES.required],
-  plaintiffJob: [VALIDATION_RULES.required],
-  defendantName: [VALIDATION_RULES.required],
-  defendantState: [VALIDATION_RULES.required],
-  defendantEntityType: [VALIDATION_RULES.required],
-  courtLocation: [VALIDATION_RULES.required],
-  courtName: [VALIDATION_RULES.required],
-  complaintFilingDate: [VALIDATION_RULES.required, VALIDATION_RULES.date],
-  selectedCauses: [VALIDATION_RULES.required],
-  plaintiffResidence: [VALIDATION_RULES.required],
-  defendantBusinessType: [VALIDATION_RULES.required],
-  defendantBusinessAddress: [VALIDATION_RULES.required],
-  employmentStartDate: [VALIDATION_RULES.required, VALIDATION_RULES.date],
-  employmentEndDate: [VALIDATION_RULES.required, VALIDATION_RULES.date],
-  hourlyRate: [VALIDATION_RULES.required, VALIDATION_RULES.number],
-  unpaidHours: [VALIDATION_RULES.required, VALIDATION_RULES.number],
-  weeklyHours: [VALIDATION_RULES.required, VALIDATION_RULES.number],
-  payPeriodInterval: [VALIDATION_RULES.required],
-  iwcOrder: [VALIDATION_RULES.required, VALIDATION_RULES.number],
-  payPeriods: [VALIDATION_RULES.required, VALIDATION_RULES.number]
+  PlaintiffName: [VALIDATION_RULES.required],
+  PlaintiffJob: [VALIDATION_RULES.required],
+  DefendantName: [VALIDATION_RULES.required],
+  DefendantState: [VALIDATION_RULES.required],
+  DefendantEntityType: [VALIDATION_RULES.required],
+  CourtLocation: [VALIDATION_RULES.required],
+  CourtName: [VALIDATION_RULES.required],
+  ComplaintFilingDate: [VALIDATION_RULES.required, VALIDATION_RULES.date],
+  SelectedCauses: [VALIDATION_RULES.required],
+  PlaintiffResidence: [VALIDATION_RULES.required],
+  DefendantBusinessType: [VALIDATION_RULES.required],
+  DefendantBusinessAddress: [VALIDATION_RULES.required],
+  EmploymentStartDate: [VALIDATION_RULES.required, VALIDATION_RULES.date],
+  EmploymentEndDate: [VALIDATION_RULES.required, VALIDATION_RULES.date],
+  HourlyRate: [VALIDATION_RULES.required, VALIDATION_RULES.number],
+  UnpaidHours: [VALIDATION_RULES.required, VALIDATION_RULES.number],
+  WeeklyHours: [VALIDATION_RULES.required, VALIDATION_RULES.number],
+  PayPeriodInterval: [VALIDATION_RULES.required],
+  IwcOrder: [VALIDATION_RULES.required, VALIDATION_RULES.number],
+  PayPeriods: [VALIDATION_RULES.required, VALIDATION_RULES.number]
 }
 
 // 字段变更处理（其他字段仍需要）
@@ -623,7 +623,7 @@ const handlePlaintiffNameBlur = (value) => {
     // 移除可能存在的尾随逗号和空格
     const cleanedValue = currentValue.replace(/,?\s*$/, '')
     const newValue = `${cleanedValue}, an individual`
-    formStore.updateComplaintForm('plaintiffName', newValue)
+    formStore.updateComplaintForm('PlaintiffName', newValue)
   }
 }
 

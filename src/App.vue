@@ -120,11 +120,11 @@ const currentFormProgress = computed(() => {
 // Calculate complaint form progress
 const calculateComplaintProgress = () => {
   const requiredFields = [
-    'plaintiffName', 'plaintiffJob', 'defendantName', 'defendantState', 'defendantEntityType',
-    'courtLocation', 'courtName', 'complaintFilingDate', 'selectedCauses', 'plaintiffResidence',
-    'defendantBusinessType', 'defendantBusinessAddress', 'employmentStartDate',
-    'employmentEndDate', 'hourlyRate', 'unpaidHours', 'weeklyHours',
-    'payPeriodInterval', 'iwcOrder', 'payPeriods'
+    'PlaintiffName', 'PlaintiffJob', 'DefendantName', 'DefendantState', 'DefendantEntityType',
+    'CourtLocation', 'CourtName', 'ComplaintFilingDate', 'SelectedCauses', 'PlaintiffResidence',
+    'DefendantBusinessType', 'DefendantBusinessAddress', 'EmploymentStartDate',
+    'EmploymentEndDate', 'HourlyRate', 'UnpaidHours', 'WeeklyHours',
+    'PayPeriodInterval', 'IwcOrder', 'PayPeriods'
   ]
 
   const filledFields = requiredFields.filter(field => {

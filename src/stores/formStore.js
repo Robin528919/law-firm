@@ -13,41 +13,41 @@ export const useFormStore = defineStore('form', () => {
   // 起诉/损害赔偿表单数据
   const complaintForm = ref({
     // 基础信息
-    plaintiffName: '',
-    plaintiffJob: '',
-    defendantName: '',
-    defendantState: '',
-    defendantEntityType: '',
-    courtLocation: '',
-    courtName: '',
-    caseNumber: ' ', // 默认空格
-    judgeName: '',
-    complaintFilingDate: null,
+    PlaintiffName: '',
+    PlaintiffJob: '',
+    DefendantName: '',
+    DefendantState: '',
+    DefendantEntityType: '',
+    CourtLocation: '',
+    CourtName: '',
+    CaseNumber: ' ', // 默认空格
+    JudgeName: '',
+    ComplaintFilingDate: null,
     
     // 选择字段
-    selectedCauses: [],
-    payPeriodInterval: '',
+    SelectedCauses: [],
+    PayPeriodInterval: '',
     
     // 地址信息
-    plaintiffResidence: '',
-    defendantBusinessType: '',
-    defendantBusinessAddress: '',
+    PlaintiffResidence: '',
+    DefendantBusinessType: '',
+    DefendantBusinessAddress: '',
     
     // 雇佣信息
-    employmentStartDate: null,
-    employmentEndDate: null,
-    hourlyRate: 0,
-    unpaidHours: 0,
-    weeklyHours: 0,
-    doubleOvertimeHours: 0,
+    EmploymentStartDate: null,
+    EmploymentEndDate: null,
+    HourlyRate: 0,
+    UnpaidHours: 0,
+    WeeklyHours: 0,
+    DoubleOvertimeHours: 0,
     
     // 其他字段
-    iwcOrder: 0,
-    payPeriods: 0,
-    missedMealBreaks: 0,
-    missedRestBreaks: 0,
-    businessExpenseType: '',
-    businessExpenseAmount: 0
+    IwcOrder: 0,
+    PayPeriods: 0,
+    MissedMealBreaks: 0,
+    MissedRestBreaks: 0,
+    BusinessExpenseType: '',
+    BusinessExpenseAmount: 0
   })
   
   // 回复表单数据
@@ -191,7 +191,7 @@ export const useFormStore = defineStore('form', () => {
   // 格式化的被告名称（起诉表单）
   const formattedComplaintDefendantName = computed(() => {
     const form = complaintForm.value
-    return formatDefendantName(form.defendantName, form.defendantState, form.defendantEntityType)
+    return formatDefendantName(form.DefendantName, form.DefendantState, form.DefendantEntityType)
   })
 
   // 格式化的被告名称（回复表单）
@@ -308,49 +308,49 @@ export const useFormStore = defineStore('form', () => {
     
     // 基础计算
     const doe = calculations.calculateDOE(
-      form.complaintFilingDate,
-      form.employmentStartDate,
-      form.employmentEndDate
+      form.ComplaintFilingDate,
+      form.EmploymentStartDate,
+      form.EmploymentEndDate
     )
     
     const oneAndHalfOvertimeHours = calculations.calculate1_5OvertimeHours(
-      form.weeklyHours,
-      form.doubleOvertimeHours
+      form.WeeklyHours,
+      form.DoubleOvertimeHours
     )
     
     const overtimeHoursTotal = calculations.calculateOvertimeHoursTotal(
       oneAndHalfOvertimeHours,
-      form.doubleOvertimeHours
+      form.DoubleOvertimeHours
     )
     
     // 损害赔偿计算
     const damageUnpaidWages = calculations.calculateDamageUnpaidWages(
-      form.unpaidHours,
-      form.hourlyRate
+      form.UnpaidHours,
+      form.HourlyRate
     )
     
     const damageMealBreaks = calculations.calculateDamageMealBreaks(
-      form.missedMealBreaks,
+      form.MissedMealBreaks,
       doe,
-      form.hourlyRate
+      form.HourlyRate
     )
     
     const damageRestBreaks = calculations.calculateDamageRestBreaks(
-      form.missedRestBreaks,
+      form.MissedRestBreaks,
       doe,
-      form.hourlyRate
+      form.HourlyRate
     )
     
     const damageOvertime = calculations.calculateDamageOvertime(
       oneAndHalfOvertimeHours,
-      form.doubleOvertimeHours,
-      form.hourlyRate,
+      form.DoubleOvertimeHours,
+      form.HourlyRate,
       doe
     )
     
-    const damageWaitingTime = calculations.calculateDamageWaitingTime(form.hourlyRate)
+    const damageWaitingTime = calculations.calculateDamageWaitingTime(form.HourlyRate)
     
-    const wageStatementPenalty = calculations.calculateWageStatementPenalty(form.payPeriods)
+    const wageStatementPenalty = calculations.calculateWageStatementPenalty(form.PayPeriods)
     
     const damages = {
       damageUnpaidWages,
@@ -358,7 +358,7 @@ export const useFormStore = defineStore('form', () => {
       damageRestBreaks,
       damageOvertime,
       damageWaitingTime,
-      businessExpenseAmount: form.businessExpenseAmount,
+      businessExpenseAmount: form.BusinessExpenseAmount,
       wageStatementPenalty
     }
     
@@ -366,8 +366,8 @@ export const useFormStore = defineStore('form', () => {
     
     // 利息计算
     const interestPeriod = calculations.calculateInterestPeriod(
-      form.complaintFilingDate,
-      form.employmentEndDate
+      form.ComplaintFilingDate,
+      form.EmploymentEndDate
     )
     
     const preJudgmentInterest = calculations.calculatePreJudgmentInterest(
@@ -381,16 +381,16 @@ export const useFormStore = defineStore('form', () => {
     )
     
     // 复数形式
-    const plaintiffPlurality = calculations.getPlurality(form.plaintiffName)
+    const plaintiffPlurality = calculations.getPlurality(form.PlaintiffName)
     const defendantPlurality = calculations.getPlurality(formattedComplaintDefendantName.value)
     
     // 状态判断
-    const overtimeStatus = calculations.calculateOvertimeStatus(form.weeklyHours)
+    const overtimeStatus = calculations.calculateOvertimeStatus(form.WeeklyHours)
     
     // 日期字段
     const executedDate = formatLegalDate(new Date())
-    const sol3 = calculations.calculate3SOL(form.complaintFilingDate)
-    const sol4 = calculations.calculate4SOL(form.complaintFilingDate)
+    const sol3 = calculations.calculate3SOL(form.ComplaintFilingDate)
+    const sol4 = calculations.calculate4SOL(form.ComplaintFilingDate)
     
     // 案件编号
     const causeNumber = calculations.generateCauseNumber(0)
@@ -486,7 +486,7 @@ export const useFormStore = defineStore('form', () => {
     
     if (targetType === 'complaint') {
       Object.keys(complaintForm.value).forEach(key => {
-        if (key === 'caseNumber') {
+        if (key === 'CaseNumber') {
           complaintForm.value[key] = ' '
         } else if (typeof complaintForm.value[key] === 'string') {
           complaintForm.value[key] = ''
