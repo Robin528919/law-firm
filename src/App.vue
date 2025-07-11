@@ -376,11 +376,56 @@ const handleSubmit = async () => {
     // 继续执行，不阻止提交
   }
 
-  // 准备提交数据，包含邮箱地址
+  // 准备提交数据，包含邮箱地址和计算字段
+  let formData = formStore.getCurrentFormData()
+  
+  // 对于 Complaint 表单，需要合并计算字段
+  if (formStore.currentFormType === 'complaint') {
+    const calculations = formStore.complaintCalculations
+    
+    // 将计算字段映射为规格表中的字段名并合并到formData中
+    const calculatedFields = {
+      // 复数形式字段
+      PlaintiffPlurality1: calculations.plaintiffPlurality1,
+      PlaintiffPlurality2: calculations.plaintiffPlurality2, 
+      DefendantPlurality1: calculations.defendantPlurality1,
+      DefendantPlurality2: calculations.defendantPlurality2,
+      
+      // 基础计算字段
+      DOE: calculations.doe,
+      OvertimeHoursTotal: calculations.overtimeHoursTotal,
+      '1.5OvertimeHours': calculations.oneAndHalfOvertimeHours,
+      
+      // 损害赔偿字段
+      WageStatementPenalty: calculations.wageStatementPenalty,
+      DamageUnpaidWages: calculations.damageUnpaidWages,
+      DamageMealBreaks: calculations.damageMealBreaks,
+      DamageRestBreaks: calculations.damageRestBreaks,
+      DamageOvertime: calculations.damageOvertime,
+      DamageWaitingTime: calculations.damageWaitingTime,
+      DamageTotal: calculations.damageTotal,
+      
+      // 利息字段
+      InterestPeriod: calculations.interestPeriod,
+      PreJudgmentInterest: calculations.preJudgmentInterest,
+      DamageTotalIncludingInterest: calculations.damageTotalIncludingInterest,
+      
+      // 日期和状态字段
+      ExecutedDate: calculations.executedDate,
+      CauseNumber: calculations.causeNumber,
+      '3SOL': calculations.sol3,
+      '4SOL': calculations.sol4,
+      OvertimeStatus: calculations.overtimeStatus
+    }
+    
+    // 合并输入字段和计算字段
+    formData = { ...formData, ...calculatedFields }
+  }
+
   const submissionData = {
     submissionEmail: formStore.submissionEmail,
     formType: formStore.currentFormType,
-    formData: formStore.getCurrentFormData(),
+    formData: formData,
     timestamp: new Date().toISOString()
   }
 
