@@ -79,6 +79,7 @@ import PmpDepoForm from '@/components/forms/PmpDepoForm.vue'
 import NtcOfDepoForm from '@/components/forms/NtcOfDepoForm.vue'
 import {useFormStore} from '@/stores/formStore'
 import {API_CONFIG} from '@/utils/constants'
+import {formatLegalDate} from '@/utils/calculations'
 
 // Use form state management
 const formStore = useFormStore()
@@ -420,6 +421,17 @@ const handleSubmit = async () => {
     
     // 合并输入字段和计算字段
     formData = { ...formData, ...calculatedFields }
+    
+    // 将输入的日期字段也转换为美式格式
+    if (formData.ComplaintFilingDate) {
+      formData.ComplaintFilingDate = formatLegalDate(formData.ComplaintFilingDate)
+    }
+    if (formData.EmploymentStartDate) {
+      formData.EmploymentStartDate = formatLegalDate(formData.EmploymentStartDate)
+    }
+    if (formData.EmploymentEndDate) {
+      formData.EmploymentEndDate = formatLegalDate(formData.EmploymentEndDate)
+    }
   }
 
   const submissionData = {
