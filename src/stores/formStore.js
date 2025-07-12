@@ -2,7 +2,7 @@ import { defineStore } from 'pinia'
 import { ref, computed } from 'vue'
 import * as calculations from '@/utils/calculations'
 import { formatLegalDate, formatDefendantName } from '@/utils/calculations'
-import { getInitialCausesObject } from '@/utils/constants'
+import { getInitialCausesObject, RFP_SEXUAL_HARASSMENT_TEST_DATA } from '@/utils/constants'
 
 export const useFormStore = defineStore('form', () => {
   // 当前选中的表单类型
@@ -189,6 +189,18 @@ export const useFormStore = defineStore('form', () => {
     ExecutedDate: null,
     ServerName: ''
   })
+
+  // RFP Sexual Harassment 表单数据
+  const rfpSexualHarassmentForm = ref({
+    PlaintiffName: '',
+    DefendantName: '',
+    CaseNumber: '',
+    DefendantBusinessAddress: '',
+    CourtName: '',
+    CourtLocation: '',
+    EmploymentStartDate: null,
+    EmploymentEndDate: null
+  })
   
   // 格式化的被告名称（起诉表单）
   const formattedComplaintDefendantName = computed(() => {
@@ -245,6 +257,13 @@ export const useFormStore = defineStore('form', () => {
     return form.DefendantName || ''
   })
 
+  // 格式化的被告名称（RFP Sexual Harassment表单）
+  const formattedRfpSexualHarassmentDefendantName = computed(() => {
+    const form = rfpSexualHarassmentForm.value
+    // RFP Sexual Harassment表单只有被告名称，没有州和实体类型信息
+    return form.DefendantName || ''
+  })
+
   // Motion to Strike 表单的计算字段
   const motionToStrikeCalculations = computed(() => {
     const form = motionToStrikeForm.value
@@ -296,6 +315,21 @@ export const useFormStore = defineStore('form', () => {
     // 复数形式计算 - 只有当有姓名输入时才计算
     const plaintiffPlurality = plaintiffNamesString ? calculations.getPlurality(plaintiffNamesString) : { form1: '' }
     const defendantPlurality = defendantNamesString ? calculations.getPlurality(defendantNamesString) : { form1Defendant: '' }
+    
+    return {
+      // 复数形式
+      plaintiffPlurality1: plaintiffPlurality.form1,
+      defendantPlurality1: defendantPlurality.form1Defendant
+    }
+  })
+
+  // RFP Sexual Harassment 表单的计算字段
+  const rfpSexualHarassmentCalculations = computed(() => {
+    const form = rfpSexualHarassmentForm.value
+    
+    // 复数形式计算 - 只有当有姓名输入时才计算
+    const plaintiffPlurality = form.PlaintiffName ? calculations.getPlurality(form.PlaintiffName) : { form1: '' }
+    const defendantPlurality = form.DefendantName ? calculations.getPlurality(form.DefendantName) : { form1Defendant: '' }
     
     return {
       // 复数形式
@@ -478,6 +512,10 @@ export const useFormStore = defineStore('form', () => {
   const updateNtcOfDepoForm = (field, value) => {
     ntcOfDepoForm.value[field] = value
   }
+
+  const updateRfpSexualHarassmentForm = (field, value) => {
+    rfpSexualHarassmentForm.value[field] = value
+  }
   
   const updateSubmissionEmail = (email) => {
     submissionEmail.value = email
@@ -586,6 +624,18 @@ export const useFormStore = defineStore('form', () => {
           ntcOfDepoForm.value[key] = null
         }
       })
+    } else if (targetType === 'rfpSexualHarassment') {
+      Object.keys(rfpSexualHarassmentForm.value).forEach(key => {
+        if (typeof rfpSexualHarassmentForm.value[key] === 'string') {
+          rfpSexualHarassmentForm.value[key] = ''
+        } else if (typeof rfpSexualHarassmentForm.value[key] === 'number') {
+          rfpSexualHarassmentForm.value[key] = 0
+        } else if (Array.isArray(rfpSexualHarassmentForm.value[key])) {
+          rfpSexualHarassmentForm.value[key] = []
+        } else {
+          rfpSexualHarassmentForm.value[key] = null
+        }
+      })
     }
   }
   
@@ -602,7 +652,8 @@ export const useFormStore = defineStore('form', () => {
         motionToStrike: motionToStrikeForm.value,
         requestForProduction: requestForProductionForm.value,
         pmpDepo: pmpDepoForm.value,
-        ntcOfDepo: ntcOfDepoForm.value
+        ntcOfDepo: ntcOfDepoForm.value,
+        rfpSexualHarassment: rfpSexualHarassmentForm.value
       }
     }
     
@@ -646,6 +697,9 @@ export const useFormStore = defineStore('form', () => {
       }
       if (data.forms.ntcOfDepo) {
         Object.assign(ntcOfDepoForm.value, data.forms.ntcOfDepo)
+      }
+      if (data.forms.rfpSexualHarassment) {
+        Object.assign(rfpSexualHarassmentForm.value, data.forms.rfpSexualHarassment)
       }
     }
   }
@@ -691,6 +745,8 @@ export const useFormStore = defineStore('form', () => {
         return pmpDepoForm.value
       case 'ntcOfDepo':
         return ntcOfDepoForm.value
+      case 'rfpSexualHarassment':
+        return rfpSexualHarassmentForm.value
       default:
         return {}
     }
@@ -766,6 +822,7 @@ export const useFormStore = defineStore('form', () => {
     requestForProductionForm,
     pmpDepoForm,
     ntcOfDepoForm,
+    rfpSexualHarassmentForm,
     formErrors,
     isLoading,
     
@@ -774,6 +831,7 @@ export const useFormStore = defineStore('form', () => {
     motionToStrikeCalculations,
     ntcOfDepoCalculations,
     requestForProductionCalculations,
+    rfpSexualHarassmentCalculations,
     formattedComplaintDefendantName,
     formattedAnswerDefendantName,
     formattedSettlementDefendantName,
@@ -782,6 +840,7 @@ export const useFormStore = defineStore('form', () => {
     formattedRequestForProductionDefendantName,
     formattedPmpDepoDefendantName,
     formattedNtcOfDepoDefendantName,
+    formattedRfpSexualHarassmentDefendantName,
     isFormValid,
     
     // 方法
@@ -794,6 +853,7 @@ export const useFormStore = defineStore('form', () => {
     updateRequestForProductionForm,
     updatePmpDepoForm,
     updateNtcOfDepoForm,
+    updateRfpSexualHarassmentForm,
     updateSubmissionEmail,
     resetForm,
     resetCurrentForm,

@@ -43,6 +43,11 @@ export const FORM_TYPES = [
     value: 'ntcOfDepo',
     label: 'NTC of Depo Form',
     description: 'Create notice of deposition documents'
+  },
+  {
+    value: 'rfpSexualHarassment',
+    label: 'RFP Sexual Harassment Form',
+    description: 'Request for Production documents for sexual harassment cases'
   }
 ]
 
@@ -409,6 +414,18 @@ export const COMPLAINT_TEST_DATA = {
   MissedRestBreaks: 5,
   BusinessExpenseType: 'Gas',
   BusinessExpenseAmount: 1000
+}
+
+// RFP Sexual Harassment 表单测试数据
+export const RFP_SEXUAL_HARASSMENT_TEST_DATA = {
+  PlaintiffName: 'Jane Doe, an individual',
+  DefendantName: 'ABC Corporation',
+  CaseNumber: 'LASC123456',
+  DefendantBusinessAddress: '1435 S. Vermont Avenue, Los Angeles, CA 90006',
+  CourtName: 'STANLEY MOSK COURTHOUSE',
+  CourtLocation: 'COUNTY OF LOS ANGELES, CENTRAL DISTRICT',
+  EmploymentStartDate: '2022-01-15',
+  EmploymentEndDate: '2024-03-20'
 }
 
 // API 配置

@@ -31,6 +31,9 @@
         <!-- NTC of Depo form -->
         <NtcOfDepoForm v-if="formStore.currentFormType === 'ntcOfDepo'" ref="ntcOfDepoFormRef"/>
 
+        <!-- RFP Sexual Harassment form -->
+        <RfpSexualHarassmentForm v-if="formStore.currentFormType === 'rfpSexualHarassment'" ref="rfpSexualHarassmentFormRef"/>
+
         <!-- Form action buttons -->
         <FormActions
             variant="default"
@@ -77,6 +80,7 @@ import MotionToStrikeForm from '@/components/forms/MotionToStrikeForm.vue'
 import RequestForProductionForm from '@/components/forms/RequestForProductionForm.vue'
 import PmpDepoForm from '@/components/forms/PmpDepoForm.vue'
 import NtcOfDepoForm from '@/components/forms/NtcOfDepoForm.vue'
+import RfpSexualHarassmentForm from '@/components/forms/RfpSexualHarassmentForm.vue'
 import {useFormStore} from '@/stores/formStore'
 import {API_CONFIG} from '@/utils/constants'
 import {formatLegalDate} from '@/utils/calculations'
@@ -93,6 +97,7 @@ const motionToStrikeFormRef = ref()
 const requestForProductionFormRef = ref()
 const pmpDepoFormRef = ref()
 const ntcOfDepoFormRef = ref()
+const rfpSexualHarassmentFormRef = ref()
 
 // Current form completion progress
 const currentFormProgress = computed(() => {
@@ -113,6 +118,8 @@ const currentFormProgress = computed(() => {
       return calculatePmpDepoProgress()
     case 'ntcOfDepo':
       return calculateNtcOfDepoProgress()
+    case 'rfpSexualHarassment':
+      return calculateRfpSexualHarassmentProgress()
     default:
       return 0
   }
@@ -267,6 +274,22 @@ const calculateNtcOfDepoProgress = () => {
   return Math.round((filledFields / requiredFields.length) * 100)
 }
 
+// Calculate rfp sexual harassment form progress
+const calculateRfpSexualHarassmentProgress = () => {
+  const requiredFields = [
+    'PlaintiffName', 'DefendantName', 'CaseNumber', 'DefendantBusinessAddress',
+    'CourtName', 'CourtLocation', 'EmploymentStartDate', 'EmploymentEndDate'
+  ]
+
+  const filledFields = requiredFields.filter(field => {
+    const value = formStore.rfpSexualHarassmentForm[field]
+    if (typeof value === 'string') return value.trim() !== ''
+    return value !== null && value !== undefined
+  }).length
+
+  return Math.round((filledFields / requiredFields.length) * 100)
+}
+
 // Get current form reference
 const getCurrentFormRef = () => {
   switch (formStore.currentFormType) {
@@ -286,6 +309,8 @@ const getCurrentFormRef = () => {
       return pmpDepoFormRef.value
     case 'ntcOfDepo':
       return ntcOfDepoFormRef.value
+    case 'rfpSexualHarassment':
+      return rfpSexualHarassmentFormRef.value
     default:
       return null
   }
@@ -430,6 +455,29 @@ const handleSubmit = async () => {
     if (formData.ComplaintFilingDate) {
       formData.ComplaintFilingDate = formatLegalDate(formData.ComplaintFilingDate)
     }
+    if (formData.EmploymentStartDate) {
+      formData.EmploymentStartDate = formatLegalDate(formData.EmploymentStartDate)
+    }
+    if (formData.EmploymentEndDate) {
+      formData.EmploymentEndDate = formatLegalDate(formData.EmploymentEndDate)
+    }
+  }
+
+  // 对于 RFP Sexual Harassment 表单，需要合并计算字段
+  if (formStore.currentFormType === 'rfpSexualHarassment') {
+    const calculations = formStore.rfpSexualHarassmentCalculations
+    
+    // 将计算字段映射为规格表中的字段名并合并到formData中
+    const calculatedFields = {
+      // 复数形式字段
+      PlaintiffPlurality1: calculations.plaintiffPlurality1,
+      DefendantPlurality1: calculations.defendantPlurality1
+    }
+    
+    // 合并输入字段和计算字段
+    formData = { ...formData, ...calculatedFields }
+    
+    // 将输入的日期字段也转换为美式格式
     if (formData.EmploymentStartDate) {
       formData.EmploymentStartDate = formatLegalDate(formData.EmploymentStartDate)
     }
