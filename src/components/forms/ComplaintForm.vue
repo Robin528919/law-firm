@@ -4,7 +4,7 @@
       ref="formRef"
       :model="formData"
       :rules="validationRules"
-      label-width="160px"
+      label-width="auto"
       label-position="top"
       size="default"
       @submit.prevent="handleSubmit"
@@ -572,7 +572,6 @@ import { useFormStore } from '@/stores/formStore'
 import {
   CAUSES_OF_ACTION,
   PAY_PERIOD_OPTIONS,
-  FIELD_TOOLTIPS,
   VALIDATION_RULES,
   API_CONFIG,
   COMPLAINT_TEST_DATA,
@@ -645,10 +644,10 @@ const handleFieldChange = (value, field) => {
 const handleCauseChange = () => {
   // 更新案由序号
   updateCausesOrder(formData.SelectedCauses)
-  
+
   // 更新案由标签数组
   formData.SelectedCausesLabels = generateSelectedCausesLabels(formData.SelectedCauses)
-  
+
   // 触发表单验证
   formRef.value?.validateField('SelectedCauses')
 }
@@ -690,18 +689,18 @@ const handleSubmit = async () => {
 // 填充测试数据方法
 const fillTestData = async () => {
   fillingTestData.value = true
-  
+
   try {
     // 填充所有测试数据
     Object.keys(COMPLAINT_TEST_DATA).forEach(key => {
       formData[key] = COMPLAINT_TEST_DATA[key]
     })
-    
+
     // 短暂延迟模拟加载过程
     await new Promise(resolve => setTimeout(resolve, 300))
-    
+
     console.log('Complaint 测试数据已填充:', formData)
-    
+
   } catch (error) {
     console.error('填充测试数据时出错:', error)
   } finally {
@@ -842,12 +841,12 @@ defineExpose({
   .causes-checkbox-group {
     gap: 10px;
   }
-  
+
   .cause-checkbox :deep(.el-checkbox__label) {
     font-size: 14px;
     max-width: calc(100% - 25px);
   }
-  
+
   .cause-order {
     font-size: 0.85em;
     margin-left: 6px;
