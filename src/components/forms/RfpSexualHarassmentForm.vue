@@ -11,8 +11,7 @@
       >
         <FormField
           label="Plaintiff Name"
-          :model-value="formStore.rfpSexualHarassmentForm.PlaintiffName"
-          @update:model-value="(value) => formStore.updateRfpSexualHarassmentForm('PlaintiffName', value)"
+          v-model="formStore.rfpSexualHarassmentForm.PlaintiffName"
           prop="PlaintiffName"
           type="text"
           placeholder="e.g. Jane Doe, an individual"
@@ -23,8 +22,7 @@
 
         <FormField
           label="Defendant Name"
-          :model-value="formStore.rfpSexualHarassmentForm.DefendantName"
-          @update:model-value="(value) => formStore.updateRfpSexualHarassmentForm('DefendantName', value)"
+          v-model="formStore.rfpSexualHarassmentForm.DefendantName"
           prop="DefendantName"
           type="text"
           placeholder="e.g. ABC Corporation"
@@ -34,8 +32,7 @@
 
         <FormField
           label="Case Number"
-          :model-value="formStore.rfpSexualHarassmentForm.CaseNumber"
-          @update:model-value="(value) => formStore.updateRfpSexualHarassmentForm('CaseNumber', value)"
+          v-model="formStore.rfpSexualHarassmentForm.CaseNumber"
           prop="CaseNumber"
           type="text"
           placeholder="e.g. LASC123456"
@@ -45,8 +42,7 @@
 
         <FormField
           label="Defendant's Detailed Business Address"
-          :model-value="formStore.rfpSexualHarassmentForm.DefendantBusinessAddress"
-          @update:model-value="(value) => formStore.updateRfpSexualHarassmentForm('DefendantBusinessAddress', value)"
+          v-model="formStore.rfpSexualHarassmentForm.DefendantBusinessAddress"
           prop="DefendantBusinessAddress"
           type="text"
           placeholder="e.g. 1435 S. Vermont Avenue, Los Angeles, CA 90006"
@@ -65,8 +61,7 @@
       >
         <FormField
           label="Court Name"
-          :model-value="formStore.rfpSexualHarassmentForm.CourtName"
-          @update:model-value="(value) => formStore.updateRfpSexualHarassmentForm('CourtName', value)"
+          v-model="formStore.rfpSexualHarassmentForm.CourtName"
           prop="CourtName"
           type="text"
           placeholder="e.g. STANLEY MOSK COURTHOUSE"
@@ -76,8 +71,7 @@
 
         <FormField
           label="Court Location"
-          :model-value="formStore.rfpSexualHarassmentForm.CourtLocation"
-          @update:model-value="(value) => formStore.updateRfpSexualHarassmentForm('CourtLocation', value)"
+          v-model="formStore.rfpSexualHarassmentForm.CourtLocation"
           prop="CourtLocation"
           type="text"
           placeholder="e.g. COUNTY OF LOS ANGELES, CENTRAL DISTRICT"
@@ -96,8 +90,7 @@
       >
         <FormField
           label="Start Date of the Employment"
-          :model-value="formStore.rfpSexualHarassmentForm.EmploymentStartDate"
-          @update:model-value="(value) => formStore.updateRfpSexualHarassmentForm('EmploymentStartDate', value)"
+          v-model="formStore.rfpSexualHarassmentForm.EmploymentStartDate"
           prop="EmploymentStartDate"
           type="date"
           placeholder="mm/dd/yyyy"
@@ -107,8 +100,7 @@
 
         <FormField
           label="End Date of the Employment"
-          :model-value="formStore.rfpSexualHarassmentForm.EmploymentEndDate"
-          @update:model-value="(value) => formStore.updateRfpSexualHarassmentForm('EmploymentEndDate', value)"
+          v-model="formStore.rfpSexualHarassmentForm.EmploymentEndDate"
           prop="EmploymentEndDate"
           type="date"
           placeholder="mm/dd/yyyy"
