@@ -1,6 +1,6 @@
 <template>
   <div class="rfp-sexual-harassment-form">
-    <el-form ref="formRef" :model="formData" :rules="validationRules" label-width="200px">
+    <el-form ref="formRef" :model="formStore.rfpSexualHarassmentForm" :rules="validationRules" label-width="200px">
       <!-- 基础信息 -->
       <FormGroup
         title="Basic Information"
@@ -11,7 +11,8 @@
       >
         <FormField
           label="Plaintiff Name"
-          v-model="formData.PlaintiffName"
+          :model-value="formStore.rfpSexualHarassmentForm.PlaintiffName"
+          @update:model-value="(value) => formStore.updateRfpSexualHarassmentForm('PlaintiffName', value)"
           prop="PlaintiffName"
           type="text"
           placeholder="e.g. Jane Doe, an individual"
@@ -22,7 +23,8 @@
 
         <FormField
           label="Defendant Name"
-          v-model="formData.DefendantName"
+          :model-value="formStore.rfpSexualHarassmentForm.DefendantName"
+          @update:model-value="(value) => formStore.updateRfpSexualHarassmentForm('DefendantName', value)"
           prop="DefendantName"
           type="text"
           placeholder="e.g. ABC Corporation"
@@ -32,7 +34,8 @@
 
         <FormField
           label="Case Number"
-          v-model="formData.CaseNumber"
+          :model-value="formStore.rfpSexualHarassmentForm.CaseNumber"
+          @update:model-value="(value) => formStore.updateRfpSexualHarassmentForm('CaseNumber', value)"
           prop="CaseNumber"
           type="text"
           placeholder="e.g. LASC123456"
@@ -42,7 +45,8 @@
 
         <FormField
           label="Defendant's Detailed Business Address"
-          v-model="formData.DefendantBusinessAddress"
+          :model-value="formStore.rfpSexualHarassmentForm.DefendantBusinessAddress"
+          @update:model-value="(value) => formStore.updateRfpSexualHarassmentForm('DefendantBusinessAddress', value)"
           prop="DefendantBusinessAddress"
           type="text"
           placeholder="e.g. 1435 S. Vermont Avenue, Los Angeles, CA 90006"
@@ -61,7 +65,8 @@
       >
         <FormField
           label="Court Name"
-          v-model="formData.CourtName"
+          :model-value="formStore.rfpSexualHarassmentForm.CourtName"
+          @update:model-value="(value) => formStore.updateRfpSexualHarassmentForm('CourtName', value)"
           prop="CourtName"
           type="text"
           placeholder="e.g. STANLEY MOSK COURTHOUSE"
@@ -71,7 +76,8 @@
 
         <FormField
           label="Court Location"
-          v-model="formData.CourtLocation"
+          :model-value="formStore.rfpSexualHarassmentForm.CourtLocation"
+          @update:model-value="(value) => formStore.updateRfpSexualHarassmentForm('CourtLocation', value)"
           prop="CourtLocation"
           type="text"
           placeholder="e.g. COUNTY OF LOS ANGELES, CENTRAL DISTRICT"
@@ -90,7 +96,8 @@
       >
         <FormField
           label="Start Date of the Employment"
-          v-model="formData.EmploymentStartDate"
+          :model-value="formStore.rfpSexualHarassmentForm.EmploymentStartDate"
+          @update:model-value="(value) => formStore.updateRfpSexualHarassmentForm('EmploymentStartDate', value)"
           prop="EmploymentStartDate"
           type="date"
           placeholder="mm/dd/yyyy"
@@ -100,7 +107,8 @@
 
         <FormField
           label="End Date of the Employment"
-          v-model="formData.EmploymentEndDate"
+          :model-value="formStore.rfpSexualHarassmentForm.EmploymentEndDate"
+          @update:model-value="(value) => formStore.updateRfpSexualHarassmentForm('EmploymentEndDate', value)"
           prop="EmploymentEndDate"
           type="date"
           placeholder="mm/dd/yyyy"
@@ -179,9 +187,6 @@ import {
 const formStore = useFormStore()
 const formRef = ref()
 
-// 表单数据 - 直接使用 ref，支持双向绑定
-const formData = formStore.rfpSexualHarassmentForm
-
 // 计算字段
 const calculations = computed(() => formStore.rfpSexualHarassmentCalculations)
 
@@ -205,7 +210,7 @@ const validationRules = {
 
 // 处理 Plaintiff Name 失去焦点事件，自动添加 ", an individual"
 const handlePlaintiffNameBlur = () => {
-  const currentValue = formData.PlaintiffName || ''
+  const currentValue = formStore.rfpSexualHarassmentForm.PlaintiffName || ''
   // 检查是否已经包含 ", an individual" 或为空
   if (currentValue && !currentValue.includes(', an individual')) {
     // 移除可能存在的尾随逗号和空格
@@ -217,7 +222,7 @@ const handlePlaintiffNameBlur = () => {
 
 // 监听表单数据变化，自动保存
 watch(
-  () => formData.value,
+  () => formStore.rfpSexualHarassmentForm,
   () => {
     // 这里可以实现自动保存逻辑
   },
@@ -244,13 +249,13 @@ const fillTestData = async () => {
   try {
     // 填充所有测试数据
     Object.keys(RFP_SEXUAL_HARASSMENT_TEST_DATA).forEach(key => {
-      formData[key] = RFP_SEXUAL_HARASSMENT_TEST_DATA[key]
+      formStore.updateRfpSexualHarassmentForm(key, RFP_SEXUAL_HARASSMENT_TEST_DATA[key])
     })
     
     // 短暂延迟模拟加载过程
     await new Promise(resolve => setTimeout(resolve, 300))
     
-    console.log('RFP Sexual Harassment 测试数据已填充:', formData)
+    console.log('RFP Sexual Harassment 测试数据已填充:', formStore.rfpSexualHarassmentForm)
     
   } catch (error) {
     console.error('填充测试数据时出错:', error)
