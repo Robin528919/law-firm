@@ -93,6 +93,7 @@
           v-model="formData.EmploymentStartDate"
           prop="EmploymentStartDate"
           type="date"
+          placeholder="mm/dd/yyyy"
           required
           description="When the plaintiff started working"
         />
@@ -102,6 +103,7 @@
           v-model="formData.EmploymentEndDate"
           prop="EmploymentEndDate"
           type="date"
+          placeholder="mm/dd/yyyy"
           required
           description="When the plaintiff stopped working"
         />

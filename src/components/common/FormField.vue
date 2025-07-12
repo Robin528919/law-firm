@@ -74,7 +74,7 @@
         :disabled="disabled || isCalculated"
         :readonly="readonly || isCalculated"
         value-format="YYYY-MM-DD"
-        format="YYYY-MM-DD"
+        format="MM/DD/YYYY"
         style="width: 100%"
         @change="handleInput"
       />
