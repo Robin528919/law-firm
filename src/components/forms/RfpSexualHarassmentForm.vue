@@ -7,7 +7,7 @@
         description="Plaintiff and defendant information"
         icon="User"
         variant="bordered"
-        :columns="2"
+        :columns="1"
       >
         <FormField
           label="Plaintiff Name"
@@ -57,7 +57,7 @@
         description="Court location and jurisdiction details"
         icon="Building"
         variant="bordered"
-        :columns="2"
+        :columns="1"
       >
         <FormField
           label="Court Name"
@@ -86,27 +86,28 @@
         description="Employment period and related dates"
         icon="Calendar"
         variant="bordered"
-        :columns="2"
+        :columns="1"
       >
-        <FormField
-          label="Start Date of the Employment"
-          v-model="formStore.rfpSexualHarassmentForm.EmploymentStartDate"
-          prop="EmploymentStartDate"
-          type="date"
-          placeholder="mm/dd/yyyy"
-          required
-          description="When the plaintiff started working"
-        />
-
-        <FormField
-          label="End Date of the Employment"
-          v-model="formStore.rfpSexualHarassmentForm.EmploymentEndDate"
-          prop="EmploymentEndDate"
-          type="date"
-          placeholder="mm/dd/yyyy"
-          required
-          description="When the plaintiff stopped working"
-        />
+        <el-form-item label="Start Date of the Employment" prop="EmploymentStartDate"  label-width="auth" >
+          <el-date-picker
+             v-model="formStore.rfpSexualHarassmentForm.EmploymentStartDate"
+            type="date"
+            placeholder="e.g. May 1, 2022"
+            style="width: 100%"
+            value-format="YYYY-MM-DD"
+            format="MMMM D, YYYY"
+          />
+        </el-form-item>
+        <el-form-item label="End Date of the Employment" prop="EmploymentEndDate" label-width="auth" >
+          <el-date-picker
+           v-model="formStore.rfpSexualHarassmentForm.EmploymentEndDate"
+            type="date"
+            placeholder="e.g. May 1, 2022"
+            style="width: 100%"
+            value-format="YYYY-MM-DD"
+            format="MMMM D, YYYY"
+          />
+        </el-form-item>
       </FormGroup>
 
       <!-- 自动计算字段 -->
@@ -237,18 +238,18 @@ const handleSubmit = async () => {
 // 填充测试数据方法
 const fillTestData = async () => {
   fillingTestData.value = true
-  
+
   try {
     // 填充所有测试数据
     Object.keys(RFP_SEXUAL_HARASSMENT_TEST_DATA).forEach(key => {
       formStore.updateRfpSexualHarassmentForm(key, RFP_SEXUAL_HARASSMENT_TEST_DATA[key])
     })
-    
+
     // 短暂延迟模拟加载过程
     await new Promise(resolve => setTimeout(resolve, 300))
-    
+
     console.log('RFP Sexual Harassment 测试数据已填充:', formStore.rfpSexualHarassmentForm)
-    
+
   } catch (error) {
     console.error('填充测试数据时出错:', error)
   } finally {
@@ -303,4 +304,4 @@ defineExpose({
   background-color: var(--el-color-warning-light-5);
   border-color: var(--el-color-warning);
 }
-</style> 
+</style>

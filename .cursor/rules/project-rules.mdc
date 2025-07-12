@@ -1,7 +1,5 @@
 ---
-description: 
-globs: 
-alwaysApply: false
+alwaysApply: true
 ---
 1、项目内的注释需要使用中文
 2、你只需要负责修改代码、不需要执行 npm run dev 进行启动项目
@@ -9,3 +7,4 @@ alwaysApply: false
 4、代码中的注释应该用中文
 5、代码中一些界面上显示的文字（比如 '待选择'）应该用英文
 6、代码中一些日志（console.log）应该用中文
+7、只有在我单独需要你git提交的时候、再进行git操作、否则不要操作
