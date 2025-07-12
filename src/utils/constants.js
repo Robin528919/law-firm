@@ -424,8 +424,8 @@ export const RFP_SEXUAL_HARASSMENT_TEST_DATA = {
   DefendantBusinessAddress: '1435 S. Vermont Avenue, Los Angeles, CA 90006',
   CourtName: 'STANLEY MOSK COURTHOUSE',
   CourtLocation: 'COUNTY OF LOS ANGELES, CENTRAL DISTRICT',
-  EmploymentStartDate: '2022-01-15',
-  EmploymentEndDate: '2024-03-20'
+  EmploymentStartDate: '2022-01-15', // 字符串格式
+  EmploymentEndDate: '2024-03-20'    // 字符串格式
 }
 
 // API 配置

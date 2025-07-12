@@ -1,16 +1,16 @@
-import { defineStore } from 'pinia'
-import { ref, computed } from 'vue'
+import {defineStore} from 'pinia'
+import {computed, ref} from 'vue'
 import * as calculations from '@/utils/calculations'
-import { formatLegalDate, formatDefendantName } from '@/utils/calculations'
-import { getInitialCausesObject, RFP_SEXUAL_HARASSMENT_TEST_DATA } from '@/utils/constants'
+import {formatDefendantName, formatLegalDate} from '@/utils/calculations'
+import {getInitialCausesObject} from '@/utils/constants'
 
 export const useFormStore = defineStore('form', () => {
   // 当前选中的表单类型
   const currentFormType = ref('complaint')
-  
+
   // 通用提交邮箱地址
   const submissionEmail = ref('')
-  
+
   // 起诉/损害赔偿表单数据
   const complaintForm = ref({
     // 基础信息
@@ -24,17 +24,17 @@ export const useFormStore = defineStore('form', () => {
     CaseNumber: ' ', // 默认空格
     JudgeName: '',
     ComplaintFilingDate: null,
-    
+
     // 选择字段
     SelectedCauses: getInitialCausesObject(),
     SelectedCausesLabels: [], // 存储选中案由的 label 数组
     PayPeriodInterval: '',
-    
+
     // 地址信息
     PlaintiffResidence: '',
     DefendantBusinessType: '',
     DefendantBusinessAddress: '',
-    
+
     // 雇佣信息
     EmploymentStartDate: null,
     EmploymentEndDate: null,
@@ -42,7 +42,7 @@ export const useFormStore = defineStore('form', () => {
     UnpaidHours: 0,
     WeeklyHours: 0,
     DoubleOvertimeHours: 0,
-    
+
     // 其他字段
     IwcOrder: 0,
     PayPeriods: 0,
@@ -51,7 +51,7 @@ export const useFormStore = defineStore('form', () => {
     BusinessExpenseType: '',
     BusinessExpenseAmount: 0
   })
-  
+
   // 回复表单数据
   const answerForm = ref({
     LetterDate: null,
@@ -64,7 +64,7 @@ export const useFormStore = defineStore('form', () => {
     ADNumber: '',
     RespDate: null
   })
-  
+
   // 和解协议表单数据
   const settlementForm = ref({
     PlaintiffName: '',
@@ -198,10 +198,10 @@ export const useFormStore = defineStore('form', () => {
     DefendantBusinessAddress: '',
     CourtName: '',
     CourtLocation: '',
-    EmploymentStartDate: null,
-    EmploymentEndDate: null
+    EmploymentStartDate: '', // 改为字符串
+    EmploymentEndDate: ''    // 改为字符串
   })
-  
+
   // 格式化的被告名称（起诉表单）
   const formattedComplaintDefendantName = computed(() => {
     const form = complaintForm.value
@@ -239,8 +239,7 @@ export const useFormStore = defineStore('form', () => {
   const formattedRequestForProductionDefendantName = computed(() => {
     const form = requestForProductionForm.value
     // Request for Production表单数组格式的名称
-    const defendantNamesString = form.DefendantNames?.filter(name => name.trim()).join(', ') || ''
-    return defendantNamesString
+      return form.DefendantNames?.filter(name => name.trim()).join(', ') || ''
   })
 
   // 格式化的被告名称（PMP Depo表单）
@@ -267,19 +266,19 @@ export const useFormStore = defineStore('form', () => {
   // Motion to Strike 表单的计算字段
   const motionToStrikeCalculations = computed(() => {
     const form = motionToStrikeForm.value
-    
+
     // 复数形式计算 - 只有当有姓名输入时才计算
     const plaintiffPlurality = form.PlaintiffName ? calculations.getPlurality(form.PlaintiffName) : { form1: '' }
     const defendantPlurality = form.DefendantName ? calculations.getPlurality(form.DefendantName) : { form1Defendant: '' }
-    
+
     // 执行日期 - 当前日期
     const executedDate = formatLegalDate(new Date())
-    
+
     return {
       // 复数形式
       plaintiffPlurality1: plaintiffPlurality.form1,
       defendantPlurality1: defendantPlurality.form1Defendant,
-      
+
       // 执行日期
       executedDate
         }
@@ -288,15 +287,15 @@ export const useFormStore = defineStore('form', () => {
   // NTC of Depo 表单的计算字段
   const ntcOfDepoCalculations = computed(() => {
     const form = ntcOfDepoForm.value
-    
+
     // 将数组格式的名称转换为字符串用于复数计算
     const plaintiffNamesString = form.PlaintiffNames?.filter(name => name.trim()).join(', ') || ''
     const defendantNamesString = form.DefendantNames?.filter(name => name.trim()).join(', ') || ''
-    
+
     // 复数形式计算 - 只有当有姓名输入时才计算
     const plaintiffPlurality = plaintiffNamesString ? calculations.getPlurality(plaintiffNamesString) : { form1: '' }
     const defendantPlurality = defendantNamesString ? calculations.getPlurality(defendantNamesString) : { form1Defendant: '' }
-    
+
     return {
       // 复数形式
       plaintiffPlurality1: plaintiffPlurality.form1,
@@ -307,15 +306,15 @@ export const useFormStore = defineStore('form', () => {
   // Request for Production 表单的计算字段
   const requestForProductionCalculations = computed(() => {
     const form = requestForProductionForm.value
-    
+
     // 将数组格式的名称转换为字符串用于复数计算
     const plaintiffNamesString = form.PlaintiffNames?.filter(name => name.trim()).join(', ') || ''
     const defendantNamesString = form.DefendantNames?.filter(name => name.trim()).join(', ') || ''
-    
+
     // 复数形式计算 - 只有当有姓名输入时才计算
     const plaintiffPlurality = plaintiffNamesString ? calculations.getPlurality(plaintiffNamesString) : { form1: '' }
     const defendantPlurality = defendantNamesString ? calculations.getPlurality(defendantNamesString) : { form1Defendant: '' }
-    
+
     return {
       // 复数形式
       plaintiffPlurality1: plaintiffPlurality.form1,
@@ -326,68 +325,68 @@ export const useFormStore = defineStore('form', () => {
   // RFP Sexual Harassment 表单的计算字段
   const rfpSexualHarassmentCalculations = computed(() => {
     const form = rfpSexualHarassmentForm.value
-    
+
     // 复数形式计算 - 只有当有姓名输入时才计算
     const plaintiffPlurality = form.PlaintiffName ? calculations.getPlurality(form.PlaintiffName) : { form1: '' }
     const defendantPlurality = form.DefendantName ? calculations.getPlurality(form.DefendantName) : { form1Defendant: '' }
-    
+
     return {
       // 复数形式
       plaintiffPlurality1: plaintiffPlurality.form1,
       defendantPlurality1: defendantPlurality.form1Defendant
     }
   })
-  
+
   // 起诉表单的计算字段
   const complaintCalculations = computed(() => {
     const form = complaintForm.value
-    
+
     // 基础计算
     const doe = calculations.calculateDOE(
       form.ComplaintFilingDate,
       form.EmploymentStartDate,
       form.EmploymentEndDate
     )
-    
+
     const oneAndHalfOvertimeHours = calculations.calculate1_5OvertimeHours(
       form.WeeklyHours,
       form.DoubleOvertimeHours
     )
-    
+
     const overtimeHoursTotal = calculations.calculateOvertimeHoursTotal(
       oneAndHalfOvertimeHours,
       form.DoubleOvertimeHours
     )
-    
+
     // 损害赔偿计算
     const damageUnpaidWages = calculations.calculateDamageUnpaidWages(
       form.UnpaidHours,
       form.HourlyRate
     )
-    
+
     const damageMealBreaks = calculations.calculateDamageMealBreaks(
       form.MissedMealBreaks,
       doe,
       form.HourlyRate
     )
-    
+
     const damageRestBreaks = calculations.calculateDamageRestBreaks(
       form.MissedRestBreaks,
       doe,
       form.HourlyRate
     )
-    
+
     const damageOvertime = calculations.calculateDamageOvertime(
       oneAndHalfOvertimeHours,
       form.DoubleOvertimeHours,
       form.HourlyRate,
       doe
     )
-    
+
     const damageWaitingTime = calculations.calculateDamageWaitingTime(form.HourlyRate)
-    
+
     const wageStatementPenalty = calculations.calculateWageStatementPenalty(form.PayPeriods)
-    
+
     const damages = {
       damageUnpaidWages,
       damageMealBreaks,
@@ -397,46 +396,46 @@ export const useFormStore = defineStore('form', () => {
       businessExpenseAmount: form.BusinessExpenseAmount,
       wageStatementPenalty
     }
-    
+
     const damageTotal = calculations.calculateDamageTotal(damages)
-    
+
     // 利息计算
     const interestPeriod = calculations.calculateInterestPeriod(
       form.ComplaintFilingDate,
       form.EmploymentEndDate
     )
-    
+
     const preJudgmentInterest = calculations.calculatePreJudgmentInterest(
       damageTotal,
       interestPeriod
     )
-    
+
     const damageTotalIncludingInterest = calculations.calculateDamageTotalIncludingInterest(
       damageTotal,
       preJudgmentInterest
     )
-    
+
     // 复数形式
     const plaintiffPlurality = calculations.getPlurality(form.PlaintiffName)
     const defendantPlurality = calculations.getPlurality(formattedComplaintDefendantName.value)
-    
+
     // 状态判断
     const overtimeStatus = calculations.calculateOvertimeStatus(form.WeeklyHours)
-    
+
     // 日期字段
     const executedDate = formatLegalDate(new Date())
     const sol3 = calculations.calculate3SOL(form.ComplaintFilingDate)
     const sol4 = calculations.calculate4SOL(form.ComplaintFilingDate)
-    
+
     // 案件编号
     const causeNumber = calculations.generateCauseNumber(0)
-    
+
     return {
       // 基础计算
       doe,
       oneAndHalfOvertimeHours,
       overtimeHoursTotal,
-      
+
       // 损害赔偿
       damageUnpaidWages,
       damageMealBreaks,
@@ -445,50 +444,50 @@ export const useFormStore = defineStore('form', () => {
       damageWaitingTime,
       wageStatementPenalty,
       damageTotal,
-      
+
       // 利息
       interestPeriod,
       preJudgmentInterest,
       damageTotalIncludingInterest,
-      
+
       // 复数形式
       plaintiffPlurality1: plaintiffPlurality.form1,
       plaintiffPlurality2: plaintiffPlurality.form2,
       defendantPlurality1: defendantPlurality.form1Defendant,
       defendantPlurality2: defendantPlurality.form2Defendant,
-      
+
       // 状态
       overtimeStatus,
-      
+
       // 日期
       executedDate,
       sol3,
       sol4,
-      
+
       // 其他
       causeNumber
     }
   })
-  
+
   // 表单验证状态
   const formErrors = ref({})
   const isFormValid = computed(() => {
     return Object.keys(formErrors.value).length === 0
   })
-  
+
   // 操作方法
   const setCurrentFormType = (type) => {
     currentFormType.value = type
   }
-  
+
   const updateComplaintForm = (field, value) => {
     complaintForm.value[field] = value
   }
-  
+
   const updateAnswerForm = (field, value) => {
     answerForm.value[field] = value
   }
-  
+
   const updateSettlementForm = (field, value) => {
     settlementForm.value[field] = value
   }
@@ -516,14 +515,14 @@ export const useFormStore = defineStore('form', () => {
   const updateRfpSexualHarassmentForm = (field, value) => {
     rfpSexualHarassmentForm.value[field] = value
   }
-  
+
   const updateSubmissionEmail = (email) => {
     submissionEmail.value = email
   }
-  
+
   const resetForm = (type = null) => {
     const targetType = type || currentFormType.value
-    
+
     if (targetType === 'complaint') {
       Object.keys(complaintForm.value).forEach(key => {
         if (key === 'CaseNumber') {
@@ -638,7 +637,7 @@ export const useFormStore = defineStore('form', () => {
       })
     }
   }
-  
+
   const exportFormData = () => {
     const data = {
       currentFormType: currentFormType.value,
@@ -656,23 +655,23 @@ export const useFormStore = defineStore('form', () => {
         rfpSexualHarassment: rfpSexualHarassmentForm.value
       }
     }
-    
+
     if (currentFormType.value === 'complaint') {
       data.calculations = complaintCalculations.value
     }
-    
+
     return data
   }
-  
+
   const importFormData = (data) => {
     if (data.currentFormType) {
       currentFormType.value = data.currentFormType
     }
-    
+
     if (data.submissionEmail) {
       submissionEmail.value = data.submissionEmail
     }
-    
+
     if (data.forms) {
       if (data.forms.complaint) {
         Object.assign(complaintForm.value, data.forms.complaint)
@@ -703,7 +702,7 @@ export const useFormStore = defineStore('form', () => {
       }
     }
   }
-  
+
   const setFormError = (field, error) => {
     if (error) {
       formErrors.value[field] = error
@@ -711,7 +710,7 @@ export const useFormStore = defineStore('form', () => {
       delete formErrors.value[field]
     }
   }
-  
+
   const clearFormErrors = () => {
     formErrors.value = {}
   }
@@ -764,21 +763,7 @@ export const useFormStore = defineStore('form', () => {
     }
   }
 
-  // 从本地存储加载表单数据
-  const loadFormData = () => {
-    try {
-      const saved = localStorage.getItem('legal-forms-data')
-      if (saved) {
-        const data = JSON.parse(saved)
-        importFormData(data)
-        return true
-      }
-      return false
-    } catch (error) {
-      console.error('加载数据失败:', error)
-      return false
-    }
-  }
+
 
   // 改进的导出功能，包含文件下载
   const exportFormDataWithDownload = () => {
@@ -787,7 +772,7 @@ export const useFormStore = defineStore('form', () => {
       const jsonString = JSON.stringify(data, null, 2)
       const blob = new Blob([jsonString], { type: 'application/json' })
       const url = URL.createObjectURL(blob)
-      
+
       const link = document.createElement('a')
       link.href = url
       link.download = `legal-forms-${currentFormType.value || 'all'}-${new Date().toISOString().slice(0, 10)}.json`
@@ -809,7 +794,7 @@ export const useFormStore = defineStore('form', () => {
   const setLoading = (loading) => {
     isLoading.value = loading
   }
-  
+
   return {
     // 状态
     currentFormType,
@@ -825,7 +810,7 @@ export const useFormStore = defineStore('form', () => {
     rfpSexualHarassmentForm,
     formErrors,
     isLoading,
-    
+
     // 计算属性
     complaintCalculations,
     motionToStrikeCalculations,
@@ -842,7 +827,7 @@ export const useFormStore = defineStore('form', () => {
     formattedNtcOfDepoDefendantName,
     formattedRfpSexualHarassmentDefendantName,
     isFormValid,
-    
+
     // 方法
     setCurrentFormType,
     updateComplaintForm,
@@ -863,9 +848,8 @@ export const useFormStore = defineStore('form', () => {
     exportFormDataWithDownload,
     importFormData,
     saveFormData,
-    loadFormData,
     setFormError,
     clearFormErrors,
     setLoading
   }
-}) 
+})
