@@ -1,6 +1,6 @@
 <template>
   <div class="rfp-sexual-harassment-form">
-    <el-form ref="formRef" :model="formStore.rfpSexualHarassmentForm" :rules="validationRules" label-width="200px">
+    <el-form ref="formRef" :model="formStore.rfpSexualHarassmentForm" :rules="validationRules" label-width="auto">
       <!-- 基础信息 -->
       <FormGroup
         title="Basic Information"
@@ -88,7 +88,7 @@
         variant="bordered"
         :columns="1"
       >
-        <el-form-item label="Start Date of the Employment" prop="EmploymentStartDate"  label-width="auth" >
+        <el-form-item label="Start Date of the Employment" prop="EmploymentStartDate">
           <el-date-picker
              v-model="formStore.rfpSexualHarassmentForm.EmploymentStartDate"
             type="date"
@@ -98,7 +98,7 @@
             format="MMMM D, YYYY"
           />
         </el-form-item>
-        <el-form-item label="End Date of the Employment" prop="EmploymentEndDate" label-width="auth" >
+        <el-form-item label="End Date of the Employment" prop="EmploymentEndDate">
           <el-date-picker
            v-model="formStore.rfpSexualHarassmentForm.EmploymentEndDate"
             type="date"
