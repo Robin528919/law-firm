@@ -177,6 +177,16 @@ export const updateCausesOrder = (causesObject) => {
   return causesObject
 }
 
+// 生成选中案由的 label 数组
+export const generateSelectedCausesLabels = (causesObject) => {
+  // 获取所有选中的案由，按照 CAUSES_OF_ACTION 的顺序
+  const selectedCausesLabels = CAUSES_OF_ACTION
+    .filter(cause => causesObject[cause.value]?.selected === true)
+    .map(cause => cause.label)
+  
+  return selectedCausesLabels
+}
+
 // Pay Period Options
 export const PAY_PERIOD_OPTIONS = [
   { value: 'daily', label: 'Daily' },
@@ -376,6 +386,13 @@ export const COMPLAINT_TEST_DATA = {
     cause_21: { selected: false, order: "" },
     cause_22: { selected: false, order: "" }
   },
+  SelectedCausesLabels: [
+    'FAILURE TO PAY ALL WAGES [California Labor Code §§ 201-202, 218, 218.5, 1194, 1194.2]',
+    'FAILURE TO PROVIDE MEAL PERIODS [Labor Code §§ 226.7(a), 512]',
+    'FAILURE TO PROVIDE REST PERIODS [Labor Code §§ 226.7(a), 512]',
+    'FAILURE TO PAY OVERTIME WAGES [Labor Code §§ 510 and 1194 et seq.]',
+    'FAILURE TO PAY WAGES DUE UPON TERMINATION: WAITING TIME PENALTIES [Labor Code §§ 201, 202 and 203]'
+  ],
   PlaintiffResidence: 'Los Angeles, California',
   DefendantBusinessType: 'restaurant',
   DefendantBusinessAddress: '123 Broadway, Los Angeles, CA 90016',

@@ -27,6 +27,7 @@ export const useFormStore = defineStore('form', () => {
     
     // 选择字段
     SelectedCauses: getInitialCausesObject(),
+    SelectedCausesLabels: [], // 存储选中案由的 label 数组
     PayPeriodInterval: '',
     
     // 地址信息
@@ -491,6 +492,8 @@ export const useFormStore = defineStore('form', () => {
           complaintForm.value[key] = ' '
         } else if (key === 'SelectedCauses') {
           complaintForm.value[key] = getInitialCausesObject()
+        } else if (key === 'SelectedCausesLabels') {
+          complaintForm.value[key] = []
         } else if (typeof complaintForm.value[key] === 'string') {
           complaintForm.value[key] = ''
         } else if (typeof complaintForm.value[key] === 'number') {

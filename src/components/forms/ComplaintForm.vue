@@ -576,7 +576,8 @@ import {
   VALIDATION_RULES,
   API_CONFIG,
   COMPLAINT_TEST_DATA,
-  updateCausesOrder
+  updateCausesOrder,
+  generateSelectedCausesLabels
 } from '@/utils/constants'
 
 // 使用表单状态管理
@@ -644,6 +645,9 @@ const handleFieldChange = (value, field) => {
 const handleCauseChange = () => {
   // 更新案由序号
   updateCausesOrder(formData.SelectedCauses)
+  
+  // 更新案由标签数组
+  formData.SelectedCausesLabels = generateSelectedCausesLabels(formData.SelectedCauses)
   
   // 触发表单验证
   formRef.value?.validateField('SelectedCauses')
