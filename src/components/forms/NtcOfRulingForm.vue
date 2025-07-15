@@ -185,15 +185,30 @@
           />
         </el-form-item>
 
-        <FormField
-          label="Trial Date"
-          v-model="formData.TrialDate"
-          prop="TrialDate"
-          type="text"
-          placeholder="e.g. July 22, 2024 or 'Not Set'"
-          required
-          description="Trial date or 'Not Set' if not scheduled"
-        />
+        <!-- Trial Date 特殊处理：切换按钮 -->
+        <el-form-item label="Trial Date" prop="TrialDate">
+          <div class="trial-date-field">
+            <el-radio-group v-model="trialDateMode" @change="handleTrialDateModeChange" size="small">
+              <el-radio-button :value="'date'">Set Date</el-radio-button>
+              <el-radio-button :value="'notSet'">Not Set</el-radio-button>
+            </el-radio-group>
+            
+            <el-date-picker
+                v-if="trialDateMode === 'date'"
+                v-model="trialDateValue"
+                type="date"
+                placeholder="Select trial date"
+                style="width: 100%; margin-top: 8px;"
+                value-format="MMMM D, YYYY"
+                format="MMMM D, YYYY"
+                @change="handleTrialDateChange"
+            />
+            
+            <div v-else class="not-set-display">
+              Trial Date: Not Set
+            </div>
+          </div>
+        </el-form-item>
 
         <el-form-item label="Letter Date" prop="LetterDate">
           <el-date-picker
@@ -339,6 +354,10 @@ const isDevelopmentMode = computed(() => {
 })
 const fillingTestData = ref(false)
 
+// Trial Date 相关状态
+const trialDateMode = ref('notSet')
+const trialDateValue = ref(null)
+
 // 验证规则
 const validationRules = {
   PlaintiffName: [VALIDATION_RULES.required],
@@ -357,6 +376,32 @@ const validationRules = {
   ServiceInfo: [VALIDATION_RULES.required],
   ExecutedDate: [VALIDATION_RULES.required, VALIDATION_RULES.date],
   ServerName: [VALIDATION_RULES.required]
+}
+
+// 初始化 Trial Date 状态
+watch(() => formData.TrialDate, (newValue) => {
+  if (newValue === 'Not Set' || !newValue) {
+    trialDateMode.value = 'notSet'
+    trialDateValue.value = null
+  } else {
+    trialDateMode.value = 'date'
+    trialDateValue.value = newValue
+  }
+}, { immediate: true })
+
+// Trial Date 模式变更处理
+const handleTrialDateModeChange = (mode) => {
+  if (mode === 'notSet') {
+    formStore.updateNtcOfRulingForm('TrialDate', 'Not Set')
+    trialDateValue.value = null
+  } else {
+    formStore.updateNtcOfRulingForm('TrialDate', trialDateValue.value)
+  }
+}
+
+// Trial Date 值变更处理
+const handleTrialDateChange = (value) => {
+  formStore.updateNtcOfRulingForm('TrialDate', value)
 }
 
 // 监听表单数据变化，自动保存
@@ -391,6 +436,16 @@ const fillTestData = async () => {
       formStore.updateNtcOfRulingForm(key, NTC_OF_RULING_TEST_DATA[key])
     })
 
+    // 处理 Trial Date 特殊逻辑
+    const testTrialDate = NTC_OF_RULING_TEST_DATA.TrialDate
+    if (testTrialDate === 'Not Set' || !testTrialDate) {
+      trialDateMode.value = 'notSet'
+      trialDateValue.value = null
+    } else {
+      trialDateMode.value = 'date'
+      trialDateValue.value = testTrialDate
+    }
+
     // 短暂延迟模拟加载过程
     await new Promise(resolve => setTimeout(resolve, 300))
 
@@ -415,6 +470,20 @@ defineExpose({
 <style scoped>
 .ntc-of-ruling-form {
   width: 100%;
+}
+
+.trial-date-field {
+  width: 100%;
+}
+
+.trial-date-field .el-radio-group {
+  margin-bottom: 8px;
+}
+
+.not-set-display {
+  padding: 8px 0;
+  color: var(--el-text-color-regular);
+  font-style: italic;
 }
 
 /* 响应式调整 */
