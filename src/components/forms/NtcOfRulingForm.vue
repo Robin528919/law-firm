@@ -79,15 +79,18 @@
           />
         </el-form-item>
 
-        <FormField
-          label="Hearing Time"
-          v-model="formData.HearingTime"
-          prop="HearingTime"
-          type="text"
-          placeholder="e.g. 8:30 AM"
-          required
-          description="Time of first hearing"
-        />
+        <el-form-item label="Hearing Time" prop="HearingTime">
+          <el-time-select
+            v-model="formData.HearingTime"
+            start="08:00"
+            step="00:30"
+            end="17:00"
+            placeholder="Select hearing time"
+            format="h:mm A"
+            value-format="h:mm A"
+            style="width: 100%"
+          />
+        </el-form-item>
 
         <el-form-item label="Hearing Date 2" prop="HearingDate2">
           <el-date-picker
@@ -100,14 +103,18 @@
           />
         </el-form-item>
 
-        <FormField
-          label="Hearing Time 2"
-          v-model="formData.HearingTime2"
-          prop="HearingTime2"
-          type="text"
-          placeholder="e.g. 8:30 AM"
-          description="Time of second hearing (if applicable)"
-        />
+        <el-form-item label="Hearing Time 2" prop="HearingTime2">
+          <el-time-select
+            v-model="formData.HearingTime2"
+            start="08:00"
+            step="00:30"
+            end="17:00"
+            placeholder="Select hearing time"
+            format="h:mm A"
+            value-format="h:mm A"
+            style="width: 100%"
+          />
+        </el-form-item>
 
         <FormField
           label="Hearing Department 2"
