@@ -53,6 +53,11 @@ export const FORM_TYPES = [
     value: 'ntcOfRuling',
     label: 'NTC of Ruling Form',
     description: 'Create notice of ruling documents'
+  },
+  {
+    value: 'cmcNotice',
+    label: 'CMC Notice Form',
+    description: 'Create case management conference notice documents'
   }
 ]
 
@@ -453,6 +458,26 @@ export const NTC_OF_RULING_TEST_DATA = {
   LetterDate: '2023-10-03',
   ServiceInfo: 'LAW OFFICES OF ROGER C. HSU\n175. S. Lake Ave., Ste. 210\nPasadena, CA 91101',
   ExecutedDate: '2023-10-03',
+  ServerName: 'Jennifer Ontiveros'
+}
+
+// CMC Notice 测试数据
+export const CMC_NOTICE_TEST_DATA = {
+  PlaintiffName: 'LEOBARDO SALAZAR',
+  DefendantName: 'SAND BUILDING MATERIALS, INC.',
+  CourtLocation: 'COUNTY OF LOS ANGELES',
+  CourtName: 'STANLEY MOSK COURTHOUSE',
+  CaseNumber: 'BC595011',
+  JudgeName: 'Hon. Gregory Keosian',
+  HearingDept: 'Dept. "61"',
+  HearingDate: '2016-01-07',
+  HearingTime: '9:00 AM',
+  ComplaintFilingDate: '2015-09-17',
+  TrialDate: 'Not Set',
+  CourtAddress: '111 North Hill Street, Room 307 Los Angeles, CA 90012',
+  LetterDate: '',
+  ServiceInfo: 'LAW OFFICES OF ROGER C. HSU\n175. S. Lake Ave., Ste. 210\nPasadena, CA 91101',
+  ExecutedDate: '2015-12-08',
   ServerName: 'Jennifer Ontiveros'
 }
 

@@ -225,6 +225,26 @@ export const useFormStore = defineStore('form', () => {
     ServerName: ''
   })
 
+  // CMC Notice 表单数据
+  const cmcNoticeForm = ref({
+    PlaintiffName: '',
+    DefendantName: '',
+    CourtLocation: '',
+    CourtName: '',
+    CaseNumber: '',
+    JudgeName: '',
+    HearingDept: '',
+    HearingDate: null,
+    HearingTime: '',
+    ComplaintFilingDate: null,
+    TrialDate: '',
+    CourtAddress: '',
+    LetterDate: null,
+    ServiceInfo: '',
+    ExecutedDate: null,
+    ServerName: ''
+  })
+
   // 格式化的被告名称（起诉表单）
   const formattedComplaintDefendantName = computed(() => {
     const form = complaintForm.value
@@ -382,6 +402,25 @@ export const useFormStore = defineStore('form', () => {
       // 复数形式
       plaintiffPlurality1: plaintiffPlurality.form1,
       defendantPlurality1: defendantPlurality.form1Defendant,
+      
+      // 执行日期
+      executedDate
+    }
+  })
+
+  // CMC Notice 表单的计算字段
+  const cmcNoticeCalculations = computed(() => {
+    const form = cmcNoticeForm.value
+
+    // 复数形式计算 - 只有当有姓名输入时才计算
+    const plaintiffPlurality = form.PlaintiffName ? calculations.getPlurality(form.PlaintiffName) : { form1: '' }
+
+    // 执行日期 - 当前日期
+    const executedDate = formatLegalDate(new Date())
+
+    return {
+      // 复数形式
+      plaintiffPlurality1: plaintiffPlurality.form1,
       
       // 执行日期
       executedDate
@@ -571,6 +610,10 @@ export const useFormStore = defineStore('form', () => {
     ntcOfRulingForm.value[field] = value
   }
 
+  const updateCmcNoticeForm = (field, value) => {
+    cmcNoticeForm.value[field] = value
+  }
+
   const updateSubmissionEmail = (email) => {
     submissionEmail.value = email
   }
@@ -690,6 +733,22 @@ export const useFormStore = defineStore('form', () => {
           rfpSexualHarassmentForm.value[key] = null
         }
       })
+    } else if (targetType === 'ntcOfRuling') {
+      Object.keys(ntcOfRulingForm.value).forEach(key => {
+        if (typeof ntcOfRulingForm.value[key] === 'string') {
+          ntcOfRulingForm.value[key] = ''
+        } else {
+          ntcOfRulingForm.value[key] = null
+        }
+      })
+    } else if (targetType === 'cmcNotice') {
+      Object.keys(cmcNoticeForm.value).forEach(key => {
+        if (typeof cmcNoticeForm.value[key] === 'string') {
+          cmcNoticeForm.value[key] = ''
+        } else {
+          cmcNoticeForm.value[key] = null
+        }
+      })
     }
   }
 
@@ -708,7 +767,8 @@ export const useFormStore = defineStore('form', () => {
         pmpDepo: pmpDepoForm.value,
         ntcOfDepo: ntcOfDepoForm.value,
         rfpSexualHarassment: rfpSexualHarassmentForm.value,
-        ntcOfRuling: ntcOfRulingForm.value
+        ntcOfRuling: ntcOfRulingForm.value,
+        cmcNotice: cmcNoticeForm.value
       }
     }
 
@@ -759,6 +819,9 @@ export const useFormStore = defineStore('form', () => {
       if (data.forms.ntcOfRuling) {
         Object.assign(ntcOfRulingForm.value, data.forms.ntcOfRuling)
       }
+      if (data.forms.cmcNotice) {
+        Object.assign(cmcNoticeForm.value, data.forms.cmcNotice)
+      }
     }
   }
 
@@ -807,6 +870,8 @@ export const useFormStore = defineStore('form', () => {
         return rfpSexualHarassmentForm.value
       case 'ntcOfRuling':
         return ntcOfRulingForm.value
+      case 'cmcNotice':
+        return cmcNoticeForm.value
       default:
         return {}
     }
@@ -870,6 +935,7 @@ export const useFormStore = defineStore('form', () => {
     ntcOfDepoForm,
     rfpSexualHarassmentForm,
     ntcOfRulingForm,
+    cmcNoticeForm,
     formErrors,
     isLoading,
 
@@ -880,6 +946,7 @@ export const useFormStore = defineStore('form', () => {
     requestForProductionCalculations,
     rfpSexualHarassmentCalculations,
     ntcOfRulingCalculations,
+    cmcNoticeCalculations,
     formattedComplaintDefendantName,
     formattedAnswerDefendantName,
     formattedSettlementDefendantName,
@@ -904,6 +971,7 @@ export const useFormStore = defineStore('form', () => {
     updateNtcOfDepoForm,
     updateRfpSexualHarassmentForm,
     updateNtcOfRulingForm,
+    updateCmcNoticeForm,
     updateSubmissionEmail,
     resetForm,
     resetCurrentForm,

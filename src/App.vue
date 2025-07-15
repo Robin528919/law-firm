@@ -37,6 +37,9 @@
         <!-- NTC of Ruling form -->
         <NtcOfRulingForm v-if="formStore.currentFormType === 'ntcOfRuling'" ref="ntcOfRulingFormRef"/>
 
+        <!-- CMC Notice form -->
+        <CmcNoticeForm v-if="formStore.currentFormType === 'cmcNotice'" ref="cmcNoticeFormRef"/>
+
         <!-- Form action buttons -->
         <FormActions
             variant="default"
@@ -85,6 +88,7 @@ import PmpDepoForm from '@/components/forms/PmpDepoForm.vue'
 import NtcOfDepoForm from '@/components/forms/NtcOfDepoForm.vue'
 import RfpSexualHarassmentForm from '@/components/forms/RfpSexualHarassmentForm.vue'
 import NtcOfRulingForm from '@/components/forms/NtcOfRulingForm.vue'
+import CmcNoticeForm from '@/components/forms/CmcNoticeForm.vue'
 import {useFormStore} from '@/stores/formStore'
 import {API_CONFIG} from '@/utils/constants'
 import {formatLegalDate} from '@/utils/calculations'
@@ -103,6 +107,7 @@ const pmpDepoFormRef = ref()
 const ntcOfDepoFormRef = ref()
 const rfpSexualHarassmentFormRef = ref()
 const ntcOfRulingFormRef = ref()
+const cmcNoticeFormRef = ref()
 
 // Current form completion progress
 const currentFormProgress = computed(() => {
@@ -127,6 +132,8 @@ const currentFormProgress = computed(() => {
       return calculateRfpSexualHarassmentProgress()
     case 'ntcOfRuling':
       return calculateNtcOfRulingProgress()
+    case 'cmcNotice':
+      return calculateCmcNoticeProgress()
     default:
       return 0
   }
@@ -314,6 +321,23 @@ const calculateNtcOfRulingProgress = () => {
   return Math.round((filledFields / requiredFields.length) * 100)
 }
 
+// Calculate cmc notice form progress
+const calculateCmcNoticeProgress = () => {
+  const requiredFields = [
+    'PlaintiffName', 'DefendantName', 'CourtLocation', 'CourtName', 'CaseNumber',
+    'JudgeName', 'HearingDept', 'HearingDate', 'HearingTime', 'ComplaintFilingDate',
+    'TrialDate', 'CourtAddress', 'ServiceInfo', 'ExecutedDate', 'ServerName'
+  ]
+
+  const filledFields = requiredFields.filter(field => {
+    const value = formStore.cmcNoticeForm[field]
+    if (typeof value === 'string') return value.trim() !== ''
+    return value !== null && value !== undefined
+  }).length
+
+  return Math.round((filledFields / requiredFields.length) * 100)
+}
+
 // Get current form reference
 const getCurrentFormRef = () => {
   switch (formStore.currentFormType) {
@@ -337,6 +361,8 @@ const getCurrentFormRef = () => {
       return rfpSexualHarassmentFormRef.value
     case 'ntcOfRuling':
       return ntcOfRulingFormRef.value
+    case 'cmcNotice':
+      return cmcNoticeFormRef.value
     default:
       return null
   }
