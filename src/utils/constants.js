@@ -48,6 +48,11 @@ export const FORM_TYPES = [
     value: 'rfpSexualHarassment',
     label: 'RFP Sexual Harassment Form',
     description: 'Request for Production documents for sexual harassment cases'
+  },
+  {
+    value: 'ntcOfRuling',
+    label: 'NTC of Ruling Form',
+    description: 'Create notice of ruling documents'
   }
 ]
 
@@ -426,6 +431,29 @@ export const RFP_SEXUAL_HARASSMENT_TEST_DATA = {
   CourtLocation: 'COUNTY OF LOS ANGELES, CENTRAL DISTRICT',
   EmploymentStartDate: '2022-01-15', // 字符串格式
   EmploymentEndDate: '2024-03-20'    // 字符串格式
+}
+
+// NTC of Ruling 表单测试数据
+export const NTC_OF_RULING_TEST_DATA = {
+  PlaintiffName: 'CARLOS LOYA',
+  DefendantName: 'KELLWOOD APPAREL, LLC',
+  CaseNumber: '22STCV15872',
+  JudgeName: 'Hon. Timothy P. Dillon',
+  HearingDept: 'Dept. "73"',
+  HearingDate: '2024-07-22',
+  HearingTime: '8:30 AM',
+  HearingDate2: '2024-07-08',
+  HearingTime2: '8:30 AM',
+  HearingDept2: '7',
+  ComplaintFilingDate: '2022-05-12',
+  TrialDate: 'July 22, 2024',
+  CourtLocation: 'COUNTY OF LOS ANGELES',
+  CourtName: 'STANLEY MOSK COURTHOUSE',
+  CourtAddress: '111 North Hill Street, Room 307 Los Angeles, CA 90012',
+  LetterDate: '2023-10-03',
+  ServiceInfo: 'LAW OFFICES OF ROGER C. HSU\n175. S. Lake Ave., Ste. 210\nPasadena, CA 91101',
+  ExecutedDate: '2023-10-03',
+  ServerName: 'Jennifer Ontiveros'
 }
 
 // API 配置

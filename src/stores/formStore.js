@@ -202,6 +202,29 @@ export const useFormStore = defineStore('form', () => {
     EmploymentEndDate: ''    // 改为字符串
   })
 
+  // NTC of Ruling 表单数据
+  const ntcOfRulingForm = ref({
+    PlaintiffName: '',
+    DefendantName: '',
+    CaseNumber: '',
+    JudgeName: '',
+    HearingDept: '',
+    HearingDate: null,
+    HearingTime: '',
+    HearingDate2: null,
+    HearingTime2: '',
+    HearingDept2: '',
+    ComplaintFilingDate: null,
+    TrialDate: '',
+    CourtLocation: '',
+    CourtName: '',
+    CourtAddress: '',
+    LetterDate: null,
+    ServiceInfo: '',
+    ExecutedDate: null,
+    ServerName: ''
+  })
+
   // 格式化的被告名称（起诉表单）
   const formattedComplaintDefendantName = computed(() => {
     const form = complaintForm.value
@@ -260,6 +283,13 @@ export const useFormStore = defineStore('form', () => {
   const formattedRfpSexualHarassmentDefendantName = computed(() => {
     const form = rfpSexualHarassmentForm.value
     // RFP Sexual Harassment表单只有被告名称，没有州和实体类型信息
+    return form.DefendantName || ''
+  })
+
+  // 格式化的被告名称（NTC of Ruling表单）
+  const formattedNtcOfRulingDefendantName = computed(() => {
+    const form = ntcOfRulingForm.value
+    // NTC of Ruling表单只有被告名称，没有州和实体类型信息
     return form.DefendantName || ''
   })
 
@@ -334,6 +364,27 @@ export const useFormStore = defineStore('form', () => {
       // 复数形式
       plaintiffPlurality1: plaintiffPlurality.form1,
       defendantPlurality1: defendantPlurality.form1Defendant
+    }
+  })
+
+  // NTC of Ruling 表单的计算字段
+  const ntcOfRulingCalculations = computed(() => {
+    const form = ntcOfRulingForm.value
+
+    // 复数形式计算 - 只有当有姓名输入时才计算
+    const plaintiffPlurality = form.PlaintiffName ? calculations.getPlurality(form.PlaintiffName) : { form1: '' }
+    const defendantPlurality = form.DefendantName ? calculations.getPlurality(form.DefendantName) : { form1Defendant: '' }
+
+    // 执行日期 - 当前日期
+    const executedDate = formatLegalDate(new Date())
+
+    return {
+      // 复数形式
+      plaintiffPlurality1: plaintiffPlurality.form1,
+      defendantPlurality1: defendantPlurality.form1Defendant,
+      
+      // 执行日期
+      executedDate
     }
   })
 
@@ -516,6 +567,10 @@ export const useFormStore = defineStore('form', () => {
     rfpSexualHarassmentForm.value[field] = value
   }
 
+  const updateNtcOfRulingForm = (field, value) => {
+    ntcOfRulingForm.value[field] = value
+  }
+
   const updateSubmissionEmail = (email) => {
     submissionEmail.value = email
   }
@@ -652,7 +707,8 @@ export const useFormStore = defineStore('form', () => {
         requestForProduction: requestForProductionForm.value,
         pmpDepo: pmpDepoForm.value,
         ntcOfDepo: ntcOfDepoForm.value,
-        rfpSexualHarassment: rfpSexualHarassmentForm.value
+        rfpSexualHarassment: rfpSexualHarassmentForm.value,
+        ntcOfRuling: ntcOfRulingForm.value
       }
     }
 
@@ -700,6 +756,9 @@ export const useFormStore = defineStore('form', () => {
       if (data.forms.rfpSexualHarassment) {
         Object.assign(rfpSexualHarassmentForm.value, data.forms.rfpSexualHarassment)
       }
+      if (data.forms.ntcOfRuling) {
+        Object.assign(ntcOfRulingForm.value, data.forms.ntcOfRuling)
+      }
     }
   }
 
@@ -746,6 +805,8 @@ export const useFormStore = defineStore('form', () => {
         return ntcOfDepoForm.value
       case 'rfpSexualHarassment':
         return rfpSexualHarassmentForm.value
+      case 'ntcOfRuling':
+        return ntcOfRulingForm.value
       default:
         return {}
     }
@@ -808,6 +869,7 @@ export const useFormStore = defineStore('form', () => {
     pmpDepoForm,
     ntcOfDepoForm,
     rfpSexualHarassmentForm,
+    ntcOfRulingForm,
     formErrors,
     isLoading,
 
@@ -817,6 +879,7 @@ export const useFormStore = defineStore('form', () => {
     ntcOfDepoCalculations,
     requestForProductionCalculations,
     rfpSexualHarassmentCalculations,
+    ntcOfRulingCalculations,
     formattedComplaintDefendantName,
     formattedAnswerDefendantName,
     formattedSettlementDefendantName,
@@ -826,6 +889,7 @@ export const useFormStore = defineStore('form', () => {
     formattedPmpDepoDefendantName,
     formattedNtcOfDepoDefendantName,
     formattedRfpSexualHarassmentDefendantName,
+    formattedNtcOfRulingDefendantName,
     isFormValid,
 
     // 方法
@@ -839,6 +903,7 @@ export const useFormStore = defineStore('form', () => {
     updatePmpDepoForm,
     updateNtcOfDepoForm,
     updateRfpSexualHarassmentForm,
+    updateNtcOfRulingForm,
     updateSubmissionEmail,
     resetForm,
     resetCurrentForm,

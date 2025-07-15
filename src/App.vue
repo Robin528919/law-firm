@@ -34,6 +34,9 @@
         <!-- RFP Sexual Harassment form -->
         <RfpSexualHarassmentForm v-if="formStore.currentFormType === 'rfpSexualHarassment'" ref="rfpSexualHarassmentFormRef"/>
 
+        <!-- NTC of Ruling form -->
+        <NtcOfRulingForm v-if="formStore.currentFormType === 'ntcOfRuling'" ref="ntcOfRulingFormRef"/>
+
         <!-- Form action buttons -->
         <FormActions
             variant="default"
@@ -81,6 +84,7 @@ import RequestForProductionForm from '@/components/forms/RequestForProductionFor
 import PmpDepoForm from '@/components/forms/PmpDepoForm.vue'
 import NtcOfDepoForm from '@/components/forms/NtcOfDepoForm.vue'
 import RfpSexualHarassmentForm from '@/components/forms/RfpSexualHarassmentForm.vue'
+import NtcOfRulingForm from '@/components/forms/NtcOfRulingForm.vue'
 import {useFormStore} from '@/stores/formStore'
 import {API_CONFIG} from '@/utils/constants'
 import {formatLegalDate} from '@/utils/calculations'
@@ -98,6 +102,7 @@ const requestForProductionFormRef = ref()
 const pmpDepoFormRef = ref()
 const ntcOfDepoFormRef = ref()
 const rfpSexualHarassmentFormRef = ref()
+const ntcOfRulingFormRef = ref()
 
 // Current form completion progress
 const currentFormProgress = computed(() => {
@@ -120,6 +125,8 @@ const currentFormProgress = computed(() => {
       return calculateNtcOfDepoProgress()
     case 'rfpSexualHarassment':
       return calculateRfpSexualHarassmentProgress()
+    case 'ntcOfRuling':
+      return calculateNtcOfRulingProgress()
     default:
       return 0
   }
@@ -290,6 +297,23 @@ const calculateRfpSexualHarassmentProgress = () => {
   return Math.round((filledFields / requiredFields.length) * 100)
 }
 
+// Calculate ntc of ruling form progress
+const calculateNtcOfRulingProgress = () => {
+  const requiredFields = [
+    'PlaintiffName', 'DefendantName', 'CaseNumber', 'JudgeName', 'HearingDept',
+    'HearingDate', 'HearingTime', 'ComplaintFilingDate', 'TrialDate', 'CourtLocation',
+    'CourtName', 'CourtAddress', 'LetterDate', 'ServiceInfo', 'ExecutedDate', 'ServerName'
+  ]
+
+  const filledFields = requiredFields.filter(field => {
+    const value = formStore.ntcOfRulingForm[field]
+    if (typeof value === 'string') return value.trim() !== ''
+    return value !== null && value !== undefined
+  }).length
+
+  return Math.round((filledFields / requiredFields.length) * 100)
+}
+
 // Get current form reference
 const getCurrentFormRef = () => {
   switch (formStore.currentFormType) {
@@ -311,6 +335,8 @@ const getCurrentFormRef = () => {
       return ntcOfDepoFormRef.value
     case 'rfpSexualHarassment':
       return rfpSexualHarassmentFormRef.value
+    case 'ntcOfRuling':
+      return ntcOfRulingFormRef.value
     default:
       return null
   }
