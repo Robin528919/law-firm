@@ -16,6 +16,7 @@
         size="large"
         style="width: 100%"
         :disabled="isChanging"
+        filterable
       >
         <el-option
           v-for="formType in FORM_TYPES"
