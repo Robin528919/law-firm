@@ -58,6 +58,11 @@ export const FORM_TYPES = [
     value: 'cmcNotice',
     label: 'CMC Notice Form',
     description: 'Create case management conference notice documents'
+  },
+  {
+    value: 'ntcCaseReassignment',
+    label: 'NTC Case Reassignment Form',
+    description: 'Create notice of case reassignment documents'
   }
 ]
 
@@ -479,6 +484,26 @@ export const CMC_NOTICE_TEST_DATA = {
   ServiceInfo: 'LAW OFFICES OF ROGER C. HSU\n175. S. Lake Ave., Ste. 210\nPasadena, CA 91101',
   ExecutedDate: '2015-12-08',
   ServerName: 'Jennifer Ontiveros'
+}
+
+// NTC Case Reassignment 测试数据
+export const NTC_CASE_REASSIGNMENT_TEST_DATA = {
+  PlaintiffName: 'ANA BERTHA CAMPOS',
+  DefendantName: 'NATALIA GRANADOS, SUPER ANTOJITOS MEXICANOS',
+  PlaintiffPlurality1: 'Plaintiffs, Maria Cardenas',
+  CourtLocation: 'COUNTY OF LOS ANGELES',
+  CourtName: 'STANLEY MOSK COURTHOUSE',
+  CaseNumber: '21STCV19888',
+  JudgeName: 'Hon. Joseph Lipner',
+  HearingDept: 'Dept. "72"',
+  ComplaintFilingDate: '2021-05-26',
+  TrialDate: 'Not Set',
+  PreviousJudgeName: 'Curtis Kin',
+  ReassignDate: 'August 7, 2023',
+  LetterDate: '2023-08-16',
+  ServiceInfo: 'LAW OFFICES OF ROGER C. HSU\n175. S. Lake Ave., Ste. 210\nPasadena, CA 91101',
+  ServerName: 'Jennifer Ontiveros',
+  ExecutedDate: '2023-08-16'
 }
 
 // API 配置

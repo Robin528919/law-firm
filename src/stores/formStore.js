@@ -245,6 +245,26 @@ export const useFormStore = defineStore('form', () => {
     ServerName: ''
   })
 
+  // NTC Case Reassignment 表单数据
+  const ntcCaseReassignmentForm = ref({
+    PlaintiffName: '',
+    DefendantName: '',
+    PlaintiffPlurality1: '',
+    CourtLocation: '',
+    CourtName: '',
+    CaseNumber: '',
+    JudgeName: '',
+    HearingDept: '',
+    ComplaintFilingDate: null,
+    TrialDate: '',
+    PreviousJudgeName: '',
+    ReassignDate: '',
+    LetterDate: null,
+    ServiceInfo: '',
+    ServerName: '',
+    ExecutedDate: null
+  })
+
   // 格式化的被告名称（起诉表单）
   const formattedComplaintDefendantName = computed(() => {
     const form = complaintForm.value
@@ -421,6 +441,25 @@ export const useFormStore = defineStore('form', () => {
     return {
       // 复数形式
       plaintiffPlurality1: plaintiffPlurality.form1,
+      
+      // 执行日期
+      executedDate
+    }
+  })
+
+  // NTC Case Reassignment 表单的计算字段
+  const ntcCaseReassignmentCalculations = computed(() => {
+    const form = ntcCaseReassignmentForm.value
+
+    // 复数形式计算 - 只有当有姓名输入时才计算
+    const defendantPlurality = form.DefendantName ? calculations.getPlurality(form.DefendantName) : { form1Defendant: '' }
+
+    // 执行日期 - 当前日期
+    const executedDate = formatLegalDate(new Date())
+
+    return {
+      // 复数形式
+      defendantPlurality1: defendantPlurality.form1Defendant,
       
       // 执行日期
       executedDate
@@ -614,6 +653,10 @@ export const useFormStore = defineStore('form', () => {
     cmcNoticeForm.value[field] = value
   }
 
+  const updateNtcCaseReassignmentForm = (field, value) => {
+    ntcCaseReassignmentForm.value[field] = value
+  }
+
   const updateSubmissionEmail = (email) => {
     submissionEmail.value = email
   }
@@ -749,6 +792,14 @@ export const useFormStore = defineStore('form', () => {
           cmcNoticeForm.value[key] = null
         }
       })
+    } else if (targetType === 'ntcCaseReassignment') {
+      Object.keys(ntcCaseReassignmentForm.value).forEach(key => {
+        if (typeof ntcCaseReassignmentForm.value[key] === 'string') {
+          ntcCaseReassignmentForm.value[key] = ''
+        } else {
+          ntcCaseReassignmentForm.value[key] = null
+        }
+      })
     }
   }
 
@@ -768,7 +819,8 @@ export const useFormStore = defineStore('form', () => {
         ntcOfDepo: ntcOfDepoForm.value,
         rfpSexualHarassment: rfpSexualHarassmentForm.value,
         ntcOfRuling: ntcOfRulingForm.value,
-        cmcNotice: cmcNoticeForm.value
+        cmcNotice: cmcNoticeForm.value,
+        ntcCaseReassignment: ntcCaseReassignmentForm.value
       }
     }
 
@@ -822,6 +874,9 @@ export const useFormStore = defineStore('form', () => {
       if (data.forms.cmcNotice) {
         Object.assign(cmcNoticeForm.value, data.forms.cmcNotice)
       }
+      if (data.forms.ntcCaseReassignment) {
+        Object.assign(ntcCaseReassignmentForm.value, data.forms.ntcCaseReassignment)
+      }
     }
   }
 
@@ -872,6 +927,8 @@ export const useFormStore = defineStore('form', () => {
         return ntcOfRulingForm.value
       case 'cmcNotice':
         return cmcNoticeForm.value
+      case 'ntcCaseReassignment':
+        return ntcCaseReassignmentForm.value
       default:
         return {}
     }
@@ -936,6 +993,7 @@ export const useFormStore = defineStore('form', () => {
     rfpSexualHarassmentForm,
     ntcOfRulingForm,
     cmcNoticeForm,
+    ntcCaseReassignmentForm,
     formErrors,
     isLoading,
 
@@ -947,6 +1005,7 @@ export const useFormStore = defineStore('form', () => {
     rfpSexualHarassmentCalculations,
     ntcOfRulingCalculations,
     cmcNoticeCalculations,
+    ntcCaseReassignmentCalculations,
     formattedComplaintDefendantName,
     formattedAnswerDefendantName,
     formattedSettlementDefendantName,
@@ -972,6 +1031,7 @@ export const useFormStore = defineStore('form', () => {
     updateRfpSexualHarassmentForm,
     updateNtcOfRulingForm,
     updateCmcNoticeForm,
+    updateNtcCaseReassignmentForm,
     updateSubmissionEmail,
     resetForm,
     resetCurrentForm,

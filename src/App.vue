@@ -40,6 +40,9 @@
         <!-- CMC Notice form -->
         <CmcNoticeForm v-if="formStore.currentFormType === 'cmcNotice'" ref="cmcNoticeFormRef"/>
 
+        <!-- NTC Case Reassignment form -->
+        <NtcCaseReassignmentForm v-if="formStore.currentFormType === 'ntcCaseReassignment'" ref="ntcCaseReassignmentFormRef"/>
+
         <!-- Form action buttons -->
         <FormActions
             variant="default"
@@ -89,6 +92,7 @@ import NtcOfDepoForm from '@/components/forms/NtcOfDepoForm.vue'
 import RfpSexualHarassmentForm from '@/components/forms/RfpSexualHarassmentForm.vue'
 import NtcOfRulingForm from '@/components/forms/NtcOfRulingForm.vue'
 import CmcNoticeForm from '@/components/forms/CmcNoticeForm.vue'
+import NtcCaseReassignmentForm from '@/components/forms/NtcCaseReassignmentForm.vue'
 import {useFormStore} from '@/stores/formStore'
 import {API_CONFIG} from '@/utils/constants'
 import {formatLegalDate} from '@/utils/calculations'
@@ -108,6 +112,7 @@ const ntcOfDepoFormRef = ref()
 const rfpSexualHarassmentFormRef = ref()
 const ntcOfRulingFormRef = ref()
 const cmcNoticeFormRef = ref()
+const ntcCaseReassignmentFormRef = ref()
 
 // Current form completion progress
 const currentFormProgress = computed(() => {
@@ -134,6 +139,8 @@ const currentFormProgress = computed(() => {
       return calculateNtcOfRulingProgress()
     case 'cmcNotice':
       return calculateCmcNoticeProgress()
+    case 'ntcCaseReassignment':
+      return calculateNtcCaseReassignmentProgress()
     default:
       return 0
   }
@@ -338,6 +345,23 @@ const calculateCmcNoticeProgress = () => {
   return Math.round((filledFields / requiredFields.length) * 100)
 }
 
+// Calculate ntc case reassignment form progress
+const calculateNtcCaseReassignmentProgress = () => {
+  const requiredFields = [
+    'PlaintiffName', 'DefendantName', 'CaseNumber', 'CourtLocation', 'CourtName',
+    'JudgeName', 'HearingDept', 'ComplaintFilingDate', 'TrialDate', 'PreviousJudgeName',
+    'ReassignDate', 'LetterDate', 'ServiceInfo', 'ServerName', 'ExecutedDate'
+  ]
+
+  const filledFields = requiredFields.filter(field => {
+    const value = formStore.ntcCaseReassignmentForm[field]
+    if (typeof value === 'string') return value.trim() !== ''
+    return value !== null && value !== undefined
+  }).length
+
+  return Math.round((filledFields / requiredFields.length) * 100)
+}
+
 // Get current form reference
 const getCurrentFormRef = () => {
   switch (formStore.currentFormType) {
@@ -363,6 +387,8 @@ const getCurrentFormRef = () => {
       return ntcOfRulingFormRef.value
     case 'cmcNotice':
       return cmcNoticeFormRef.value
+    case 'ntcCaseReassignment':
+      return ntcCaseReassignmentFormRef.value
     default:
       return null
   }
