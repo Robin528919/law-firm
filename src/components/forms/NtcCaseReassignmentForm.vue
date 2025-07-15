@@ -16,7 +16,7 @@
         description="Case and party information for case reassignment notice"
         icon="Document"
         variant="card"
-        :columns="2"
+        :columns="1"
       >
         <FormField
           label="Plaintiff Name"
@@ -64,7 +64,7 @@
         description="Court location and jurisdiction details"
         icon="Building"
         variant="bordered"
-        :columns="2"
+        :columns="1"
       >
         <FormField
           label="Court Location"
@@ -113,7 +113,7 @@
         description="Important dates related to case and reassignment"
         icon="Calendar"
         variant="card"
-        :columns="2"
+        :columns="1"
       >
         <el-form-item label="Complaint Filing Date" prop="ComplaintFilingDate">
           <el-date-picker
@@ -134,7 +134,7 @@
               <el-radio-button :value="'date'">Set Date</el-radio-button>
               <el-radio-button :value="'notSet'">Not Set</el-radio-button>
             </el-radio-group>
-            
+
             <el-date-picker
                 v-if="trialDateMode === 'date'"
                 v-model="trialDateValue"
@@ -145,23 +145,24 @@
                 format="MMMM D, YYYY"
                 @change="handleTrialDateChange"
             />
-            
+
             <div v-else class="not-set-display">
               Trial Date: Not Set
             </div>
           </div>
         </el-form-item>
 
-        <FormField
-          label="Reassign Date"
-          v-model="formData.ReassignDate"
-          prop="ReassignDate"
-          type="text"
-          placeholder="e.g. August 7, 2023"
-          required
-          description="Date when case was reassigned to new judge"
-        />
-
+        <el-form-item label="Reassign Date" prop="ReassignDate">
+          <el-date-picker
+              v-model="formData.ReassignDate"
+              type="date"
+              placeholder="Select letter date"
+              style="width: 100%;"
+              value-format="YYYY-MM-DD"
+              format="MMMM D, YYYY"
+          />
+          <div class="field-description">Date of the letter</div>
+        </el-form-item>
         <el-form-item label="Letter Date" prop="LetterDate">
           <el-date-picker
               v-model="formData.LetterDate"
@@ -375,20 +376,6 @@ watch(
   },
   { deep: true }
 )
-
-// 表单提交
-const handleSubmit = async () => {
-  try {
-    const valid = await formRef.value.validate()
-    if (valid) {
-      // 处理表单提交逻辑
-      console.log('表单验证通过，可以提交')
-    }
-  } catch (error) {
-    console.log('表单验证失败:', error)
-  }
-}
-
 // 填充测试数据方法
 const fillTestData = async () => {
   fillingTestData.value = true
@@ -482,4 +469,4 @@ defineExpose({
   background-color: var(--el-color-warning-light-5);
   border-color: var(--el-color-warning);
 }
-</style> 
+</style>
