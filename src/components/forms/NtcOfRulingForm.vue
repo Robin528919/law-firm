@@ -63,20 +63,21 @@
           v-model="formData.HearingDept"
           prop="HearingDept"
           type="text"
-          placeholder="e.g. Dept. \"73\""
+          placeholder='e.g. Dept. "73"'
           required
           description="Department for first hearing"
         />
 
-        <FormField
-          label="Hearing Date"
-          v-model="formData.HearingDate"
-          prop="HearingDate"
-          type="date"
-          placeholder="Select hearing date"
-          required
-          description="Date of first hearing"
-        />
+        <el-form-item label="Hearing Date" prop="HearingDate">
+          <el-date-picker
+              v-model="formData.HearingDate"
+              type="date"
+              placeholder="e.g. July 21, 2025"
+              style="width: 100%"
+              value-format="MMMM D, YYYY"
+              format="MMMM D, YYYY"
+          />
+        </el-form-item>
 
         <FormField
           label="Hearing Time"
@@ -88,14 +89,16 @@
           description="Time of first hearing"
         />
 
-        <FormField
-          label="Hearing Date 2"
-          v-model="formData.HearingDate2"
-          prop="HearingDate2"
-          type="date"
-          placeholder="Select second hearing date"
-          description="Date of second hearing (if applicable)"
-        />
+        <el-form-item label="Hearing Date 2" prop="HearingDate2">
+          <el-date-picker
+              v-model="formData.HearingDate2"
+              type="date"
+              placeholder="e.g. July 8, 2025"
+              style="width: 100%"
+              value-format="MMMM D, YYYY"
+              format="MMMM D, YYYY"
+          />
+        </el-form-item>
 
         <FormField
           label="Hearing Time 2"
@@ -164,15 +167,16 @@
         variant="bordered"
         :columns="1"
       >
-        <FormField
-          label="Complaint Filing Date"
-          v-model="formData.ComplaintFilingDate"
-          prop="ComplaintFilingDate"
-          type="date"
-          placeholder="Select complaint filing date"
-          required
-          description="Date when complaint was filed"
-        />
+        <el-form-item label="Complaint Filing Date" prop="ComplaintFilingDate">
+          <el-date-picker
+              v-model="formData.ComplaintFilingDate"
+              type="date"
+              placeholder="e.g. May 12, 2022"
+              style="width: 100%"
+              value-format="MMMM D, YYYY"
+              format="MMMM D, YYYY"
+          />
+        </el-form-item>
 
         <FormField
           label="Trial Date"
@@ -184,25 +188,27 @@
           description="Trial date or 'Not Set' if not scheduled"
         />
 
-        <FormField
-          label="Letter Date"
-          v-model="formData.LetterDate"
-          prop="LetterDate"
-          type="date"
-          placeholder="Select letter date"
-          required
-          description="Date of the letter/notice"
-        />
+        <el-form-item label="Letter Date" prop="LetterDate">
+          <el-date-picker
+              v-model="formData.LetterDate"
+              type="date"
+              placeholder="e.g. October 3, 2023"
+              style="width: 100%"
+              value-format="MMMM D, YYYY"
+              format="MMMM D, YYYY"
+          />
+        </el-form-item>
 
-        <FormField
-          label="Executed Date"
-          v-model="formData.ExecutedDate"
-          prop="ExecutedDate"
-          type="date"
-          placeholder="Select executed date"
-          required
-          description="Date when document was executed"
-        />
+        <el-form-item label="Executed Date" prop="ExecutedDate">
+          <el-date-picker
+              v-model="formData.ExecutedDate"
+              type="date"
+              placeholder="e.g. October 3, 2023"
+              style="width: 100%"
+              value-format="MMMM D, YYYY"
+              format="MMMM D, YYYY"
+          />
+        </el-form-item>
       </FormGroup>
 
       <!-- 送达信息 -->
