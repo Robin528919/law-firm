@@ -8,3 +8,49 @@ alwaysApply: true
 5、代码中一些界面上显示的文字（比如 '待选择'）应该用英文
 6、代码中一些日志（console.log）应该用中文
 7、只有在我单独需要你git提交的时候、再进行git操作、否则不要操作
+
+8、Vue模板中的属性值不能包含双引号(")，必须使用单引号(')替代
+   - 错误：placeholder="e.g. Dept. \"39\""
+   - 正确：placeholder="e.g. Dept. '39'"
+
+9、所有新开发的表单组件必须与现有表单保持统一风格
+   - 测试数据按钮：使用FormGroup包装，warning类型，DocumentCopy图标，包含loading状态
+   - 表单布局：使用FormGroup和FormField组件
+   - 验证规则：使用VALIDATION_RULES常量
+
+10、日期相关统一规范
+    - 所有日期选择器使用美式格式：format="MMMM D, YYYY" value-format="MMMM D, YYYY"
+    - 测试数据中的日期必须与表单格式一致（如：January 13, 2017）
+    - Trial Date字段必须支持"Not Set"和具体日期两种模式，参考NTC Case Reassignment Form
+
+11、状态管理规范
+    - formData直接使用，不要使用formData.value（除非明确是ref包装）
+    - 使用Object.prototype.hasOwnProperty.call()检查属性存在性
+    - 计算字段必须通过store的computed属性实现
+
+12、新增表单开发流程
+    - constants.js中添加表单类型和测试数据
+    - formStore.js中添加完整状态管理
+    - 创建Vue组件（包含validate方法）
+    - App.vue中集成（引入、渲染、进度计算、引用、提交处理）
+    - 所有字段必须包含适当的验证规则和描述
+
+13、表单字段特殊处理规范
+    - 复数形式字段（Plurality）必须自动计算且disabled显示
+    - 执行日期（ExecutedDate）必须自动计算为当前日期
+    - 自动计算字段不在测试数据填充范围内
+
+14、错误处理和调试
+    - 使用mcp工具获取控制台错误并及时修复
+    - console.log输出必须使用中文
+    - 测试数据填充必须包含异步处理和错误捕获
+
+15、参考现有代码实现
+    - 新功能开发前必须先查看相似功能的现有实现
+    - 保持代码风格和架构的一致性
+    - 复用现有的组件和工具函数
+
+16、字段映射和数据处理
+    - 提交时必须包含所有输入字段和计算字段
+    - 日期字段提交前必须转换为美式格式
+    - 变量命名必须与需求文档中的字段名保持一致

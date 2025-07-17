@@ -43,6 +43,9 @@
         <!-- NTC Case Reassignment form -->
         <NtcCaseReassignmentForm v-if="formStore.currentFormType === 'ntcCaseReassignment'" ref="ntcCaseReassignmentFormRef"/>
 
+        <!-- SROGS01 Overtime form -->
+        <Srogs01OvertimeForm v-if="formStore.currentFormType === 'srogs01Overtime'" ref="srogs01OvertimeFormRef"/>
+
         <!-- Form action buttons -->
         <FormActions
             variant="default"
@@ -93,6 +96,7 @@ import RfpSexualHarassmentForm from '@/components/forms/RfpSexualHarassmentForm.
 import NtcOfRulingForm from '@/components/forms/NtcOfRulingForm.vue'
 import CmcNoticeForm from '@/components/forms/CmcNoticeForm.vue'
 import NtcCaseReassignmentForm from '@/components/forms/NtcCaseReassignmentForm.vue'
+import Srogs01OvertimeForm from '@/components/forms/Srogs01OvertimeForm.vue'
 import {useFormStore} from '@/stores/formStore'
 import {API_CONFIG} from '@/utils/constants'
 import {formatLegalDate} from '@/utils/calculations'
@@ -113,6 +117,7 @@ const rfpSexualHarassmentFormRef = ref()
 const ntcOfRulingFormRef = ref()
 const cmcNoticeFormRef = ref()
 const ntcCaseReassignmentFormRef = ref()
+const srogs01OvertimeFormRef = ref()
 
 // Current form completion progress
 const currentFormProgress = computed(() => {
@@ -141,6 +146,8 @@ const currentFormProgress = computed(() => {
       return calculateCmcNoticeProgress()
     case 'ntcCaseReassignment':
       return calculateNtcCaseReassignmentProgress()
+    case 'srogs01Overtime':
+      return calculateSrogs01OvertimeProgress()
     default:
       return 0
   }
@@ -362,6 +369,23 @@ const calculateNtcCaseReassignmentProgress = () => {
   return Math.round((filledFields / requiredFields.length) * 100)
 }
 
+// Calculate srogs01 overtime form progress
+const calculateSrogs01OvertimeProgress = () => {
+  const requiredFields = [
+    'PlaintiffName', 'DefendantName', 'CaseNumber', 'JudgeName', 'HearingDept',
+    'ComplaintFilingDate', 'TrialDate', 'DefendantBusinessAddress', 'CourtName', 'CourtLocation',
+    'EmploymentStartDate', 'EmploymentEndDate', 'ServerName', 'ServiceInfo'
+  ]
+
+  const filledFields = requiredFields.filter(field => {
+    const value = formStore.srogs01OvertimeForm[field]
+    if (typeof value === 'string') return value.trim() !== ''
+    return value !== null && value !== undefined
+  }).length
+
+  return Math.round((filledFields / requiredFields.length) * 100)
+}
+
 // Get current form reference
 const getCurrentFormRef = () => {
   switch (formStore.currentFormType) {
@@ -389,6 +413,8 @@ const getCurrentFormRef = () => {
       return cmcNoticeFormRef.value
     case 'ntcCaseReassignment':
       return ntcCaseReassignmentFormRef.value
+    case 'srogs01Overtime':
+      return srogs01OvertimeFormRef.value
     default:
       return null
   }
@@ -556,6 +582,36 @@ const handleSubmit = async () => {
     formData = { ...formData, ...calculatedFields }
     
     // 将输入的日期字段也转换为美式格式
+    if (formData.EmploymentStartDate) {
+      formData.EmploymentStartDate = formatLegalDate(formData.EmploymentStartDate)
+    }
+    if (formData.EmploymentEndDate) {
+      formData.EmploymentEndDate = formatLegalDate(formData.EmploymentEndDate)
+    }
+  }
+
+  // 对于 SROGS01 Overtime 表单，需要合并计算字段
+  if (formStore.currentFormType === 'srogs01Overtime') {
+    const calculations = formStore.srogs01OvertimeCalculations
+    
+    // 将计算字段映射为规格表中的字段名并合并到formData中
+    const calculatedFields = {
+      // 复数形式字段
+      PlaintiffPlurality1: calculations.plaintiffPlurality1,
+      DefendantPlurality1: calculations.defendantPlurality1,
+      DefendantPlurality2: calculations.defendantPlurality2,
+      
+      // 执行日期
+      ExecutedDate: calculations.executedDate
+    }
+    
+    // 合并输入字段和计算字段
+    formData = { ...formData, ...calculatedFields }
+    
+    // 将输入的日期字段也转换为美式格式
+    if (formData.ComplaintFilingDate) {
+      formData.ComplaintFilingDate = formatLegalDate(formData.ComplaintFilingDate)
+    }
     if (formData.EmploymentStartDate) {
       formData.EmploymentStartDate = formatLegalDate(formData.EmploymentStartDate)
     }

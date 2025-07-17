@@ -63,6 +63,16 @@ export const FORM_TYPES = [
     value: 'ntcCaseReassignment',
     label: 'NTC Case Reassignment Form',
     description: 'Create notice of case reassignment documents'
+  },
+  {
+    value: 'srogs01Overtime',
+    label: 'SROGS01 Overtime Form',
+    description: 'Create SROGS01 overtime related documents'
+  },
+  {
+    value: 'declContcOsc',
+    label: 'DECL CONTC OSC Form',
+    description: 'Create declaration of contempt order to show cause documents'
   }
 ]
 
@@ -504,6 +514,48 @@ export const NTC_CASE_REASSIGNMENT_TEST_DATA = {
   ServiceInfo: 'LAW OFFICES OF ROGER C. HSU\n175. S. Lake Ave., Ste. 210\nPasadena, CA 91101',
   ServerName: 'Jennifer Ontiveros',
   ExecutedDate: '2023-08-16'
+}
+
+// SROGS01 Overtime 表单测试数据
+export const SROGS01_OVERTIME_TEST_DATA = {
+  PlaintiffName: 'PERSON 1, NIMIA, ROSARIO',
+  DefendantName: 'COMPANY. INC',
+  CaseNumber: 'BC647042',
+  JudgeName: 'Hon. Elizabeth Feffer',
+  HearingDept: 'Dept. "39"',
+  ComplaintFilingDate: 'January 13, 2017',
+  TrialDate: 'Not Set',
+  DefendantBusinessAddress: '123 Business Street, Los Angeles, CA 90001',
+  CourtName: 'STANLEY MOSK COURTHOUSE',
+  CourtLocation: 'COUNTY OF LOS ANGELES',
+  EmploymentStartDate: 'January 1, 2016',
+  EmploymentEndDate: 'January 10, 2017',
+  PlaintiffPlurality1: 'Plaintiffs',
+  DefendantPlurality1: 'Defendants',
+  DefendantPlurality2: 'Defendants are',
+  ExecutedDate: 'May 22, 2018',
+  ServerName: 'Jennifer Ontiveros',
+  ServiceInfo: 'LAW OFFICES OF ROGER C. HSU\n175. S. Lake Ave., Ste. 210\nPasadena, CA 91101'
+}
+
+// DECL CONTC OSC 表单测试数据
+export const DECL_CONTC_OSC_TEST_DATA = {
+  PlaintiffName: 'JUANA HERNANDEZ CONTRERAS',
+  CourtLocation: 'COUNTY OF LOS ANGELES',
+  CourtName: 'STANLEY MOSK COURTHOUSE',
+  PlaintiffPlurality1: 'Plaintiff',
+  DefendantPlurality1: 'Defendants',
+  DefendantName: 'NPW COMPANIES dba DAHL, WAREHOUSE CO',
+  CaseNumber: '20STCV44544',
+  JudgeName: 'Hon. Ruth Ann Kwan',
+  HearingDept: 'Dept. "72"',
+  HearingDate: 'September 27, 2021',
+  HearingTime: '8:30 a.m.',
+  ComplaintFilingDate: 'November 13, 2020',
+  TrialDate: 'Not Set',
+  ServiceInfo: 'LAW OFFICES OF ROGER C. HSU\n175. S. Lake Ave., Ste. 210\nPasadena, CA 91101',
+  ExecutedDate: 'August 3, 2021',
+  ServerName: 'Jennifer Ontiveros'
 }
 
 // API 配置

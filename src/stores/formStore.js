@@ -265,6 +265,48 @@ export const useFormStore = defineStore('form', () => {
     ExecutedDate: null
   })
 
+  // SROGS01 Overtime 表单数据
+  const srogs01OvertimeForm = ref({
+    PlaintiffName: '',
+    DefendantName: '',
+    CaseNumber: '',
+    JudgeName: '',
+    HearingDept: '',
+    ComplaintFilingDate: null,
+    TrialDate: '',
+    DefendantBusinessAddress: '',
+    CourtName: '',
+    CourtLocation: '',
+    EmploymentStartDate: null,
+    EmploymentEndDate: null,
+    PlaintiffPlurality1: '',
+    DefendantPlurality1: '',
+    DefendantPlurality2: '',
+    ExecutedDate: null,
+    ServerName: '',
+    ServiceInfo: ''
+  })
+
+  // DECL CONTC OSC 表单数据
+  const declContcOscForm = ref({
+    PlaintiffName: '',
+    CourtLocation: '',
+    CourtName: '',
+    PlaintiffPlurality1: '',
+    DefendantPlurality1: '',
+    DefendantName: '',
+    CaseNumber: '',
+    JudgeName: '',
+    HearingDept: '',
+    HearingDate: null,
+    HearingTime: '',
+    ComplaintFilingDate: null,
+    TrialDate: '',
+    ServiceInfo: '',
+    ExecutedDate: null,
+    ServerName: ''
+  })
+
   // 格式化的被告名称（起诉表单）
   const formattedComplaintDefendantName = computed(() => {
     const form = complaintForm.value
@@ -330,6 +372,20 @@ export const useFormStore = defineStore('form', () => {
   const formattedNtcOfRulingDefendantName = computed(() => {
     const form = ntcOfRulingForm.value
     // NTC of Ruling表单只有被告名称，没有州和实体类型信息
+    return form.DefendantName || ''
+  })
+
+  // 格式化的被告名称（SROGS01 Overtime表单）
+  const formattedSrogs01OvertimeDefendantName = computed(() => {
+    const form = srogs01OvertimeForm.value
+    // SROGS01 Overtime表单只有被告名称，没有州和实体类型信息
+    return form.DefendantName || ''
+  })
+
+  // 格式化的被告名称（DECL CONTC OSC表单）
+  const formattedDeclContcOscDefendantName = computed(() => {
+    const form = declContcOscForm.value
+    // DECL CONTC OSC表单只有被告名称，没有州和实体类型信息
     return form.DefendantName || ''
   })
 
@@ -459,6 +515,56 @@ export const useFormStore = defineStore('form', () => {
 
     return {
       // 复数形式
+      defendantPlurality1: defendantPlurality.form1Defendant,
+      
+      // 执行日期
+      executedDate
+    }
+  })
+
+  // SROGS01 Overtime 表单的计算字段
+  const srogs01OvertimeCalculations = computed(() => {
+    const form = srogs01OvertimeForm.value
+
+    // 复数形式计算 - 只有当有姓名输入时才计算
+    const plaintiffPlurality = form.PlaintiffName ? calculations.getPlurality(form.PlaintiffName) : { form1: '' }
+    const defendantPlurality = form.DefendantName ? calculations.getPlurality(form.DefendantName) : { form1Defendant: '' }
+
+    // DefendantPlurality2 自动计算：单数用 "Defendant is"，复数用 "Defendants are"
+    let defendantPlurality2 = ''
+    if (form.DefendantName) {
+      const isPlural = form.DefendantName.includes(',') || form.DefendantName.includes(' and ')
+      defendantPlurality2 = isPlural ? 'Defendants are' : 'Defendant is'
+    }
+
+    // 执行日期 - 当前日期
+    const executedDate = formatLegalDate(new Date())
+
+    return {
+      // 复数形式
+      plaintiffPlurality1: plaintiffPlurality.form1,
+      defendantPlurality1: defendantPlurality.form1Defendant,
+      defendantPlurality2,
+      
+      // 执行日期
+      executedDate
+    }
+  })
+
+  // DECL CONTC OSC 表单的计算字段
+  const declContcOscCalculations = computed(() => {
+    const form = declContcOscForm.value
+
+    // 复数形式计算 - 只有当有姓名输入时才计算
+    const plaintiffPlurality = form.PlaintiffName ? calculations.getPlurality(form.PlaintiffName) : { form1: '' }
+    const defendantPlurality = form.DefendantName ? calculations.getPlurality(form.DefendantName) : { form1Defendant: '' }
+
+    // 执行日期 - 当前日期
+    const executedDate = formatLegalDate(new Date())
+
+    return {
+      // 复数形式
+      plaintiffPlurality1: plaintiffPlurality.form1,
       defendantPlurality1: defendantPlurality.form1Defendant,
       
       // 执行日期
@@ -657,6 +763,14 @@ export const useFormStore = defineStore('form', () => {
     ntcCaseReassignmentForm.value[field] = value
   }
 
+  const updateSrogs01OvertimeForm = (field, value) => {
+    srogs01OvertimeForm.value[field] = value
+  }
+
+  const updateDeclContcOscForm = (field, value) => {
+    declContcOscForm.value[field] = value
+  }
+
   const updateSubmissionEmail = (email) => {
     submissionEmail.value = email
   }
@@ -800,6 +914,22 @@ export const useFormStore = defineStore('form', () => {
           ntcCaseReassignmentForm.value[key] = null
         }
       })
+    } else if (targetType === 'srogs01Overtime') {
+      Object.keys(srogs01OvertimeForm.value).forEach(key => {
+        if (typeof srogs01OvertimeForm.value[key] === 'string') {
+          srogs01OvertimeForm.value[key] = ''
+        } else {
+          srogs01OvertimeForm.value[key] = null
+        }
+      })
+    } else if (targetType === 'declContcOsc') {
+      Object.keys(declContcOscForm.value).forEach(key => {
+        if (typeof declContcOscForm.value[key] === 'string') {
+          declContcOscForm.value[key] = ''
+        } else {
+          declContcOscForm.value[key] = null
+        }
+      })
     }
   }
 
@@ -820,7 +950,9 @@ export const useFormStore = defineStore('form', () => {
         rfpSexualHarassment: rfpSexualHarassmentForm.value,
         ntcOfRuling: ntcOfRulingForm.value,
         cmcNotice: cmcNoticeForm.value,
-        ntcCaseReassignment: ntcCaseReassignmentForm.value
+        ntcCaseReassignment: ntcCaseReassignmentForm.value,
+        srogs01Overtime: srogs01OvertimeForm.value,
+        declContcOsc: declContcOscForm.value
       }
     }
 
@@ -877,6 +1009,12 @@ export const useFormStore = defineStore('form', () => {
       if (data.forms.ntcCaseReassignment) {
         Object.assign(ntcCaseReassignmentForm.value, data.forms.ntcCaseReassignment)
       }
+      if (data.forms.srogs01Overtime) {
+        Object.assign(srogs01OvertimeForm.value, data.forms.srogs01Overtime)
+      }
+      if (data.forms.declContcOsc) {
+        Object.assign(declContcOscForm.value, data.forms.declContcOsc)
+      }
     }
   }
 
@@ -929,6 +1067,10 @@ export const useFormStore = defineStore('form', () => {
         return cmcNoticeForm.value
       case 'ntcCaseReassignment':
         return ntcCaseReassignmentForm.value
+      case 'srogs01Overtime':
+        return srogs01OvertimeForm.value
+      case 'declContcOsc':
+        return declContcOscForm.value
       default:
         return {}
     }
@@ -994,6 +1136,8 @@ export const useFormStore = defineStore('form', () => {
     ntcOfRulingForm,
     cmcNoticeForm,
     ntcCaseReassignmentForm,
+    srogs01OvertimeForm,
+    declContcOscForm,
     formErrors,
     isLoading,
 
@@ -1006,6 +1150,8 @@ export const useFormStore = defineStore('form', () => {
     ntcOfRulingCalculations,
     cmcNoticeCalculations,
     ntcCaseReassignmentCalculations,
+    srogs01OvertimeCalculations,
+    declContcOscCalculations,
     formattedComplaintDefendantName,
     formattedAnswerDefendantName,
     formattedSettlementDefendantName,
@@ -1016,6 +1162,8 @@ export const useFormStore = defineStore('form', () => {
     formattedNtcOfDepoDefendantName,
     formattedRfpSexualHarassmentDefendantName,
     formattedNtcOfRulingDefendantName,
+    formattedSrogs01OvertimeDefendantName,
+    formattedDeclContcOscDefendantName,
     isFormValid,
 
     // 方法
@@ -1032,6 +1180,8 @@ export const useFormStore = defineStore('form', () => {
     updateNtcOfRulingForm,
     updateCmcNoticeForm,
     updateNtcCaseReassignmentForm,
+    updateSrogs01OvertimeForm,
+    updateDeclContcOscForm,
     updateSubmissionEmail,
     resetForm,
     resetCurrentForm,
