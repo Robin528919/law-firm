@@ -170,7 +170,7 @@
               <el-radio-button :value="'date'">Set Date</el-radio-button>
               <el-radio-button :value="'notSet'">Not Set</el-radio-button>
             </el-radio-group>
-            
+
             <el-date-picker
                 v-if="trialDateMode === 'date'"
                 v-model="trialDateValue"
@@ -181,7 +181,7 @@
                 format="MMMM D, YYYY"
                 @change="handleTrialDateChange"
             />
-            
+
             <div v-else class="not-set-display">
               Trial Date: Not Set
             </div>
@@ -290,7 +290,6 @@ import TestDataTool from '@/components/common/TestDataTool.vue'
 import { useFormStore } from '@/stores/formStore'
 import {
   VALIDATION_RULES,
-  API_CONFIG,
   CMC_NOTICE_TEST_DATA
 } from '@/utils/constants'
 
@@ -303,11 +302,6 @@ const formData = formStore.cmcNoticeForm
 
 // 计算字段
 const calculations = computed(() => formStore.cmcNoticeCalculations)
-
-// 开发测试相关状态
-const isDevelopmentMode = computed(() => {
-  return API_CONFIG.ENVIRONMENT === 'development' || API_CONFIG.APP_ENV === 'development' || API_CONFIG.DEBUG
-})
 
 // Trial Date 相关状态
 const trialDateMode = ref('notSet')
@@ -359,46 +353,10 @@ const handleTrialDateChange = (value) => {
 }
 
 // 监听表单数据变化，自动保存
-watch(
-  () => formStore.cmcNoticeForm,
-  () => {
-    // 这里可以实现自动保存逻辑
-  },
-  { deep: true }
-)
-
-// 表单提交
-const handleSubmit = async () => {
-  try {
-    const valid = await formRef.value.validate()
-    if (valid) {
-      // 处理表单提交逻辑
-      console.log('表单验证通过，可以提交')
-    }
-  } catch (error) {
-    console.log('表单验证失败:', error)
-  }
-}
 
 // TestDataTool 相关方法
 const updateField = (field, value) => {
   formStore.updateCmcNoticeForm(field, value)
-}
-
-// 特殊字段处理器
-const specialHandlers = {
-  TrialDate: (value) => {
-    // 处理 Trial Date 特殊逻辑
-    if (value === 'Not Set' || !value) {
-      trialDateMode.value = 'notSet'
-      trialDateValue.value = null
-      updateField('TrialDate', 'Not Set')
-    } else {
-      trialDateMode.value = 'date'
-      trialDateValue.value = value
-      updateField('TrialDate', value)
-    }
-  }
 }
 
 // 暴露方法给父组件
@@ -461,4 +419,4 @@ defineExpose({
   background-color: var(--el-color-warning-light-5);
   border-color: var(--el-color-warning);
 }
-</style> 
+</style>
