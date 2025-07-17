@@ -265,6 +265,14 @@
           </div>
         </div>
       </FormGroup>
+
+      <!-- 测试数据工具 -->
+      <TestDataTool
+        :test-data="SETTLEMENT_TEST_DATA"
+        :form-data="formData"
+        :update-field="updateField"
+        form-name="SETTLEMENT"
+      />
     </el-form>
   </div>
 </template>
@@ -275,10 +283,12 @@ import { Refresh } from '@element-plus/icons-vue'
 import FormGroup from '@/components/common/FormGroup.vue'
 import FormField from '@/components/common/FormField.vue'
 import DefendantNameField from '@/components/common/DefendantNameField.vue'
+import TestDataTool from '@/components/common/TestDataTool.vue'
 import { useFormStore } from '@/stores/formStore'
 import {
   CONTACT_METHOD_OPTIONS,
-  VALIDATION_RULES
+  VALIDATION_RULES,
+  SETTLEMENT_TEST_DATA
 } from '@/utils/constants'
 import { getPlurality, convertAmountToWords, formatLegalDate } from '@/utils/calculations'
 
@@ -287,7 +297,12 @@ const formStore = useFormStore()
 const formRef = ref()
 
 // 表单数据 - 直接使用 ref，支持双向绑定
-const formData = formStore.settlementForm
+const formData = computed(() => formStore.settlementForm)
+
+// 表单字段更新方法
+const updateField = (field, value) => {
+  formStore.updateSettlementForm(field, value)
+}
 
 // 联系方式选项
 const contactMethodOptions = CONTACT_METHOD_OPTIONS

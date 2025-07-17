@@ -123,6 +123,14 @@
             description="Enter the range of affirmative defense numbers subject to demurrer"
         />
       </FormGroup>
+
+      <!-- 测试数据工具 -->
+      <TestDataTool
+        :test-data="ANSWER_TEST_DATA"
+        :form-data="formData"
+        :update-field="updateField"
+        form-name="ANSWER"
+      />
     </el-form>
   </div>
 </template>
@@ -131,8 +139,9 @@
 import {ref, computed} from 'vue'
 import FormGroup from '@/components/common/FormGroup.vue'
 import FormField from '@/components/common/FormField.vue'
+import TestDataTool from '@/components/common/TestDataTool.vue'
 import {useFormStore} from '@/stores/formStore'
-import {VALIDATION_RULES} from '@/utils/constants'
+import {VALIDATION_RULES, ANSWER_TEST_DATA} from '@/utils/constants'
 import {formatLegalDate} from '@/utils/calculations'
 
 // 使用表单状态管理
@@ -140,7 +149,12 @@ const formStore = useFormStore()
 const formRef = ref()
 
 // 表单数据 - 直接使用 ref，支持双向绑定
-const formData = formStore.answerForm
+const formData = computed(() => formStore.answerForm)
+
+// 表单字段更新方法
+const updateField = (field, value) => {
+  formStore.updateAnswerForm(field, value)
+}
 
 // 验证规则
 const validationRules = {

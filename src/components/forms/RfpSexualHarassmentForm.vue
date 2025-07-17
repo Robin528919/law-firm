@@ -137,30 +137,13 @@
         />
       </FormGroup>
 
-      <!-- 开发测试工具 -->
-      <FormGroup
-        v-if="isDevelopmentMode"
-        title="Development Tools"
-        description="Testing utilities for development purposes"
-        icon="Tools"
-        variant="bordered"
-        :columns="1"
-      >
-        <div class="test-tools">
-          <el-button
-            @click="fillTestData"
-            type="warning"
-            icon="DocumentCopy"
-            size="default"
-            :loading="fillingTestData"
-          >
-            Fill Test Data
-          </el-button>
-          <div class="test-info">
-            <small>Environment: {{ API_CONFIG.ENVIRONMENT }} | App Env: {{ API_CONFIG.APP_ENV }}</small>
-          </div>
-        </div>
-      </FormGroup>
+      <!-- 测试数据工具 -->
+      <TestDataTool
+        :test-data="RFP_SEXUAL_HARASSMENT_TEST_DATA"
+        :form-data="formData"
+        :update-field="updateField"
+        form-name="RFP SEXUAL HARASSMENT"
+      />
     </el-form>
   </div>
 </template>
@@ -169,10 +152,10 @@
 import { ref, computed, watch } from 'vue'
 import FormGroup from '@/components/common/FormGroup.vue'
 import FormField from '@/components/common/FormField.vue'
+import TestDataTool from '@/components/common/TestDataTool.vue'
 import { useFormStore } from '@/stores/formStore'
 import {
   VALIDATION_RULES,
-  API_CONFIG,
   RFP_SEXUAL_HARASSMENT_TEST_DATA
 } from '@/utils/constants'
 
@@ -180,14 +163,16 @@ import {
 const formStore = useFormStore()
 const formRef = ref()
 
+// 表单数据
+const formData = computed(() => formStore.rfpSexualHarassmentForm)
+
 // 计算字段
 const calculations = computed(() => formStore.rfpSexualHarassmentCalculations)
 
-// 开发测试相关状态
-const isDevelopmentMode = computed(() => {
-  return API_CONFIG.ENVIRONMENT === 'development' || API_CONFIG.APP_ENV === 'development' || API_CONFIG.DEBUG
-})
-const fillingTestData = ref(false)
+// 表单字段更新方法
+const updateField = (field, value) => {
+  formStore.updateRfpSexualHarassmentForm(field, value)
+}
 
 // 验证规则
 const validationRules = {
@@ -235,33 +220,10 @@ const handleSubmit = async () => {
   }
 }
 
-// 填充测试数据方法
-const fillTestData = async () => {
-  fillingTestData.value = true
-
-  try {
-    // 填充所有测试数据
-    Object.keys(RFP_SEXUAL_HARASSMENT_TEST_DATA).forEach(key => {
-      formStore.updateRfpSexualHarassmentForm(key, RFP_SEXUAL_HARASSMENT_TEST_DATA[key])
-    })
-
-    // 短暂延迟模拟加载过程
-    await new Promise(resolve => setTimeout(resolve, 300))
-
-    console.log('RFP Sexual Harassment 测试数据已填充:', formStore.rfpSexualHarassmentForm)
-
-  } catch (error) {
-    console.error('填充测试数据时出错:', error)
-  } finally {
-    fillingTestData.value = false
-  }
-}
-
 // 暴露方法给父组件
 defineExpose({
   validate: () => formRef.value?.validate(),
   resetForm: () => formRef.value?.resetFields(),
-  fillTestData,
   formRef
 })
 </script>

@@ -270,30 +270,14 @@
         />
       </FormGroup>
 
-      <!-- 开发测试工具 -->
-      <FormGroup
-        v-if="isDevelopmentMode"
-        title="Development Tools"
-        description="Tools for testing and development"
-        icon="Tools"
-        variant="warning"
-        :columns="1"
-      >
-        <div class="test-tools">
-          <el-button
-            @click="fillTestData"
-            type="warning"
-            icon="DocumentCopy"
-            size="default"
-            :loading="fillingTestData"
-          >
-            Fill Test Data
-          </el-button>
-          <div class="test-info">
-            <small>Environment: {{ API_CONFIG.ENVIRONMENT }} | App Env: {{ API_CONFIG.APP_ENV }}</small>
-          </div>
-        </div>
-      </FormGroup>
+      <!-- 测试数据工具 -->
+      <TestDataTool
+        :test-data="CMC_NOTICE_TEST_DATA"
+        :form-data="formData"
+        :update-field="updateField"
+        form-name="CMC NOTICE"
+        :exclude-fields="['ExecutedDate']"
+      />
     </el-form>
   </div>
 </template>

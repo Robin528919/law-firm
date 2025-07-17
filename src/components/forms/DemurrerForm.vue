@@ -370,6 +370,15 @@
         />
       </FormGroup>
 
+      <!-- 测试数据工具 -->
+      <TestDataTool
+        :test-data="DEMURRER_TEST_DATA"
+        :form-data="formData"
+        :update-field="updateField"
+        form-name="DEMURRER"
+        :exclude-fields="['ExecutedDate']"
+        :special-handlers="specialHandlers"
+      />
     </el-form>
   </div>
 </template>
@@ -378,11 +387,13 @@
 import { ref, computed, watchEffect } from 'vue'
 import FormGroup from '@/components/common/FormGroup.vue'
 import FormField from '@/components/common/FormField.vue'
+import TestDataTool from '@/components/common/TestDataTool.vue'
 import { useFormStore } from '@/stores/formStore'
 import {
   CASE_TYPE_OPTIONS,
   DEMURRER_CAUSES_OPTIONS,
-  VALIDATION_RULES
+  VALIDATION_RULES,
+  DEMURRER_TEST_DATA
 } from '@/utils/constants'
 import { getPlurality } from '@/utils/calculations'
 
@@ -391,7 +402,25 @@ const formStore = useFormStore()
 const formRef = ref()
 
 // 表单数据 - 直接使用 ref，支持双向绑定
-const formData = formStore.demurrerForm
+const formData = computed(() => formStore.demurrerForm)
+
+// 表单字段更新方法
+const updateField = (field, value) => {
+  formStore.updateDemurrerForm(field, value)
+}
+
+// 特殊字段处理器
+const specialHandlers = {
+  TrialDate: (value) => {
+    updateField('TrialDate', value)
+  },
+  SelectedCauses: (value) => {
+    // 处理数组字段
+    if (Array.isArray(value)) {
+      updateField('SelectedCauses', value)
+    }
+  }
+}
 
 // 选择选项
 const caseTypeOptions = CASE_TYPE_OPTIONS

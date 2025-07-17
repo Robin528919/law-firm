@@ -226,29 +226,13 @@
       </FormGroup>
 
       <!-- 测试数据工具 -->
-      <FormGroup
-          v-if="isDev"
-          title="Testing Tools"
-          description="Development testing utilities"
-          icon="Setting"
-          variant="bordered"
-          :columns="1"
-      >
-        <div class="test-tools">
-          <el-button
-            @click="fillTestData"
-            type="warning"
-            icon="DocumentCopy"
-            size="default"
-            :loading="fillingTestData"
-          >
-            Fill Test Data
-          </el-button>
-          <div class="test-info">
-            <small>Environment: {{ API_CONFIG.ENVIRONMENT }} | App Env: {{ API_CONFIG.APP_ENV }}</small>
-          </div>
-        </div>
-      </FormGroup>
+      <TestDataTool
+        :test-data="DECL_CONTC_OSC_TEST_DATA"
+        :form-data="formData"
+        :update-field="updateField"
+        form-name="DECL CONTC OSC"
+        :exclude-fields="['ExecutedDate']"
+      />
     </el-form>
   </div>
 </template>
@@ -257,8 +241,9 @@
 import {ref, computed, watch} from 'vue'
 import FormGroup from '@/components/common/FormGroup.vue'
 import FormField from '@/components/common/FormField.vue'
+import TestDataTool from '@/components/common/TestDataTool.vue'
 import {useFormStore} from '@/stores/formStore'
-import {VALIDATION_RULES, DECL_CONTC_OSC_TEST_DATA, API_CONFIG} from '@/utils/constants'
+import {VALIDATION_RULES, DECL_CONTC_OSC_TEST_DATA} from '@/utils/constants'
 import {formatLegalDate} from '@/utils/calculations'
 
 // 使用表单状态管理
@@ -266,17 +251,30 @@ const formStore = useFormStore()
 const formRef = ref()
 
 // 表单数据 - 直接使用 ref，支持双向绑定
-const formData = formStore.declContcOscForm
+const formData = computed(() => formStore.declContcOscForm)
 
-// 开发模式检测
-const isDev = import.meta.env.MODE === 'development'
-
-// 测试数据填充状态
-const fillingTestData = ref(false)
+// 表单字段更新方法
+const updateField = (field, value) => {
+  formStore.updateDeclContcOscForm(field, value)
+}
 
 // Trial Date 相关状态
 const trialDateMode = ref('notSet')
 const trialDateValue = ref(null)
+
+// 特殊字段处理器
+const specialHandlers = {
+  TrialDate: (value) => {
+    if (value === 'Not Set') {
+      trialDateMode.value = 'notSet'
+      trialDateValue.value = null
+    } else {
+      trialDateMode.value = 'date'
+      trialDateValue.value = value
+    }
+    updateField('TrialDate', value)
+  }
+}
 
 // 初始化 Trial Date 状态
 watch(() => formData.TrialDate, (newValue) => {
@@ -334,42 +332,7 @@ const computedExecutedDate = computed(() => {
   return formStore.declContcOscCalculations.executedDate
 })
 
-// 填充测试数据方法
-const fillTestData = async () => {
-  fillingTestData.value = true
 
-  try {
-    // 填充所有测试数据
-    Object.keys(DECL_CONTC_OSC_TEST_DATA).forEach(key => {
-      if (Object.prototype.hasOwnProperty.call(formData, key)) {
-        if (key !== 'PlaintiffPlurality1' && key !== 'DefendantPlurality1' && key !== 'ExecutedDate') {
-          // 不填充自动计算的字段
-          formData[key] = DECL_CONTC_OSC_TEST_DATA[key]
-        }
-      }
-    })
-
-    // 处理 Trial Date 特殊逻辑
-    const testTrialDate = DECL_CONTC_OSC_TEST_DATA.TrialDate
-    if (testTrialDate === 'Not Set' || !testTrialDate) {
-      trialDateMode.value = 'notSet'
-      trialDateValue.value = null
-    } else {
-      trialDateMode.value = 'date'
-      trialDateValue.value = testTrialDate
-    }
-
-    // 短暂延迟模拟加载过程
-    await new Promise(resolve => setTimeout(resolve, 300))
-
-    console.log('DECL CONTC OSC 测试数据已填充:', formData)
-
-  } catch (error) {
-    console.error('填充测试数据时出错:', error)
-  } finally {
-    fillingTestData.value = false
-  }
-}
 
 // 字段变更处理
 const handleFieldChange = (value, field) => {
@@ -389,18 +352,6 @@ defineExpose({
 <style scoped>
 .decl-contc-osc-form {
   width: 100%;
-}
-
-.test-tools {
-  display: flex;
-  flex-direction: column;
-  gap: 1rem;
-  align-items: center;
-}
-
-.test-info {
-  opacity: 0.7;
-  font-size: 12px;
 }
 
 .trial-date-field {

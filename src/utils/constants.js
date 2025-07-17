@@ -616,6 +616,99 @@ export const NTC_OF_CONT_HEARING_TEST_DATA = {
   ExecutedDate: 'July 14, 2025'
 }
 
+// ANSWER 表单测试数据
+export const ANSWER_TEST_DATA = {
+  LetterDate: 'June 23, 2025',
+  OCName: 'John Smith',
+  OCFirm: 'Smith & Associates',
+  OCAddress: '123 Legal Ave, Los Angeles, CA 90210',
+  CaseName: 'ARCE CORDERO v. BROADWAY EXCHANGE',
+  CaseNumber: '24STCV25513',
+  DefendantName: 'BROADWAY EXCHANGE, LP',
+  ADNumber: 'AD-2024-001',
+  RespDate: 'June 30, 2025'
+}
+
+// SETTLEMENT 表单测试数据
+export const SETTLEMENT_TEST_DATA = {
+  PlaintiffName: 'GUSTAVO ARCE CORDERO',
+  DefendantName: 'BROADWAY EXCHANGE, LP',
+  DefendantState: 'California',
+  DefendantEntityType: 'Limited Partnership',
+  CourtName: 'STANLEY MOSK COURTHOUSE',
+  CaseName: 'ARCE CORDERO v. BROADWAY EXCHANGE',
+  CaseNumber: '24STCV25513',
+  SettlementWrittenAmount: 'Fifty Thousand Dollars',
+  SettlementNumericalAmount: 50000,
+  InstallmentPayment: 'Lump sum within 30 days',
+  DefenseContactMethod: 'Email',
+  DefenseEmail: 'defense@lawfirm.com',
+  DefenseFax: '(555) 123-4567',
+  DefenseCounselName: 'Jane Defense',
+  DefenseCounselFirm: 'Defense & Partners',
+  DefenseFirmAddress: '456 Defense St, Los Angeles, CA 90210',
+  PlaintiffPlurality1: 'Plaintiff',
+  DefendantPlurality1: 'Defendant'
+}
+
+// DEMURRER 表单测试数据
+export const DEMURRER_TEST_DATA = {
+  PlaintiffName: 'GUSTAVO ARCE CORDERO',
+  DefendantName: 'BROADWAY EXCHANGE, LP',
+  PlaintiffPlurality1: 'Plaintiff',
+  DefendantPlurality1: 'Defendant',
+  CourtLocation: 'COUNTY OF LOS ANGELES',
+  CourtName: 'STANLEY MOSK COURTHOUSE',
+  CourtAddress: '111 N. Hill Street, Los Angeles, CA 90012',
+  HearingDate: 'August 15, 2025',
+  HearingTime: '9:00 AM',
+  HearingDept: 'Dept. "51"',
+  ResID: '526290823671',
+  ComplaintFilingDate: 'October 2, 2024',
+  TrialDate: 'Not Set',
+  JudgeName: 'Hon. Upinder S. Kalra',
+  CaseNumber: '24STCV25513',
+  ExecutedDate: 'July 14, 2025',
+  CaseType: 'Labor Law',
+  SelectedCauses: ['Failure to Pay Wages', 'Overtime Violations'],
+  AnswerFilingDate: 'November 15, 2024',
+  ChosenAD: 'AD-2024-001',
+  ServiceInfo: 'Email: brianu@jbulaw.com',
+  ServerName: 'Jennifer Ontiveros',
+  MnCDate: 'July 1, 2025',
+  MnCRespDate: 'July 15, 2025',
+  MnCResp: 'Agreed to extension'
+}
+
+// MOTION TO STRIKE 表单测试数据
+export const MOTION_TO_STRIKE_TEST_DATA = {
+  PlaintiffName: 'GUSTAVO ARCE CORDERO',
+  DefendantName: 'BROADWAY EXCHANGE, LP',
+  PlaintiffPlurality1: 'Plaintiff',
+  DefendantPlurality1: 'Defendant',
+  CourtLocation: 'COUNTY OF LOS ANGELES',
+  CourtName: 'STANLEY MOSK COURTHOUSE',
+  CourtAddress: '111 N. Hill Street, Los Angeles, CA 90012',
+  HearingDate: 'September 10, 2025',
+  HearingTime: '10:30 AM',
+  HearingDept: 'Dept. "51"',
+  ResID: '526290823672',
+  ComplaintFilingDate: 'October 2, 2024',
+  TrialDate: 'Not Set',
+  JudgeName: 'Hon. Upinder S. Kalra',
+  CaseNumber: '24STCV25513',
+  ExecutedDate: 'July 14, 2025',
+  CaseType: 'Labor Law',
+  SelectedCauses: ['Failure to Pay Wages', 'Overtime Violations'],
+  AnswerFilingDate: 'November 15, 2024',
+  ChosenAD: 'AD-2024-002',
+  ServiceInfo: 'Email: brianu@jbulaw.com',
+  ServerName: 'Jennifer Ontiveros',
+  MnCDate: 'July 10, 2025',
+  MnCRespDate: 'July 25, 2025',
+  MnCResp: 'Filed motion to strike'
+}
+
 // API 配置
 export const API_CONFIG = {
   // 环境配置

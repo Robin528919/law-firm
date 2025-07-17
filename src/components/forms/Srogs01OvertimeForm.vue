@@ -247,29 +247,13 @@
       </FormGroup>
 
             <!-- 测试数据工具 -->
-      <FormGroup
-          v-if="isDev"
-          title="Testing Tools"
-          description="Development testing utilities"
-          icon="Setting"
-          variant="bordered"
-          :columns="1"
-      >
-        <div class="test-tools">
-          <el-button
-            @click="fillTestData"
-            type="warning"
-            icon="DocumentCopy"
-            size="default"
-            :loading="fillingTestData"
-          >
-            Fill Test Data
-          </el-button>
-          <div class="test-info">
-            <small>Environment: {{ API_CONFIG.ENVIRONMENT }} | App Env: {{ API_CONFIG.APP_ENV }}</small>
-          </div>
-        </div>
-      </FormGroup>
+      <TestDataTool
+        :test-data="SROGS01_OVERTIME_TEST_DATA"
+        :form-data="formData"
+        :update-field="updateField"
+        form-name="SROGS01 OVERTIME"
+        :exclude-fields="['ExecutedDate', 'PlaintiffPlurality1', 'DefendantPlurality1', 'DefendantPlurality2']"
+      />
     </el-form>
   </div>
 </template>
@@ -278,8 +262,9 @@
 import {ref, computed, watch} from 'vue'
 import FormGroup from '@/components/common/FormGroup.vue'
 import FormField from '@/components/common/FormField.vue'
+import TestDataTool from '@/components/common/TestDataTool.vue'
 import {useFormStore} from '@/stores/formStore'
-import {VALIDATION_RULES, SROGS01_OVERTIME_TEST_DATA, API_CONFIG} from '@/utils/constants'
+import {VALIDATION_RULES, SROGS01_OVERTIME_TEST_DATA} from '@/utils/constants'
 import {formatLegalDate} from '@/utils/calculations'
 
 // 使用表单状态管理
@@ -287,13 +272,12 @@ const formStore = useFormStore()
 const formRef = ref()
 
 // 表单数据 - 直接使用 ref，支持双向绑定
-const formData = formStore.srogs01OvertimeForm
+const formData = computed(() => formStore.srogs01OvertimeForm)
 
-// 开发模式检测
-const isDev = import.meta.env.MODE === 'development'
-
-// 测试数据填充状态
-const fillingTestData = ref(false)
+// 表单字段更新方法
+const updateField = (field, value) => {
+  formStore.updateSrogs01OvertimeForm(field, value)
+}
 
 // Trial Date 相关状态
 const trialDateMode = ref('notSet')
@@ -360,39 +344,7 @@ const computedExecutedDate = computed(() => {
   return formStore.srogs01OvertimeCalculations.executedDate
 })
 
-// 填充测试数据方法
-const fillTestData = async () => {
-  fillingTestData.value = true
 
-  try {
-    // 填充所有测试数据
-    Object.keys(SROGS01_OVERTIME_TEST_DATA).forEach(key => {
-      if (Object.prototype.hasOwnProperty.call(formData, key)) {
-        // 对于日期字段，需要转换格式
-        if (key.includes('Date') && key !== 'ExecutedDate') {
-          const dateValue = SROGS01_OVERTIME_TEST_DATA[key]
-          if (dateValue && dateValue !== 'Not Set') {
-            formData[key] = dateValue
-          }
-        } else if (key !== 'PlaintiffPlurality1' && key !== 'DefendantPlurality1' && 
-                   key !== 'DefendantPlurality2' && key !== 'ExecutedDate') {
-          // 不填充自动计算的字段
-          formData[key] = SROGS01_OVERTIME_TEST_DATA[key]
-        }
-      }
-    })
-
-    // 短暂延迟模拟加载过程
-    await new Promise(resolve => setTimeout(resolve, 300))
-
-    console.log('SROGS01 Overtime 测试数据已填充:', formData)
-
-  } catch (error) {
-    console.error('填充测试数据时出错:', error)
-  } finally {
-    fillingTestData.value = false
-  }
-}
 
 // 字段变更处理
 const handleFieldChange = (value, field) => {

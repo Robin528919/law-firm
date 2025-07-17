@@ -353,6 +353,16 @@
           description="Current date, format: June 15, 2025"
         />
       </FormGroup>
+
+      <!-- 测试数据工具 -->
+      <TestDataTool
+        :test-data="MOTION_TO_STRIKE_TEST_DATA"
+        :form-data="formData"
+        :update-field="updateField"
+        form-name="MOTION TO STRIKE"
+        :exclude-fields="['ExecutedDate']"
+        :special-handlers="specialHandlers"
+      />
     </el-form>
   </div>
 </template>
@@ -361,11 +371,13 @@
 import { ref, computed, watch } from 'vue'
 import FormGroup from '@/components/common/FormGroup.vue'
 import FormField from '@/components/common/FormField.vue'
+import TestDataTool from '@/components/common/TestDataTool.vue'
 import { useFormStore } from '@/stores/formStore'
 import {
   CASE_TYPE_OPTIONS,
   CAUSES_OF_ACTION,
-  VALIDATION_RULES
+  VALIDATION_RULES,
+  MOTION_TO_STRIKE_TEST_DATA
 } from '@/utils/constants'
 
 // 使用表单状态管理
@@ -373,7 +385,25 @@ const formStore = useFormStore()
 const formRef = ref()
 
 // 表单数据 - 直接使用 ref，支持双向绑定
-const formData = formStore.motionToStrikeForm
+const formData = computed(() => formStore.motionToStrikeForm)
+
+// 表单字段更新方法
+const updateField = (field, value) => {
+  formStore.updateMotionToStrikeForm(field, value)
+}
+
+// 特殊字段处理器
+const specialHandlers = {
+  TrialDate: (value) => {
+    updateField('TrialDate', value)
+  },
+  SelectedCauses: (value) => {
+    // 处理数组字段
+    if (Array.isArray(value)) {
+      updateField('SelectedCauses', value)
+    }
+  }
+}
 
 // 计算字段
 const calculations = computed(() => formStore.motionToStrikeCalculations)

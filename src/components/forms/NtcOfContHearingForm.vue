@@ -319,29 +319,15 @@
         />
       </FormGroup>
 
-      <!-- 测试数据按钮 -->
-      <FormGroup
-          v-if="isDevelopment"
-          title="Development Tools"
-          description="Testing utilities for development"
-          icon="DocumentCopy"
-          variant="warning"
-          :columns="1"
-      >
-        <el-button
-            type="warning"
-            @click="fillTestData"
-            :loading="isLoadingTestData"
-            :icon="DocumentCopy"
-            style="width: 100%"
-        >
-          Fill Test Data
-        </el-button>
-        <div class="field-description">
-          Automatically fill the form with test data for development purposes
-          <br>Environment: {{ environment }} | Debug Mode: {{ debugMode }}
-        </div>
-      </FormGroup>
+      <!-- 测试数据工具 -->
+      <TestDataTool
+        :test-data="NTC_OF_CONT_HEARING_TEST_DATA"
+        :form-data="formData"
+        :update-field="updateField"
+        form-name="NTC OF CONTINUED HEARING"
+        :exclude-fields="['ExecutedDate']"
+        :special-handlers="specialHandlers"
+      />
     </el-form>
   </div>
 </template>
@@ -349,24 +335,18 @@
 <script setup>
 import { ref, computed, watch, onMounted } from 'vue'
 import { useFormStore } from '@/stores/formStore'
-import { VALIDATION_RULES, NTC_OF_CONT_HEARING_TEST_DATA, API_CONFIG } from '@/utils/constants'
+import { VALIDATION_RULES, NTC_OF_CONT_HEARING_TEST_DATA } from '@/utils/constants'
 import FormGroup from '@/components/common/FormGroup.vue'
 import FormField from '@/components/common/FormField.vue'
-import { DocumentCopy } from '@element-plus/icons-vue'
+import TestDataTool from '@/components/common/TestDataTool.vue'
 
 // Store
 const formStore = useFormStore()
 
 // 响应式数据
 const formRef = ref(null)
-const isLoadingTestData = ref(false)
 const trialDateMode = ref('not-set')
 const trialDateValue = ref(null)
-
-// 环境信息
-const environment = computed(() => API_CONFIG.ENVIRONMENT)
-const debugMode = computed(() => API_CONFIG.DEBUG)
-const isDevelopment = computed(() => environment.value === 'development')
 
 // 表单数据
 const formData = computed(() => formStore.ntcOfContHearingForm)
@@ -401,6 +381,20 @@ const validationRules = {
 // 表单更新方法
 const updateField = (field, value) => {
   formStore.updateNtcOfContHearingForm(field, value)
+}
+
+// 特殊字段处理器
+const specialHandlers = {
+  TrialDate: (value) => {
+    if (value === 'Not Set') {
+      trialDateMode.value = 'not-set'
+      trialDateValue.value = null
+    } else {
+      trialDateMode.value = 'date'
+      trialDateValue.value = value
+    }
+    updateField('TrialDate', value)
+  }
 }
 
 // Trial Date 处理
@@ -441,40 +435,7 @@ watch(() => formData.value.TrialDate, (newValue) => {
   }
 }, { immediate: true })
 
-// 填充测试数据
-const fillTestData = async () => {
-  try {
-    isLoadingTestData.value = true
-    console.log('开始填充 NTC OF CONTINUED HEARING 表单测试数据...')
-    
-    // 填充除自动计算字段外的所有数据
-    Object.keys(NTC_OF_CONT_HEARING_TEST_DATA).forEach(key => {
-      // ExecutedDate 是自动计算字段，不需要填充
-      if (key !== 'ExecutedDate' && Object.prototype.hasOwnProperty.call(formData.value, key)) {
-        updateField(key, NTC_OF_CONT_HEARING_TEST_DATA[key])
-      }
-    })
-    
-    // 特殊处理 Trial Date
-    const trialDateTestValue = NTC_OF_CONT_HEARING_TEST_DATA.TrialDate
-    if (trialDateTestValue === 'Not Set') {
-      trialDateMode.value = 'not-set'
-      trialDateValue.value = null
-    } else {
-      trialDateMode.value = 'date'
-      trialDateValue.value = trialDateTestValue
-    }
-    
-    // 模拟异步操作
-    await new Promise(resolve => setTimeout(resolve, 500))
-    
-    console.log('NTC OF CONTINUED HEARING 表单测试数据填充完成')
-  } catch (error) {
-    console.error('填充测试数据时出错:', error)
-  } finally {
-    isLoadingTestData.value = false
-  }
-}
+
 
 // 表单验证方法
 const validate = async () => {
