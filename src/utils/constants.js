@@ -78,6 +78,11 @@ export const FORM_TYPES = [
     value: 'declToContCmc',
     label: 'DECL TO CONT CMC Form',
     description: 'Create declaration to continue case management conference documents'
+  },
+  {
+    value: 'ntcOfContHearing',
+    label: 'NTC of Continued Hearing Form',
+    description: 'Create notice of continued hearing documents'
   }
 ]
 
@@ -582,6 +587,33 @@ export const DECL_TO_CONT_CMC_TEST_DATA = {
   ServerName: 'Jennifer Ontiveros',
   ServiceInfo: 'LAW OFFICES OF ROGER C. HSU\n175. S. Lake Ave., Ste. 210\nPasadena, CA 91101',
   ExecutedDate: 'March 10, 2020'
+}
+
+// NTC OF CONTINUED HEARING 表单测试数据
+export const NTC_OF_CONT_HEARING_TEST_DATA = {
+  PlaintiffName: 'GUSTAVO ARCE CORDERO',
+  CourtLocation: 'COUNTY OF LOS ANGELES',
+  CourtName: 'STANLEY MOSK COURTHOUSE',
+  PlaintiffPlurality1: 'Plaintiff',
+  DefendantPlurality1: 'Defendants',
+  DefendantName: 'BROADWAY EXCHANGE, LP',
+  ProceedingName: 'Motion to Compel Production',
+  CaseNumber: '24STCV25513',
+  JudgeName: 'Hon. Upinder S. Kalra',
+  HearingDept: 'Dept. "51"',
+  HearingDate: 'May 6, 2025',
+  HearingTime: '9:00 AM',
+  HearingDate2: 'August 13, 2025',
+  HearingTime2: '9:00 AM',
+  HearingDept2: 'Dept. "51"',
+  ResID: '526290823671',
+  ComplaintFilingDate: 'October 2, 2024',
+  TrialDate: 'Not Set',
+  CourtAddress: '111 N. Hill Street, Los Angeles, CA 90012',
+  LetterDate: 'April 23, 2025',
+  ServiceInfo: 'Email: brianu@jbulaw.com',
+  ServerName: 'Jennifer Ontiveros',
+  ExecutedDate: 'July 14, 2025'
 }
 
 // API 配置

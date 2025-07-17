@@ -328,6 +328,33 @@ export const useFormStore = defineStore('form', () => {
     ExecutedDate: null
   })
 
+  // NTC OF CONTINUED HEARING 表单数据
+  const ntcOfContHearingForm = ref({
+    PlaintiffName: '',
+    CourtLocation: '',
+    CourtName: '',
+    PlaintiffPlurality1: '',
+    DefendantPlurality1: '',
+    DefendantName: '',
+    ProceedingName: '',
+    CaseNumber: '',
+    JudgeName: '',
+    HearingDept: '',
+    HearingDate: null,
+    HearingTime: '',
+    HearingDate2: null,
+    HearingTime2: '',
+    HearingDept2: '',
+    ResID: '',
+    ComplaintFilingDate: null,
+    TrialDate: '',
+    CourtAddress: '',
+    LetterDate: null,
+    ServiceInfo: '',
+    ServerName: '',
+    ExecutedDate: null
+  })
+
   // 格式化的被告名称（起诉表单）
   const formattedComplaintDefendantName = computed(() => {
     const form = complaintForm.value
@@ -414,6 +441,13 @@ export const useFormStore = defineStore('form', () => {
   const formattedDeclToContCmcDefendantName = computed(() => {
     const form = declToContCmcForm.value
     // DECL TO CONT CMC表单只有被告名称，没有州和实体类型信息
+    return form.DefendantName || ''
+  })
+
+  // 格式化的被告名称（NTC OF CONTINUED HEARING表单）
+  const formattedNtcOfContHearingDefendantName = computed(() => {
+    const form = ntcOfContHearingForm.value
+    // NTC OF CONTINUED HEARING表单只有被告名称，没有州和实体类型信息
     return form.DefendantName || ''
   })
 
@@ -603,6 +637,27 @@ export const useFormStore = defineStore('form', () => {
   // DECL TO CONT CMC 表单的计算字段
   const declToContCmcCalculations = computed(() => {
     const form = declToContCmcForm.value
+
+    // 复数形式计算 - 只有当有姓名输入时才计算
+    const plaintiffPlurality = form.PlaintiffName ? calculations.getPlurality(form.PlaintiffName) : { form1: '' }
+    const defendantPlurality = form.DefendantName ? calculations.getPlurality(form.DefendantName) : { form1Defendant: '' }
+
+    // 执行日期 - 当前日期
+    const executedDate = formatLegalDate(new Date())
+
+    return {
+      // 复数形式
+      plaintiffPlurality1: plaintiffPlurality.form1,
+      defendantPlurality1: defendantPlurality.form1Defendant,
+      
+      // 执行日期
+      executedDate
+    }
+  })
+
+  // NTC OF CONTINUED HEARING 表单的计算字段
+  const ntcOfContHearingCalculations = computed(() => {
+    const form = ntcOfContHearingForm.value
 
     // 复数形式计算 - 只有当有姓名输入时才计算
     const plaintiffPlurality = form.PlaintiffName ? calculations.getPlurality(form.PlaintiffName) : { form1: '' }
@@ -824,6 +879,10 @@ export const useFormStore = defineStore('form', () => {
     declToContCmcForm.value[field] = value
   }
 
+  const updateNtcOfContHearingForm = (field, value) => {
+    ntcOfContHearingForm.value[field] = value
+  }
+
   const updateSubmissionEmail = (email) => {
     submissionEmail.value = email
   }
@@ -991,6 +1050,14 @@ export const useFormStore = defineStore('form', () => {
           declToContCmcForm.value[key] = null
         }
       })
+    } else if (targetType === 'ntcOfContHearing') {
+      Object.keys(ntcOfContHearingForm.value).forEach(key => {
+        if (typeof ntcOfContHearingForm.value[key] === 'string') {
+          ntcOfContHearingForm.value[key] = ''
+        } else {
+          ntcOfContHearingForm.value[key] = null
+        }
+      })
     }
   }
 
@@ -1014,7 +1081,8 @@ export const useFormStore = defineStore('form', () => {
         ntcCaseReassignment: ntcCaseReassignmentForm.value,
         srogs01Overtime: srogs01OvertimeForm.value,
         declContcOsc: declContcOscForm.value,
-        declToContCmc: declToContCmcForm.value
+        declToContCmc: declToContCmcForm.value,
+        ntcOfContHearing: ntcOfContHearingForm.value
       }
     }
 
@@ -1080,6 +1148,9 @@ export const useFormStore = defineStore('form', () => {
       if (data.forms.declToContCmc) {
         Object.assign(declToContCmcForm.value, data.forms.declToContCmc)
       }
+      if (data.forms.ntcOfContHearing) {
+        Object.assign(ntcOfContHearingForm.value, data.forms.ntcOfContHearing)
+      }
     }
   }
 
@@ -1138,6 +1209,8 @@ export const useFormStore = defineStore('form', () => {
         return declContcOscForm.value
       case 'declToContCmc':
         return declToContCmcForm.value
+      case 'ntcOfContHearing':
+        return ntcOfContHearingForm.value
       default:
         return {}
     }
@@ -1206,6 +1279,7 @@ export const useFormStore = defineStore('form', () => {
     srogs01OvertimeForm,
     declContcOscForm,
     declToContCmcForm,
+    ntcOfContHearingForm,
     formErrors,
     isLoading,
 
@@ -1221,6 +1295,7 @@ export const useFormStore = defineStore('form', () => {
     srogs01OvertimeCalculations,
     declContcOscCalculations,
     declToContCmcCalculations,
+    ntcOfContHearingCalculations,
     formattedComplaintDefendantName,
     formattedAnswerDefendantName,
     formattedSettlementDefendantName,
@@ -1234,6 +1309,7 @@ export const useFormStore = defineStore('form', () => {
     formattedSrogs01OvertimeDefendantName,
     formattedDeclContcOscDefendantName,
     formattedDeclToContCmcDefendantName,
+    formattedNtcOfContHearingDefendantName,
     isFormValid,
 
     // 方法
@@ -1253,6 +1329,7 @@ export const useFormStore = defineStore('form', () => {
     updateSrogs01OvertimeForm,
     updateDeclContcOscForm,
     updateDeclToContCmcForm,
+    updateNtcOfContHearingForm,
     updateSubmissionEmail,
     resetForm,
     resetCurrentForm,
