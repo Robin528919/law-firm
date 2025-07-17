@@ -287,6 +287,7 @@
 import { ref, computed, watch } from 'vue'
 import FormGroup from '@/components/common/FormGroup.vue'
 import FormField from '@/components/common/FormField.vue'
+import TestDataTool from '@/components/common/TestDataTool.vue'
 import { useFormStore } from '@/stores/formStore'
 import { VALIDATION_RULES, NTC_OF_DEPO_TEST_DATA, API_CONFIG } from '@/utils/constants'
 
@@ -308,7 +309,6 @@ const trialDateValue = ref(null)
 const isDevelopmentMode = computed(() => {
   return API_CONFIG.ENVIRONMENT === 'development' || API_CONFIG.APP_ENV === 'development' || API_CONFIG.DEBUG
 })
-const fillingTestData = ref(false)
 
 // 验证规则
 const validationRules = {
@@ -434,40 +434,34 @@ const validate = async () => {
   }
 }
 
-// 填充测试数据方法
-const fillTestData = async () => {
-  fillingTestData.value = true
-  
-  try {
-    // 填充所有测试数据
-    Object.keys(NTC_OF_DEPO_TEST_DATA).forEach(key => {
-      if (key === 'PlaintiffNames' || key === 'DefendantNames') {
-        // 数组字段直接复制
-        formData[key] = [...NTC_OF_DEPO_TEST_DATA[key]]
-      } else {
-        // 其他字段直接赋值
-        formData[key] = NTC_OF_DEPO_TEST_DATA[key]
-      }
-    })
-    
+// TestDataTool 相关方法
+const updateField = (field, value) => {
+  formStore.updateNtcOfDepoForm(field, value)
+}
+
+// 特殊字段处理器
+const specialHandlers = {
+  PlaintiffNames: (value) => {
+    // 处理数组字段
+    formData.PlaintiffNames = [...value]
+    formStore.updateNtcOfDepoForm('PlaintiffPlurality1', calculations.value.plaintiffPlurality1)
+  },
+  DefendantNames: (value) => {
+    // 处理数组字段
+    formData.DefendantNames = [...value]
+    formStore.updateNtcOfDepoForm('DefendantPlurality1', calculations.value.defendantPlurality1)
+  },
+  TrialDate: (value) => {
     // 处理 Trial Date 特殊逻辑
-    if (NTC_OF_DEPO_TEST_DATA.TrialDate === 'Not Set') {
+    if (value === 'Not Set' || !value) {
       trialDateMode.value = 'notSet'
       trialDateValue.value = null
+      updateField('TrialDate', 'Not Set')
     } else {
       trialDateMode.value = 'date'
-      trialDateValue.value = NTC_OF_DEPO_TEST_DATA.TrialDate
+      trialDateValue.value = value
+      updateField('TrialDate', value)
     }
-    
-    // 短暂延迟模拟加载过程
-    await new Promise(resolve => setTimeout(resolve, 300))
-    
-    console.log('NTC of Depo 测试数据已填充:', formData)
-    
-  } catch (error) {
-    console.error('填充测试数据时出错:', error)
-  } finally {
-    fillingTestData.value = false
   }
 }
 
@@ -488,8 +482,7 @@ const resetForm = () => {
 // 暴露方法给父组件
 defineExpose({
   validate,
-  resetForm,
-  fillTestData
+  resetForm
 })
 </script>
 

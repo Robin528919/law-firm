@@ -552,6 +552,7 @@ import { ref, computed, watch } from 'vue'
 import FormGroup from '@/components/common/FormGroup.vue'
 import FormField from '@/components/common/FormField.vue'
 import DefendantNameField from '@/components/common/DefendantNameField.vue'
+import TestDataTool from '@/components/common/TestDataTool.vue'
 import { useFormStore } from '@/stores/formStore'
 import {
   CAUSES_OF_ACTION,
@@ -577,7 +578,6 @@ const calculations = computed(() => formStore.complaintCalculations)
 const isDevelopmentMode = computed(() => {
   return API_CONFIG.ENVIRONMENT === 'development' || API_CONFIG.APP_ENV === 'development' || API_CONFIG.DEBUG
 })
-const fillingTestData = ref(false)
 
 // 验证规则
 const validationRules = {
@@ -670,33 +670,20 @@ const handleSubmit = async () => {
   }
 }
 
-// 填充测试数据方法
-const fillTestData = async () => {
-  fillingTestData.value = true
+// TestDataTool 相关方法
+const updateField = (field, value) => {
+  formStore.updateComplaintForm(field, value)
+}
 
-  try {
-    // 填充所有测试数据
-    Object.keys(COMPLAINT_TEST_DATA).forEach(key => {
-      formData[key] = COMPLAINT_TEST_DATA[key]
-    })
-
-    // 短暂延迟模拟加载过程
-    await new Promise(resolve => setTimeout(resolve, 300))
-
-    console.log('Complaint 测试数据已填充:', formData)
-
-  } catch (error) {
-    console.error('填充测试数据时出错:', error)
-  } finally {
-    fillingTestData.value = false
-  }
+// 特殊字段处理器
+const specialHandlers = {
+  // 如果有特殊字段需要处理，在这里添加
 }
 
 // 暴露方法给父组件
 defineExpose({
   validate: () => formRef.value?.validate(),
   resetForm: () => formRef.value?.resetFields(),
-  fillTestData,
   formRef
 })
 </script>
