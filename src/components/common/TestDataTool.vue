@@ -1,7 +1,7 @@
 <template>
   <!-- 测试数据工具 -->
   <FormGroup
-      v-if="isDevelopment"
+      v-if="showTestData"
       title="Development Tools"
       description="Testing utilities for development"
       icon="DocumentCopy"
@@ -70,14 +70,14 @@ const isLoading = ref(false)
 // 环境信息
 const environment = computed(() => API_CONFIG.ENVIRONMENT)
 const debugMode = computed(() => API_CONFIG.DEBUG)
-const isDevelopment = computed(() => environment.value === 'development')
+const showTestData = computed(() => API_CONFIG.SHOW_TEST_DATA)
 
 // 通用测试数据填充方法
 const fillTestData = async () => {
   try {
     isLoading.value = true
     console.log(`开始填充 ${props.formName} 表单测试数据...`)
-    
+
     // 1. 填充普通字段
     Object.keys(props.testData).forEach(key => {
       // 跳过排除字段和不存在的字段
@@ -85,12 +85,12 @@ const fillTestData = async () => {
         console.log(`跳过排除字段: ${key}`)
         return
       }
-      
+
       if (!Object.prototype.hasOwnProperty.call(props.formData, key)) {
         console.log(`字段 ${key} 在表单数据中不存在，跳过`)
         return
       }
-      
+
       // 检查是否有特殊处理器
       if (props.specialHandlers[key]) {
         console.log(`使用特殊处理器处理字段: ${key}`)
@@ -101,10 +101,10 @@ const fillTestData = async () => {
         props.updateField(key, props.testData[key])
       }
     })
-    
+
     // 2. 模拟异步操作
     await new Promise(resolve => setTimeout(resolve, 500))
-    
+
     console.log(`${props.formName} 表单测试数据填充完成`)
   } catch (error) {
     console.error('填充测试数据时出错:', error)
@@ -121,4 +121,4 @@ const fillTestData = async () => {
   margin-top: 4px;
   line-height: 1.4;
 }
-</style> 
+</style>

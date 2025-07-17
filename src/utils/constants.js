@@ -188,8 +188,8 @@ export const getInitialCausesObject = () => {
 
 // 英文序号数组
 export const ORDINAL_NUMBERS = [
-  'FIRST', 'SECOND', 'THIRD', 'FOURTH', 'FIFTH', 'SIXTH', 'SEVENTH', 'EIGHTH', 
-  'NINTH', 'TENTH', 'ELEVENTH', 'TWELFTH', 'THIRTEENTH', 'FOURTEENTH', 'FIFTEENTH', 
+  'FIRST', 'SECOND', 'THIRD', 'FOURTH', 'FIFTH', 'SIXTH', 'SEVENTH', 'EIGHTH',
+  'NINTH', 'TENTH', 'ELEVENTH', 'TWELFTH', 'THIRTEENTH', 'FOURTEENTH', 'FIFTEENTH',
   'SIXTEENTH', 'SEVENTEENTH', 'EIGHTEENTH', 'NINETEENTH', 'TWENTIETH', 'TWENTY-FIRST', 'TWENTY-SECOND'
 ]
 
@@ -199,32 +199,30 @@ export const updateCausesOrder = (causesObject) => {
   const selectedCauses = CAUSES_OF_ACTION
     .map(cause => cause.value)
     .filter(causeKey => causesObject[causeKey]?.selected === true)
-  
+
   // 重置所有序号
   Object.keys(causesObject).forEach(key => {
     if (causesObject[key]) {
       causesObject[key].order = ""
     }
   })
-  
+
   // 为选中的案由分配序号
   selectedCauses.forEach((causeKey, index) => {
     if (causesObject[causeKey] && index < ORDINAL_NUMBERS.length) {
       causesObject[causeKey].order = ORDINAL_NUMBERS[index]
     }
   })
-  
+
   return causesObject
 }
 
 // 生成选中案由的 label 数组
 export const generateSelectedCausesLabels = (causesObject) => {
   // 获取所有选中的案由，按照 CAUSES_OF_ACTION 的顺序
-  const selectedCausesLabels = CAUSES_OF_ACTION
-    .filter(cause => causesObject[cause.value]?.selected === true)
-    .map(cause => cause.label)
-  
-  return selectedCausesLabels
+  return CAUSES_OF_ACTION
+      .filter(cause => causesObject[cause.value]?.selected === true)
+      .map(cause => cause.label)
 }
 
 // Pay Period Options
@@ -310,10 +308,10 @@ export const VALIDATION_RULES = {
   email: { type: 'email', message: 'Please enter a valid email address', trigger: 'blur' },
   number: { type: 'number', message: 'Please enter a valid number', trigger: 'blur' },
   date: { type: 'date', message: 'Please select a valid date', trigger: 'change' },
-  phone: { 
-    pattern: /^\d{3}-\d{3}-\d{4}$/, 
-    message: 'Please enter a valid phone number format (XXX-XXX-XXXX)', 
-    trigger: 'blur' 
+  phone: {
+    pattern: /^\d{3}-\d{3}-\d{4}$/,
+    message: 'Please enter a valid phone number format (XXX-XXX-XXXX)',
+    trigger: 'blur'
   }
 }
 
@@ -405,7 +403,7 @@ export const COMPLAINT_TEST_DATA = {
   ComplaintFilingDate: '2024-06-23',
   SelectedCauses: {
     cause_01: { selected: true, order: "FIRST" },   // FAILURE TO PAY ALL WAGES
-    cause_03: { selected: true, order: "SECOND" },  // FAILURE TO PROVIDE MEAL PERIODS  
+    cause_03: { selected: true, order: "SECOND" },  // FAILURE TO PROVIDE MEAL PERIODS
     cause_04: { selected: true, order: "THIRD" },   // FAILURE TO PROVIDE REST PERIODS
     cause_05: { selected: true, order: "FOURTH" },  // FAILURE TO PAY OVERTIME WAGES
     cause_06: { selected: true, order: "FIFTH" },   // FAILURE TO PAY WAGES DUE UPON TERMINATION: WAITING TIME PENALTIES
@@ -716,36 +714,37 @@ export const API_CONFIG = {
   APP_ENV: import.meta.env.VITE_APP_ENV || 'development',
   APP_NAME: import.meta.env.VITE_APP_NAME || 'Law Firm Forms',
   DEBUG: import.meta.env.VITE_DEBUG === 'true',
-  
+  // 是否展示测试数据
+  SHOW_TEST_DATA: import.meta.env.VITE_SHOW_TEST_DATA === 'true',
   // API 端点配置 - 从环境变量读取
   WEBHOOK_URL: import.meta.env.VITE_API_WEBHOOK_URL,
-  
+
   // 备用配置（兼容原有代码）
   ENDPOINTS: {
     // 测试环境webhook地址
     WEBHOOK_TEST: 'https://n8n-jacklaw-u42541.vm.elestio.app/webhook-test/b881c94b-a224-4df4-af9c-c2d5cbe337cd',
-    
-    // 生产环境webhook地址  
+
+    // 生产环境webhook地址
     WEBHOOK_PROD: 'https://n8n-jacklaw-u42541.vm.elestio.app/webhook/b881c94b-a224-4df4-af9c-c2d5cbe337cd'
   },
-  
+
   // 获取当前环境的webhook地址
   getWebhookUrl() {
     // 优先使用环境变量中的配置
     if (this.WEBHOOK_URL) {
       return this.WEBHOOK_URL
     }
-    
+
     // 兼容原有逻辑
-    return this.ENVIRONMENT === 'production' 
-      ? this.ENDPOINTS.WEBHOOK_PROD 
+    return this.ENVIRONMENT === 'production'
+      ? this.ENDPOINTS.WEBHOOK_PROD
       : this.ENDPOINTS.WEBHOOK_TEST
   },
-  
+
   // 调试日志输出
   log(...args) {
     if (this.DEBUG) {
       console.log('[API_CONFIG]', ...args)
     }
   }
-} 
+}
