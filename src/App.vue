@@ -49,6 +49,9 @@
         <!-- DECL CONTC OSC form -->
         <DeclContcOscForm v-if="formStore.currentFormType === 'declContcOsc'" ref="declContcOscFormRef"/>
 
+        <!-- DECL TO CONT CMC form -->
+        <DeclToContCmcForm v-if="formStore.currentFormType === 'declToContCmc'" ref="declToContCmcFormRef"/>
+
         <!-- Form action buttons -->
         <FormActions
             variant="default"
@@ -101,6 +104,7 @@ import CmcNoticeForm from '@/components/forms/CmcNoticeForm.vue'
 import NtcCaseReassignmentForm from '@/components/forms/NtcCaseReassignmentForm.vue'
 import Srogs01OvertimeForm from '@/components/forms/Srogs01OvertimeForm.vue'
 import DeclContcOscForm from '@/components/forms/DeclContcOscForm.vue'
+import DeclToContCmcForm from '@/components/forms/DeclToContCmcForm.vue'
 import {useFormStore} from '@/stores/formStore'
 import {API_CONFIG} from '@/utils/constants'
 import {formatLegalDate} from '@/utils/calculations'
@@ -123,6 +127,7 @@ const cmcNoticeFormRef = ref()
 const ntcCaseReassignmentFormRef = ref()
 const srogs01OvertimeFormRef = ref()
 const declContcOscFormRef = ref()
+const declToContCmcFormRef = ref()
 
 // Current form completion progress
 const currentFormProgress = computed(() => {
@@ -155,6 +160,8 @@ const currentFormProgress = computed(() => {
       return calculateSrogs01OvertimeProgress()
     case 'declContcOsc':
       return calculateDeclContcOscProgress()
+    case 'declToContCmc':
+      return calculateDeclToContCmcProgress()
     default:
       return 0
   }
@@ -410,6 +417,23 @@ const calculateDeclContcOscProgress = () => {
   return Math.round((filledFields / requiredFields.length) * 100)
 }
 
+// Calculate decl to cont cmc form progress
+const calculateDeclToContCmcProgress = () => {
+  const requiredFields = [
+    'PlaintiffName', 'DefendantName', 'CaseNumber', 'CourtLocation', 'CourtName',
+    'JudgeName', 'HearingDept', 'ComplaintFilingDate', 'HearingDate', 'HearingTime',
+    'LetterDate', 'TrialDate', 'ServerName', 'ServiceInfo'
+  ]
+
+  const filledFields = requiredFields.filter(field => {
+    const value = formStore.declToContCmcForm[field]
+    if (typeof value === 'string') return value.trim() !== ''
+    return value !== null && value !== undefined
+  }).length
+
+  return Math.round((filledFields / requiredFields.length) * 100)
+}
+
 // Get current form reference
 const getCurrentFormRef = () => {
   switch (formStore.currentFormType) {
@@ -441,6 +465,8 @@ const getCurrentFormRef = () => {
       return srogs01OvertimeFormRef.value
     case 'declContcOsc':
       return declContcOscFormRef.value
+    case 'declToContCmc':
+      return declToContCmcFormRef.value
     default:
       return null
   }
@@ -669,6 +695,35 @@ const handleSubmit = async () => {
     }
     if (formData.HearingDate) {
       formData.HearingDate = formatLegalDate(formData.HearingDate)
+    }
+  }
+
+  // 对于 DECL TO CONT CMC 表单，需要合并计算字段
+  if (formStore.currentFormType === 'declToContCmc') {
+    const calculations = formStore.declToContCmcCalculations
+    
+    // 将计算字段映射为规格表中的字段名并合并到formData中
+    const calculatedFields = {
+      // 复数形式字段
+      PlaintiffPlurality1: calculations.plaintiffPlurality1,
+      DefendantPlurality1: calculations.defendantPlurality1,
+      
+      // 执行日期
+      ExecutedDate: calculations.executedDate
+    }
+    
+    // 合并输入字段和计算字段
+    formData = { ...formData, ...calculatedFields }
+    
+    // 将输入的日期字段也转换为美式格式
+    if (formData.ComplaintFilingDate) {
+      formData.ComplaintFilingDate = formatLegalDate(formData.ComplaintFilingDate)
+    }
+    if (formData.HearingDate) {
+      formData.HearingDate = formatLegalDate(formData.HearingDate)
+    }
+    if (formData.LetterDate) {
+      formData.LetterDate = formatLegalDate(formData.LetterDate)
     }
   }
 

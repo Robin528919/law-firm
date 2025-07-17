@@ -73,6 +73,11 @@ export const FORM_TYPES = [
     value: 'declContcOsc',
     label: 'DECL CONTC OSC Form',
     description: 'Create declaration of contempt order to show cause documents'
+  },
+  {
+    value: 'declToContCmc',
+    label: 'DECL TO CONT CMC Form',
+    description: 'Create declaration to continue case management conference documents'
   }
 ]
 
@@ -556,6 +561,27 @@ export const DECL_CONTC_OSC_TEST_DATA = {
   ServiceInfo: 'LAW OFFICES OF ROGER C. HSU\n175. S. Lake Ave., Ste. 210\nPasadena, CA 91101',
   ExecutedDate: 'August 3, 2021',
   ServerName: 'Jennifer Ontiveros'
+}
+
+// DECL TO CONT CMC 表单测试数据
+export const DECL_TO_CONT_CMC_TEST_DATA = {
+  PlaintiffName: 'WALTER IXCOT, JULIO ANTONIO GOMEZ RAMOS, ELDER ANTONIO SANTOS RODRIGUEZ, JOSE RAFAEL PINZON CANUL, FRANCISCO JENARO LOPEZ CABRERA, SALVADOR LOPEZ TELLEZ, EDGAR RAMIRO YXCOT, EDGAR ROLANDO PEREZ REYNOSO, CECILIO DONIS, FAUSTO HERNANDEZ-GARCIA',
+  CourtLocation: 'COUNTY OF LOS ANGELES',
+  CourtName: 'STANLEY MOSK COURTHOUSE',
+  PlaintiffPlurality1: 'Plaintiffs',
+  DefendantPlurality1: 'Defendants',
+  DefendantName: 'CRYSTAL CAR BATH, INC., LENNOX CAR WASH',
+  CaseNumber: '19STCV35478',
+  JudgeName: 'Hon. Rupert A. Byrdsong',
+  HearingDept: 'Dept. "28"',
+  HearingDate: 'April 14, 2020',
+  HearingTime: '8:30 a.m.',
+  ComplaintFilingDate: 'May 29, 2019',
+  TrialDate: 'Not Set',
+  LetterDate: 'March 10, 2020',
+  ServerName: 'Jennifer Ontiveros',
+  ServiceInfo: 'LAW OFFICES OF ROGER C. HSU\n175. S. Lake Ave., Ste. 210\nPasadena, CA 91101',
+  ExecutedDate: 'March 10, 2020'
 }
 
 // API 配置

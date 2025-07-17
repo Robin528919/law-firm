@@ -307,6 +307,27 @@ export const useFormStore = defineStore('form', () => {
     ServerName: ''
   })
 
+  // DECL TO CONT CMC 表单数据
+  const declToContCmcForm = ref({
+    PlaintiffName: '',
+    CourtLocation: '',
+    CourtName: '',
+    PlaintiffPlurality1: '',
+    DefendantPlurality1: '',
+    DefendantName: '',
+    CaseNumber: '',
+    JudgeName: '',
+    HearingDept: '',
+    HearingDate: null,
+    HearingTime: '',
+    ComplaintFilingDate: null,
+    TrialDate: '',
+    LetterDate: null,
+    ServerName: '',
+    ServiceInfo: '',
+    ExecutedDate: null
+  })
+
   // 格式化的被告名称（起诉表单）
   const formattedComplaintDefendantName = computed(() => {
     const form = complaintForm.value
@@ -386,6 +407,13 @@ export const useFormStore = defineStore('form', () => {
   const formattedDeclContcOscDefendantName = computed(() => {
     const form = declContcOscForm.value
     // DECL CONTC OSC表单只有被告名称，没有州和实体类型信息
+    return form.DefendantName || ''
+  })
+
+  // 格式化的被告名称（DECL TO CONT CMC表单）
+  const formattedDeclToContCmcDefendantName = computed(() => {
+    const form = declToContCmcForm.value
+    // DECL TO CONT CMC表单只有被告名称，没有州和实体类型信息
     return form.DefendantName || ''
   })
 
@@ -554,6 +582,27 @@ export const useFormStore = defineStore('form', () => {
   // DECL CONTC OSC 表单的计算字段
   const declContcOscCalculations = computed(() => {
     const form = declContcOscForm.value
+
+    // 复数形式计算 - 只有当有姓名输入时才计算
+    const plaintiffPlurality = form.PlaintiffName ? calculations.getPlurality(form.PlaintiffName) : { form1: '' }
+    const defendantPlurality = form.DefendantName ? calculations.getPlurality(form.DefendantName) : { form1Defendant: '' }
+
+    // 执行日期 - 当前日期
+    const executedDate = formatLegalDate(new Date())
+
+    return {
+      // 复数形式
+      plaintiffPlurality1: plaintiffPlurality.form1,
+      defendantPlurality1: defendantPlurality.form1Defendant,
+      
+      // 执行日期
+      executedDate
+    }
+  })
+
+  // DECL TO CONT CMC 表单的计算字段
+  const declToContCmcCalculations = computed(() => {
+    const form = declToContCmcForm.value
 
     // 复数形式计算 - 只有当有姓名输入时才计算
     const plaintiffPlurality = form.PlaintiffName ? calculations.getPlurality(form.PlaintiffName) : { form1: '' }
@@ -771,6 +820,10 @@ export const useFormStore = defineStore('form', () => {
     declContcOscForm.value[field] = value
   }
 
+  const updateDeclToContCmcForm = (field, value) => {
+    declToContCmcForm.value[field] = value
+  }
+
   const updateSubmissionEmail = (email) => {
     submissionEmail.value = email
   }
@@ -930,6 +983,14 @@ export const useFormStore = defineStore('form', () => {
           declContcOscForm.value[key] = null
         }
       })
+    } else if (targetType === 'declToContCmc') {
+      Object.keys(declToContCmcForm.value).forEach(key => {
+        if (typeof declToContCmcForm.value[key] === 'string') {
+          declToContCmcForm.value[key] = ''
+        } else {
+          declToContCmcForm.value[key] = null
+        }
+      })
     }
   }
 
@@ -952,7 +1013,8 @@ export const useFormStore = defineStore('form', () => {
         cmcNotice: cmcNoticeForm.value,
         ntcCaseReassignment: ntcCaseReassignmentForm.value,
         srogs01Overtime: srogs01OvertimeForm.value,
-        declContcOsc: declContcOscForm.value
+        declContcOsc: declContcOscForm.value,
+        declToContCmc: declToContCmcForm.value
       }
     }
 
@@ -1015,6 +1077,9 @@ export const useFormStore = defineStore('form', () => {
       if (data.forms.declContcOsc) {
         Object.assign(declContcOscForm.value, data.forms.declContcOsc)
       }
+      if (data.forms.declToContCmc) {
+        Object.assign(declToContCmcForm.value, data.forms.declToContCmc)
+      }
     }
   }
 
@@ -1071,6 +1136,8 @@ export const useFormStore = defineStore('form', () => {
         return srogs01OvertimeForm.value
       case 'declContcOsc':
         return declContcOscForm.value
+      case 'declToContCmc':
+        return declToContCmcForm.value
       default:
         return {}
     }
@@ -1138,6 +1205,7 @@ export const useFormStore = defineStore('form', () => {
     ntcCaseReassignmentForm,
     srogs01OvertimeForm,
     declContcOscForm,
+    declToContCmcForm,
     formErrors,
     isLoading,
 
@@ -1152,6 +1220,7 @@ export const useFormStore = defineStore('form', () => {
     ntcCaseReassignmentCalculations,
     srogs01OvertimeCalculations,
     declContcOscCalculations,
+    declToContCmcCalculations,
     formattedComplaintDefendantName,
     formattedAnswerDefendantName,
     formattedSettlementDefendantName,
@@ -1164,6 +1233,7 @@ export const useFormStore = defineStore('form', () => {
     formattedNtcOfRulingDefendantName,
     formattedSrogs01OvertimeDefendantName,
     formattedDeclContcOscDefendantName,
+    formattedDeclToContCmcDefendantName,
     isFormValid,
 
     // 方法
@@ -1182,6 +1252,7 @@ export const useFormStore = defineStore('form', () => {
     updateNtcCaseReassignmentForm,
     updateSrogs01OvertimeForm,
     updateDeclContcOscForm,
+    updateDeclToContCmcForm,
     updateSubmissionEmail,
     resetForm,
     resetCurrentForm,
