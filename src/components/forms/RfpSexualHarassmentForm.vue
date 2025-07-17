@@ -223,8 +223,7 @@ const handleSubmit = async () => {
 // 暴露方法给父组件
 defineExpose({
   validate: () => formRef.value?.validate(),
-  resetForm: () => formRef.value?.resetFields(),
-  formRef
+  resetForm: () => formRef.value?.resetFields()
 })
 </script>
 

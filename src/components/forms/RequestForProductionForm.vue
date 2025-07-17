@@ -217,7 +217,7 @@ import FormGroup from '@/components/common/FormGroup.vue'
 import FormField from '@/components/common/FormField.vue'
 import TestDataTool from '@/components/common/TestDataTool.vue'
 import { useFormStore } from '@/stores/formStore'
-import { VALIDATION_RULES, REQUEST_FOR_PRODUCTION_TEST_DATA, API_CONFIG } from '@/utils/constants'
+import { VALIDATION_RULES, REQUEST_FOR_PRODUCTION_TEST_DATA } from '@/utils/constants'
 
 // 使用表单状态管理
 const formStore = useFormStore()
@@ -232,11 +232,6 @@ const calculations = computed(() => formStore.requestForProductionCalculations)
 // Trial Date 相关状态
 const trialDateMode = ref('notSet')
 const trialDateValue = ref(null)
-
-// 开发测试相关状态
-const isDevelopmentMode = computed(() => {
-  return API_CONFIG.ENVIRONMENT === 'development' || API_CONFIG.APP_ENV === 'development' || API_CONFIG.DEBUG
-})
 
 // 验证规则
 const validationRules = {
@@ -409,7 +404,6 @@ const resetForm = () => {
   }
 }
 
-// 暴露方法给父组件
 defineExpose({
   validate,
   resetForm

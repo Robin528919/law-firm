@@ -245,7 +245,6 @@
         :update-field="updateField"
         form-name="DECL TO CONT CMC"
         :exclude-fields="['ExecutedDate']"
-        :special-handlers="specialHandlers"
       />
     </el-form>
   </div>
@@ -257,7 +256,7 @@ import FormGroup from '@/components/common/FormGroup.vue'
 import FormField from '@/components/common/FormField.vue'
 import TestDataTool from '@/components/common/TestDataTool.vue'
 import {useFormStore} from '@/stores/formStore'
-import {VALIDATION_RULES, DECL_TO_CONT_CMC_TEST_DATA} from '@/utils/constants'
+import { VALIDATION_RULES, DECL_TO_CONT_CMC_TEST_DATA } from '@/utils/constants'
 import {formatLegalDate} from '@/utils/calculations'
 
 // 使用表单状态管理
@@ -275,20 +274,6 @@ const updateField = (field, value) => {
 // Trial Date 相关状态
 const trialDateMode = ref('notSet')
 const trialDateValue = ref(null)
-
-// 特殊字段处理器
-const specialHandlers = {
-  TrialDate: (value) => {
-    if (value === 'Not Set') {
-      trialDateMode.value = 'notSet'
-      trialDateValue.value = null
-    } else {
-      trialDateMode.value = 'date'
-      trialDateValue.value = value
-    }
-    updateField('TrialDate', value)
-  }
-}
 
 // 初始化 Trial Date 状态
 watch(() => formData.TrialDate, (newValue) => {
@@ -359,8 +344,7 @@ const handleFieldChange = (value, field) => {
 // 暴露方法给父组件
 defineExpose({
   validate: () => formRef.value?.validate(),
-  resetForm: () => formRef.value?.resetFields(),
-  formRef
+  resetForm: () => formRef.value?.resetFields()
 })
 </script>
 

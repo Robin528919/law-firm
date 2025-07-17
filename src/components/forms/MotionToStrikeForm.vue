@@ -361,7 +361,6 @@
         :update-field="updateField"
         form-name="MOTION TO STRIKE"
         :exclude-fields="['ExecutedDate']"
-        :special-handlers="specialHandlers"
       />
     </el-form>
   </div>
@@ -390,19 +389,6 @@ const formData = computed(() => formStore.motionToStrikeForm)
 // 表单字段更新方法
 const updateField = (field, value) => {
   formStore.updateMotionToStrikeForm(field, value)
-}
-
-// 特殊字段处理器
-const specialHandlers = {
-  TrialDate: (value) => {
-    updateField('TrialDate', value)
-  },
-  SelectedCauses: (value) => {
-    // 处理数组字段
-    if (Array.isArray(value)) {
-      updateField('SelectedCauses', value)
-    }
-  }
 }
 
 // 计算字段
@@ -516,7 +502,6 @@ const resetForm = () => {
   trialDateValue.value = null
 }
 
-// 暴露方法给父组件
 defineExpose({
   validate,
   resetForm

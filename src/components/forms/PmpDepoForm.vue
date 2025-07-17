@@ -186,7 +186,6 @@ const resetForm = () => {
   formStore.resetForm('pmpDepo')
 }
 
-// 暴露方法给父组件
 defineExpose({
   validate,
   resetForm

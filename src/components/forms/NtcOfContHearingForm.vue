@@ -326,7 +326,6 @@
         :update-field="updateField"
         form-name="NTC OF CONTINUED HEARING"
         :exclude-fields="['ExecutedDate']"
-        :special-handlers="specialHandlers"
       />
     </el-form>
   </div>
@@ -383,20 +382,6 @@ const updateField = (field, value) => {
   formStore.updateNtcOfContHearingForm(field, value)
 }
 
-// 特殊字段处理器
-const specialHandlers = {
-  TrialDate: (value) => {
-    if (value === 'Not Set') {
-      trialDateMode.value = 'not-set'
-      trialDateValue.value = null
-    } else {
-      trialDateMode.value = 'date'
-      trialDateValue.value = value
-    }
-    updateField('TrialDate', value)
-  }
-}
-
 // Trial Date 处理
 const handleTrialDateModeChange = (mode) => {
   if (mode === 'not-set') {
@@ -450,6 +435,14 @@ const validate = async () => {
   }
 }
 
+// 表单重置方法
+const resetForm = () => {
+  if (formRef.value) {
+    formRef.value.resetFields()
+  }
+  initializeTrialDateMode()
+}
+
 // 组件挂载时初始化
 onMounted(() => {
   initializeTrialDateMode()
@@ -457,7 +450,8 @@ onMounted(() => {
 
 // 暴露验证方法给父组件
 defineExpose({
-  validate
+  validate,
+  resetForm
 })
 </script>
 

@@ -284,7 +284,6 @@ import TestDataTool from '@/components/common/TestDataTool.vue'
 import { useFormStore } from '@/stores/formStore'
 import {
   VALIDATION_RULES,
-  API_CONFIG,
   NTC_CASE_REASSIGNMENT_TEST_DATA
 } from '@/utils/constants'
 
@@ -297,11 +296,6 @@ const formData = formStore.ntcCaseReassignmentForm
 
 // 计算字段
 const calculations = computed(() => formStore.ntcCaseReassignmentCalculations)
-
-// 开发测试相关状态
-const isDevelopmentMode = computed(() => {
-  return API_CONFIG.ENVIRONMENT === 'development' || API_CONFIG.APP_ENV === 'development' || API_CONFIG.DEBUG
-})
 
 // Trial Date 相关状态
 const trialDateMode = ref('notSet')
@@ -365,23 +359,6 @@ const updateField = (field, value) => {
   formStore.updateNtcCaseReassignmentForm(field, value)
 }
 
-// 特殊字段处理器
-const specialHandlers = {
-  TrialDate: (value) => {
-    // 处理 Trial Date 特殊逻辑
-    if (value === 'Not Set' || !value) {
-      trialDateMode.value = 'notSet'
-      trialDateValue.value = null
-      updateField('TrialDate', 'Not Set')
-    } else {
-      trialDateMode.value = 'date'
-      trialDateValue.value = value
-      updateField('TrialDate', value)
-    }
-  }
-}
-
-// 暴露方法给父组件
 defineExpose({
   validate: () => formRef.value?.validate(),
   resetForm: () => formRef.value?.resetFields(),

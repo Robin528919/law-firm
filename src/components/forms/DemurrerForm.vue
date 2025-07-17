@@ -377,7 +377,6 @@
         :update-field="updateField"
         form-name="DEMURRER"
         :exclude-fields="['ExecutedDate']"
-        :special-handlers="specialHandlers"
       />
     </el-form>
   </div>
@@ -407,19 +406,6 @@ const formData = computed(() => formStore.demurrerForm)
 // 表单字段更新方法
 const updateField = (field, value) => {
   formStore.updateDemurrerForm(field, value)
-}
-
-// 特殊字段处理器
-const specialHandlers = {
-  TrialDate: (value) => {
-    updateField('TrialDate', value)
-  },
-  SelectedCauses: (value) => {
-    // 处理数组字段
-    if (Array.isArray(value)) {
-      updateField('SelectedCauses', value)
-    }
-  }
 }
 
 // 选择选项
@@ -531,8 +517,7 @@ const handleFieldChange = (value, field) => {
 // 暴露方法给父组件
 defineExpose({
   validate: () => formRef.value?.validate(),
-  resetForm: () => formRef.value?.resetFields(),
-  formRef
+  resetForm: () => formRef.value?.resetFields()
 })
 </script>
 
