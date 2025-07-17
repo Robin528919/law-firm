@@ -2,21 +2,21 @@
   <footer class="app-footer">
     <div class="footer-content">
       <div class="footer-info">
-        <p>&copy; 2025 法律文书表单系统 - 专业版 v1.0.0</p>
-        <p class="footer-description">基于Vue.js 3 + Element Plus构建的专业法律文书生成工具</p>
+        <p>&copy; 2025 Legal Document Forms System - Pro v1.0.0</p>
+        <p class="footer-description">A professional legal document generation tool built with Vue.js 3 + Element Plus</p>
       </div>
-      
+
       <div class="footer-status">
         <div class="status-item">
           <el-icon class="status-icon"><CircleCheckFilled /></el-icon>
-          <span>系统运行正常</span>
+          <span>System running normally</span>
         </div>
-        
+
         <div class="status-item">
           <el-icon class="status-icon"><DocumentChecked /></el-icon>
-          <span>当前表单: {{ getCurrentFormName() }}</span>
+          <span>Current form: {{ getCurrentFormName() }}</span>
         </div>
-        
+
         <div class="status-item">
           <el-icon class="status-icon"><Clock /></el-icon>
           <span>{{ currentTime }}</span>
@@ -27,7 +27,7 @@
 </template>
 
 <script setup>
-import { ref, computed, onMounted, onUnmounted } from 'vue'
+import { ref, onMounted, onUnmounted } from 'vue'
 import { CircleCheckFilled, DocumentChecked, Clock } from '@element-plus/icons-vue'
 import { useFormStore } from '@/stores/formStore'
 import { FORM_TYPES } from '@/utils/constants'
@@ -41,13 +41,13 @@ let timeInterval = null
 // 获取当前表单名称
 const getCurrentFormName = () => {
   const formType = FORM_TYPES.find(type => type.value === formStore.currentFormType)
-  return formType ? formType.label.split(' ')[0] : '未选择'
+  return formType ? formType.label.split(' ')[0] : 'Not Selected'
 }
 
 // 更新时间
 const updateTime = () => {
   const now = new Date()
-  currentTime.value = now.toLocaleString('zh-CN', {
+  currentTime.value = now.toLocaleString('en-US', {
     year: 'numeric',
     month: '2-digit',
     day: '2-digit',
@@ -114,7 +114,7 @@ onUnmounted(() => {
     gap: 16px;
     text-align: center;
   }
-  
+
   .footer-status {
     flex-direction: column;
     gap: 8px;
@@ -125,9 +125,9 @@ onUnmounted(() => {
   .footer-status {
     gap: 12px;
   }
-  
+
   .status-item {
     font-size: var(--font-xs);
   }
 }
-</style> 
+</style>

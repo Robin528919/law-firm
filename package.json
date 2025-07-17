@@ -1,7 +1,7 @@
 {
   "name": "legal-document-forms",
   "version": "1.0.0",
-  "description": "法律文书表单系统 - 支持起诉/损害赔偿、回复表单、和解协议的专业法律文书生成工具",
+  "description": "Legal Document Forms System - A professional tool for generating legal documents supporting complaint/damages, answer forms, and settlement agreements.",
   "private": true,
   "type": "module",
   "scripts": {

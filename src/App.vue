@@ -256,7 +256,7 @@ const calculateMotionToStrikeProgress = () => {
   const requiredFields = [
     'PlaintiffName', 'DefendantName', 'CourtLocation', 'CourtName', 'CourtAddress',
     'HearingDate', 'HearingTime', 'HearingDept', 'ResID', 'ComplaintFilingDate',
-    'CaseType', 'SelectedCauses', 'AnswerFilingDate', 'ExecutedDate', 
+    'CaseType', 'SelectedCauses', 'AnswerFilingDate', 'ExecutedDate',
     'ChosenAD', 'MnCDate', 'MnCRespDate'
   ]
 
@@ -274,7 +274,7 @@ const calculateMotionToStrikeProgress = () => {
 const calculateRequestForProductionProgress = () => {
   const requiredFields = [
     'PlaintiffNames', 'CaseNumber', 'DefendantNames', 'JudgeName',
-    'ComplaintFilingDate', 'LetterDate', 'ExecutedDate', 
+    'ComplaintFilingDate', 'LetterDate', 'ExecutedDate',
     'OCName', 'OCFirm'
   ]
 
@@ -291,7 +291,7 @@ const calculateRequestForProductionProgress = () => {
 // Calculate pmp depo form progress
 const calculatePmpDepoProgress = () => {
   const requiredFields = [
-    'PlaintiffName', 'CaseNumber', 'DefendantName', 'OCName', 
+    'PlaintiffName', 'CaseNumber', 'DefendantName', 'OCName',
     'OCFirm', 'OCAddress', 'MnCDate', 'LetterDate'
   ]
 
@@ -308,7 +308,7 @@ const calculatePmpDepoProgress = () => {
 const calculateNtcOfDepoProgress = () => {
   const requiredFields = [
     'PlaintiffNames', 'DefendantNames', 'CourtName', 'CaseNumber', 'JudgeName',
-    'HearingDate', 'HearingTime', 'ComplaintFilingDate', 'LetterDate', 
+    'HearingDate', 'HearingTime', 'ComplaintFilingDate', 'LetterDate',
     'ExecutedDate', 'RequestNumber', 'ServerName'
   ]
 
@@ -591,24 +591,24 @@ const handleSubmit = async () => {
 
   // 准备提交数据，包含邮箱地址和计算字段
   let formData = formStore.getCurrentFormData()
-  
+
   // 对于 Complaint 表单，需要合并计算字段
   if (formStore.currentFormType === 'complaint') {
     const calculations = formStore.complaintCalculations
-    
+
     // 将计算字段映射为规格表中的字段名并合并到formData中
     const calculatedFields = {
       // 复数形式字段
       PlaintiffPlurality1: calculations.plaintiffPlurality1,
-      PlaintiffPlurality2: calculations.plaintiffPlurality2, 
+      PlaintiffPlurality2: calculations.plaintiffPlurality2,
       DefendantPlurality1: calculations.defendantPlurality1,
       DefendantPlurality2: calculations.defendantPlurality2,
-      
+
       // 基础计算字段
       DOE: calculations.doe,
       OvertimeHoursTotal: calculations.overtimeHoursTotal,
       '1.5OvertimeHours': calculations.oneAndHalfOvertimeHours,
-      
+
       // 损害赔偿字段
       WageStatementPenalty: calculations.wageStatementPenalty,
       DamageUnpaidWages: calculations.damageUnpaidWages,
@@ -617,12 +617,12 @@ const handleSubmit = async () => {
       DamageOvertime: calculations.damageOvertime,
       DamageWaitingTime: calculations.damageWaitingTime,
       DamageTotal: calculations.damageTotal,
-      
+
       // 利息字段
       InterestPeriod: calculations.interestPeriod,
       PreJudgmentInterest: calculations.preJudgmentInterest,
       DamageTotalIncludingInterest: calculations.damageTotalIncludingInterest,
-      
+
       // 日期和状态字段
       ExecutedDate: calculations.executedDate,
       CauseNumber: calculations.causeNumber,
@@ -630,10 +630,10 @@ const handleSubmit = async () => {
       '4SOL': calculations.sol4,
       OvertimeStatus: calculations.overtimeStatus
     }
-    
+
     // 合并输入字段和计算字段
     formData = { ...formData, ...calculatedFields }
-    
+
     // 将输入的日期字段也转换为美式格式
     if (formData.ComplaintFilingDate) {
       formData.ComplaintFilingDate = formatLegalDate(formData.ComplaintFilingDate)
@@ -649,17 +649,17 @@ const handleSubmit = async () => {
   // 对于 RFP Sexual Harassment 表单，需要合并计算字段
   if (formStore.currentFormType === 'rfpSexualHarassment') {
     const calculations = formStore.rfpSexualHarassmentCalculations
-    
+
     // 将计算字段映射为规格表中的字段名并合并到formData中
     const calculatedFields = {
       // 复数形式字段
       PlaintiffPlurality1: calculations.plaintiffPlurality1,
       DefendantPlurality1: calculations.defendantPlurality1
     }
-    
+
     // 合并输入字段和计算字段
     formData = { ...formData, ...calculatedFields }
-    
+
     // 将输入的日期字段也转换为美式格式
     if (formData.EmploymentStartDate) {
       formData.EmploymentStartDate = formatLegalDate(formData.EmploymentStartDate)
@@ -672,21 +672,21 @@ const handleSubmit = async () => {
   // 对于 SROGS01 Overtime 表单，需要合并计算字段
   if (formStore.currentFormType === 'srogs01Overtime') {
     const calculations = formStore.srogs01OvertimeCalculations
-    
+
     // 将计算字段映射为规格表中的字段名并合并到formData中
     const calculatedFields = {
       // 复数形式字段
       PlaintiffPlurality1: calculations.plaintiffPlurality1,
       DefendantPlurality1: calculations.defendantPlurality1,
       DefendantPlurality2: calculations.defendantPlurality2,
-      
+
       // 执行日期
       ExecutedDate: calculations.executedDate
     }
-    
+
     // 合并输入字段和计算字段
     formData = { ...formData, ...calculatedFields }
-    
+
     // 将输入的日期字段也转换为美式格式
     if (formData.ComplaintFilingDate) {
       formData.ComplaintFilingDate = formatLegalDate(formData.ComplaintFilingDate)
@@ -702,20 +702,20 @@ const handleSubmit = async () => {
   // 对于 DECL CONTC OSC 表单，需要合并计算字段
   if (formStore.currentFormType === 'declContcOsc') {
     const calculations = formStore.declContcOscCalculations
-    
+
     // 将计算字段映射为规格表中的字段名并合并到formData中
     const calculatedFields = {
       // 复数形式字段
       PlaintiffPlurality1: calculations.plaintiffPlurality1,
       DefendantPlurality1: calculations.defendantPlurality1,
-      
+
       // 执行日期
       ExecutedDate: calculations.executedDate
     }
-    
+
     // 合并输入字段和计算字段
     formData = { ...formData, ...calculatedFields }
-    
+
     // 将输入的日期字段也转换为美式格式
     if (formData.ComplaintFilingDate) {
       formData.ComplaintFilingDate = formatLegalDate(formData.ComplaintFilingDate)
@@ -728,20 +728,20 @@ const handleSubmit = async () => {
   // 对于 DECL TO CONT CMC 表单，需要合并计算字段
   if (formStore.currentFormType === 'declToContCmc') {
     const calculations = formStore.declToContCmcCalculations
-    
+
     // 将计算字段映射为规格表中的字段名并合并到formData中
     const calculatedFields = {
       // 复数形式字段
       PlaintiffPlurality1: calculations.plaintiffPlurality1,
       DefendantPlurality1: calculations.defendantPlurality1,
-      
+
       // 执行日期
       ExecutedDate: calculations.executedDate
     }
-    
+
     // 合并输入字段和计算字段
     formData = { ...formData, ...calculatedFields }
-    
+
     // 将输入的日期字段也转换为美式格式
     if (formData.ComplaintFilingDate) {
       formData.ComplaintFilingDate = formatLegalDate(formData.ComplaintFilingDate)
@@ -757,20 +757,20 @@ const handleSubmit = async () => {
   // 对于 NTC OF CONTINUED HEARING 表单，需要合并计算字段
   if (formStore.currentFormType === 'ntcOfContHearing') {
     const calculations = formStore.ntcOfContHearingCalculations
-    
+
     // 将计算字段映射为规格表中的字段名并合并到formData中
     const calculatedFields = {
       // 复数形式字段
       PlaintiffPlurality1: calculations.plaintiffPlurality1,
       DefendantPlurality1: calculations.defendantPlurality1,
-      
+
       // 执行日期
       ExecutedDate: calculations.executedDate
     }
-    
+
     // 合并输入字段和计算字段
     formData = { ...formData, ...calculatedFields }
-    
+
     // 将输入的日期字段也转换为美式格式
     if (formData.ComplaintFilingDate) {
       formData.ComplaintFilingDate = formatLegalDate(formData.ComplaintFilingDate)
@@ -807,7 +807,7 @@ const handleSubmit = async () => {
 
   // 发送POST请求
   ElMessage.success('Form submitted successfully!')
-  
+
   // 使用新的调试配置输出详细信息
   API_CONFIG.log('=== 表单提交信息 ===')
   API_CONFIG.log('环境信息:', {
@@ -817,11 +817,11 @@ const handleSubmit = async () => {
     DEBUG: API_CONFIG.DEBUG
   })
   API_CONFIG.log('提交数据:', submissionData)
-  
+
   try {
     const webhookUrl = API_CONFIG.getWebhookUrl()
     API_CONFIG.log('Webhook URL:', webhookUrl)
-    
+
     const response = await fetch(webhookUrl, {
       method: 'POST',
       headers: {
@@ -829,7 +829,7 @@ const handleSubmit = async () => {
       },
       body: JSON.stringify(submissionData)
     })
-    
+
     if (response.ok) {
       API_CONFIG.log('表单提交成功', response.status)
       ElMessage.success(`Form submitted to server successfully! (${API_CONFIG.APP_ENV})`)
@@ -847,7 +847,6 @@ const handleSubmit = async () => {
 
 <style scoped>
 .main-content {
-  width: 900px;
   margin: 0 auto;
   padding: var(--spacing-lg);
   background: var(--background);
