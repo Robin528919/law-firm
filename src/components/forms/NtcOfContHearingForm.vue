@@ -425,7 +425,7 @@ watch(() => formData.value.TrialDate, (newValue) => {
 // 表单验证方法
 const validate = async () => {
   if (!formRef.value) return false
-  
+
   try {
     await formRef.value.validate()
     return true
@@ -457,9 +457,10 @@ defineExpose({
 
 <style scoped lang="scss">
 .ntc-of-cont-hearing-form {
-  padding: 20px;
-  max-width: 800px;
+  width: 100%;
+  max-width: 100%;
   margin: 0 auto;
+  padding: 0;
 }
 
 .trial-date-container {
@@ -494,4 +495,4 @@ defineExpose({
 :deep(.el-time-picker) {
   width: 100%;
 }
-</style> 
+</style>
