@@ -290,7 +290,7 @@ import {
   VALIDATION_RULES,
   SETTLEMENT_TEST_DATA
 } from '@/utils/constants'
-import { getPlurality, convertAmountToWords, formatLegalDate } from '@/utils/calculations'
+import { getPlurality, convertAmountToWords } from '@/utils/calculations'
 
 // 使用表单状态管理
 const formStore = useFormStore()

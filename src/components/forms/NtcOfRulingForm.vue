@@ -3,69 +3,69 @@
     <el-form ref="formRef" :model="formData" :rules="validationRules" label-width="auto">
       <!-- 基础信息 -->
       <FormGroup
-        title="Basic Information"
-        description="Plaintiff, defendant and case information"
-        icon="User"
-        variant="bordered"
-        :columns="1"
+          title="Basic Information"
+          description="Plaintiff, defendant and case information"
+          icon="User"
+          variant="bordered"
+          :columns="1"
       >
         <FormField
-          label="Plaintiff Name"
-          v-model="formData.PlaintiffName"
-          prop="PlaintiffName"
-          type="text"
-          placeholder="e.g. CARLOS LOYA"
-          required
-          description="Plaintiff name"
+            label="Plaintiff Name"
+            v-model="formData.PlaintiffName"
+            prop="PlaintiffName"
+            type="text"
+            placeholder="e.g. CARLOS LOYA"
+            required
+            description="Plaintiff name"
         />
 
         <FormField
-          label="Defendant Name"
-          v-model="formData.DefendantName"
-          prop="DefendantName"
-          type="text"
-          placeholder="e.g. KELLWOOD APPAREL, LLC"
-          required
-          description="Defendant company or entity name"
+            label="Defendant Name"
+            v-model="formData.DefendantName"
+            prop="DefendantName"
+            type="text"
+            placeholder="e.g. KELLWOOD APPAREL, LLC"
+            required
+            description="Defendant company or entity name"
         />
 
         <FormField
-          label="Case Number"
-          v-model="formData.CaseNumber"
-          prop="CaseNumber"
-          type="text"
-          placeholder="e.g. 22STCV15872"
-          required
-          description="Court case number"
+            label="Case Number"
+            v-model="formData.CaseNumber"
+            prop="CaseNumber"
+            type="text"
+            placeholder="e.g. 22STCV15872"
+            required
+            description="Court case number"
         />
 
         <FormField
-          label="Judge Name"
-          v-model="formData.JudgeName"
-          prop="JudgeName"
-          type="text"
-          placeholder="e.g. Hon. Timothy P. Dillon"
-          required
-          description="Presiding judge name"
+            label="Judge Name"
+            v-model="formData.JudgeName"
+            prop="JudgeName"
+            type="text"
+            placeholder="e.g. Hon. Timothy P. Dillon"
+            required
+            description="Presiding judge name"
         />
       </FormGroup>
 
       <!-- 听证信息 -->
       <FormGroup
-        title="Hearing Information"
-        description="Hearing dates, times and department details"
-        icon="Calendar"
-        variant="bordered"
-        :columns="1"
+          title="Hearing Information"
+          description="Hearing dates, times and department details"
+          icon="Calendar"
+          variant="bordered"
+          :columns="1"
       >
         <FormField
-          label="Hearing Department"
-          v-model="formData.HearingDept"
-          prop="HearingDept"
-          type="text"
-          placeholder='e.g. Dept. "73"'
-          required
-          description="Department for first hearing"
+            label="Hearing Department"
+            v-model="formData.HearingDept"
+            prop="HearingDept"
+            type="text"
+            placeholder='e.g. Dept. "73"'
+            required
+            description="Department for first hearing"
         />
 
         <el-form-item label="Hearing Date" prop="HearingDate">
@@ -81,14 +81,14 @@
 
         <el-form-item label="Hearing Time" prop="HearingTime">
           <el-time-select
-            v-model="formData.HearingTime"
-            start="08:00"
-            step="00:30"
-            end="17:00"
-            placeholder="Select hearing time"
-            format="h:mm A"
-            value-format="h:mm A"
-            style="width: 100%"
+              v-model="formData.HearingTime"
+              start="08:00"
+              step="00:30"
+              end="17:00"
+              placeholder="Select hearing time"
+              format="h:mm A"
+              value-format="h:mm A"
+              style="width: 100%"
           />
         </el-form-item>
 
@@ -105,74 +105,74 @@
 
         <el-form-item label="Hearing Time 2" prop="HearingTime2">
           <el-time-select
-            v-model="formData.HearingTime2"
-            start="08:00"
-            step="00:30"
-            end="17:00"
-            placeholder="Select hearing time"
-            format="h:mm A"
-            value-format="h:mm A"
-            style="width: 100%"
+              v-model="formData.HearingTime2"
+              start="08:00"
+              step="00:30"
+              end="17:00"
+              placeholder="Select hearing time"
+              format="h:mm A"
+              value-format="h:mm A"
+              style="width: 100%"
           />
         </el-form-item>
 
         <FormField
-          label="Hearing Department 2"
-          v-model="formData.HearingDept2"
-          prop="HearingDept2"
-          type="text"
-          placeholder="e.g. 7"
-          description="Department for second hearing (if applicable)"
+            label="Hearing Department 2"
+            v-model="formData.HearingDept2"
+            prop="HearingDept2"
+            type="text"
+            placeholder="e.g. 7"
+            description="Department for second hearing (if applicable)"
         />
       </FormGroup>
 
       <!-- 法院信息 -->
       <FormGroup
-        title="Court Information"
-        description="Court location and jurisdiction details"
-        icon="Building"
-        variant="bordered"
-        :columns="1"
+          title="Court Information"
+          description="Court location and jurisdiction details"
+          icon="Building"
+          variant="bordered"
+          :columns="1"
       >
         <FormField
-          label="Court Location"
-          v-model="formData.CourtLocation"
-          prop="CourtLocation"
-          type="text"
-          placeholder="e.g. COUNTY OF LOS ANGELES"
-          required
-          description="County and jurisdiction (use capital letters)"
+            label="Court Location"
+            v-model="formData.CourtLocation"
+            prop="CourtLocation"
+            type="text"
+            placeholder="e.g. COUNTY OF LOS ANGELES"
+            required
+            description="County and jurisdiction (use capital letters)"
         />
 
         <FormField
-          label="Court Name"
-          v-model="formData.CourtName"
-          prop="CourtName"
-          type="text"
-          placeholder="e.g. STANLEY MOSK COURTHOUSE"
-          required
-          description="Full court name (use capital letters)"
+            label="Court Name"
+            v-model="formData.CourtName"
+            prop="CourtName"
+            type="text"
+            placeholder="e.g. STANLEY MOSK COURTHOUSE"
+            required
+            description="Full court name (use capital letters)"
         />
 
         <FormField
-          label="Court Address"
-          v-model="formData.CourtAddress"
-          prop="CourtAddress"
-          type="textarea"
-          placeholder="e.g. 111 North Hill Street, Room 307 Los Angeles, CA 90012"
-          required
-          description="Complete court address"
-          :rows="3"
+            label="Court Address"
+            v-model="formData.CourtAddress"
+            prop="CourtAddress"
+            type="textarea"
+            placeholder="e.g. 111 North Hill Street, Room 307 Los Angeles, CA 90012"
+            required
+            description="Complete court address"
+            :rows="3"
         />
       </FormGroup>
 
       <!-- 日期信息 -->
       <FormGroup
-        title="Date Information"
-        description="Important case dates and trial information"
-        icon="Calendar"
-        variant="bordered"
-        :columns="1"
+          title="Date Information"
+          description="Important case dates and trial information"
+          icon="Calendar"
+          variant="bordered"
+          :columns="1"
       >
         <el-form-item label="Complaint Filing Date" prop="ComplaintFilingDate">
           <el-date-picker
@@ -192,7 +192,7 @@
               <el-radio-button :value="'date'">Set Date</el-radio-button>
               <el-radio-button :value="'notSet'">Not Set</el-radio-button>
             </el-radio-group>
-            
+
             <el-date-picker
                 v-if="trialDateMode === 'date'"
                 v-model="trialDateValue"
@@ -203,7 +203,7 @@
                 format="MMMM D, YYYY"
                 @change="handleTrialDateChange"
             />
-            
+
             <div v-else class="not-set-display">
               Trial Date: Not Set
             </div>
@@ -235,88 +235,88 @@
 
       <!-- 送达信息 -->
       <FormGroup
-        title="Service Information"
-        description="Service details and server information"
-        icon="Message"
-        variant="bordered"
-        :columns="1"
+          title="Service Information"
+          description="Service details and server information"
+          icon="Message"
+          variant="bordered"
+          :columns="1"
       >
         <FormField
-          label="Service Info"
-          v-model="formData.ServiceInfo"
-          prop="ServiceInfo"
-          type="textarea"
-          placeholder="e.g. LAW OFFICES OF ROGER C. HSU&#10;175. S. Lake Ave., Ste. 210&#10;Pasadena, CA 91101"
-          required
-          description="Counsel name, firm name, address, phone, fax, email etc."
-          :rows="4"
+            label="Service Info"
+            v-model="formData.ServiceInfo"
+            prop="ServiceInfo"
+            type="textarea"
+            placeholder="e.g. LAW OFFICES OF ROGER C. HSU&#10;175. S. Lake Ave., Ste. 210&#10;Pasadena, CA 91101"
+            required
+            description="Counsel name, firm name, address, phone, fax, email etc."
+            :rows="4"
         />
 
         <FormField
-          label="Server Name"
-          v-model="formData.ServerName"
-          prop="ServerName"
-          type="text"
-          placeholder="e.g. Jennifer Ontiveros"
-          required
-          description="Name of the person who will serve the document"
+            label="Server Name"
+            v-model="formData.ServerName"
+            prop="ServerName"
+            type="text"
+            placeholder="e.g. Jennifer Ontiveros"
+            required
+            description="Name of the person who will serve the document"
         />
       </FormGroup>
 
       <!-- 自动计算字段 -->
       <FormGroup
-        title="Auto-Generated Fields"
-        description="Automatically generated fields based on input data"
-        icon="Calculator"
-        variant="card"
-        :columns="1"
+          title="Auto-Generated Fields"
+          description="Automatically generated fields based on input data"
+          icon="Calculator"
+          variant="card"
+          :columns="1"
       >
         <FormField
-          label="Plaintiff Plurality 1"
-          :model-value="calculations.plaintiffPlurality1"
-          type="text"
-          :is-calculated="true"
-          :display-value="calculations.plaintiffPlurality1"
-          description="Plaintiff or Plaintiffs - automatically determined based on number of plaintiffs"
+            label="Plaintiff Plurality 1"
+            :model-value="calculations.plaintiffPlurality1"
+            type="text"
+            :is-calculated="true"
+            :display-value="calculations.plaintiffPlurality1"
+            description="Plaintiff or Plaintiffs - automatically determined based on number of plaintiffs"
         />
 
         <FormField
-          label="Defendant Plurality 1"
-          :model-value="calculations.defendantPlurality1"
-          type="text"
-          :is-calculated="true"
-          :display-value="calculations.defendantPlurality1"
-          description="Defendant or Defendants - automatically determined based on number of defendants"
+            label="Defendant Plurality 1"
+            :model-value="calculations.defendantPlurality1"
+            type="text"
+            :is-calculated="true"
+            :display-value="calculations.defendantPlurality1"
+            description="Defendant or Defendants - automatically determined based on number of defendants"
         />
 
         <FormField
-          label="Executed Date (Auto)"
-          :model-value="calculations.executedDate"
-          type="text"
-          :is-calculated="true"
-          :display-value="calculations.executedDate"
-          description="Current date in legal format"
+            label="Executed Date (Auto)"
+            :model-value="calculations.executedDate"
+            type="text"
+            :is-calculated="true"
+            :display-value="calculations.executedDate"
+            description="Current date in legal format"
         />
       </FormGroup>
 
       <!-- 测试数据工具 -->
       <TestDataTool
-        :test-data="NTC_OF_RULING_TEST_DATA"
-        :form-data="formData"
-        :update-field="updateField"
-        form-name="NTC OF RULING"
-        :exclude-fields="['ExecutedDate']"
+          :test-data="NTC_OF_RULING_TEST_DATA"
+          :form-data="formData"
+          :update-field="updateField"
+          form-name="NTC OF RULING"
+          :exclude-fields="['ExecutedDate']"
       />
     </el-form>
   </div>
 </template>
 
 <script setup>
-import { ref, computed, watch } from 'vue'
+import {ref, computed, watch} from 'vue'
 import FormGroup from '@/components/common/FormGroup.vue'
 import FormField from '@/components/common/FormField.vue'
 import TestDataTool from '@/components/common/TestDataTool.vue'
-import { useFormStore } from '@/stores/formStore'
+import {useFormStore} from '@/stores/formStore'
 import {
   VALIDATION_RULES,
   NTC_OF_RULING_TEST_DATA
@@ -365,7 +365,7 @@ watch(() => formData.TrialDate, (newValue) => {
     trialDateMode.value = 'date'
     trialDateValue.value = newValue
   }
-}, { immediate: true })
+}, {immediate: true})
 
 // Trial Date 模式变更处理
 const handleTrialDateModeChange = (mode) => {
@@ -384,11 +384,11 @@ const handleTrialDateChange = (value) => {
 
 // 监听表单数据变化，自动保存
 watch(
-  () => formStore.ntcOfRulingForm,
-  () => {
-    // 这里可以实现自动保存逻辑
-  },
-  { deep: true }
+    () => formStore.ntcOfRulingForm,
+    () => {
+      // 这里可以实现自动保存逻辑
+    },
+    {deep: true}
 )
 
 // 表单提交
@@ -442,23 +442,6 @@ defineExpose({
   }
 }
 
-/* Test tools styles */
-.test-tools {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  gap: 12px;
-}
-
-.test-info {
-  color: var(--el-text-color-regular);
-  font-size: 12px;
-  background-color: var(--el-fill-color-lighter);
-  padding: 6px 10px;
-  border-radius: 4px;
-  border: 1px solid var(--el-border-color-lighter);
-}
-
 .test-tools .el-button {
   background-color: var(--el-color-warning-light-7);
   border-color: var(--el-color-warning-light-5);
@@ -468,4 +451,4 @@ defineExpose({
   background-color: var(--el-color-warning-light-5);
   border-color: var(--el-color-warning);
 }
-</style> 
+</style>

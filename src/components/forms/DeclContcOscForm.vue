@@ -244,7 +244,6 @@ import FormField from '@/components/common/FormField.vue'
 import TestDataTool from '@/components/common/TestDataTool.vue'
 import {useFormStore} from '@/stores/formStore'
 import { VALIDATION_RULES, DECL_CONTC_OSC_TEST_DATA } from '@/utils/constants'
-import {formatLegalDate} from '@/utils/calculations'
 
 // 使用表单状态管理
 const formStore = useFormStore()
@@ -363,4 +362,4 @@ defineExpose({
     font-size: 14px;
   }
 }
-</style> 
+</style>
