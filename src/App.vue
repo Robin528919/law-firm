@@ -55,6 +55,9 @@
         <!-- NTC OF CONTINUED HEARING form -->
         <NtcOfContHearingForm v-if="formStore.currentFormType === 'ntcOfContHearing'" ref="ntcOfContHearingFormRef"/>
 
+        <!-- Demurrer and Motion to Strike Answer form -->
+        <DemurrerMotionStrikeAnswerForm v-if="formStore.currentFormType === 'demurrerMotionStrikeAnswer'" ref="demurrerMotionStrikeAnswerFormRef"/>
+
         <!-- Form action buttons -->
         <FormActions
             variant="default"
@@ -109,6 +112,7 @@ import Srogs01OvertimeForm from '@/components/forms/Srogs01OvertimeForm.vue'
 import DeclContcOscForm from '@/components/forms/DeclContcOscForm.vue'
 import DeclToContCmcForm from '@/components/forms/DeclToContCmcForm.vue'
 import NtcOfContHearingForm from '@/components/forms/NtcOfContHearingForm.vue'
+import DemurrerMotionStrikeAnswerForm from '@/components/forms/DemurrerMotionStrikeAnswerForm.vue'
 import {useFormStore} from '@/stores/formStore'
 import {API_CONFIG} from '@/utils/constants'
 import {formatLegalDate} from '@/utils/calculations'
@@ -133,6 +137,7 @@ const srogs01OvertimeFormRef = ref()
 const declContcOscFormRef = ref()
 const declToContCmcFormRef = ref()
 const ntcOfContHearingFormRef = ref()
+const demurrerMotionStrikeAnswerFormRef = ref()
 
 // Current form completion progress
 const currentFormProgress = computed(() => {
@@ -169,6 +174,8 @@ const currentFormProgress = computed(() => {
       return calculateDeclToContCmcProgress()
     case 'ntcOfContHearing':
       return calculateNtcOfContHearingProgress()
+    case 'demurrerMotionStrikeAnswer':
+      return calculateDemurrerMotionStrikeAnswerProgress()
     default:
       return 0
   }
@@ -459,6 +466,26 @@ const calculateNtcOfContHearingProgress = () => {
   return Math.round((filledFields / requiredFields.length) * 100)
 }
 
+// Calculate demurrer and motion to strike answer form progress
+const calculateDemurrerMotionStrikeAnswerProgress = () => {
+  const requiredFields = [
+    'CourtCounty', 'CourtName', 'CaseNumber', 'JudgeName', 'DeptNumber',
+    'PlaintiffNames', 'DefendantNames', 'ComplaintFiledDate', 'CausesOfAction',
+    'AnswerFiledDate', 'HearingDate', 'HearingTime', 'DemurrerDefenses',
+    'StrikeDefenses', 'DefenseCounselName', 'DefenseAttorneyFirm',
+    'DefenseAttorneyAddress', 'DefenseAttorneyPhone', 'DefenseAttorneyEmail',
+    'DeclarantName', 'ExecutionDate'
+  ]
+
+  const filledFields = requiredFields.filter(field => {
+    const value = formStore.demurrerMotionStrikeAnswerForm[field]
+    if (typeof value === 'string') return value.trim() !== ''
+    return value !== null && value !== undefined
+  }).length
+
+  return Math.round((filledFields / requiredFields.length) * 100)
+}
+
 // Get current form reference
 const getCurrentFormRef = () => {
   switch (formStore.currentFormType) {
@@ -494,6 +521,8 @@ const getCurrentFormRef = () => {
       return declToContCmcFormRef.value
     case 'ntcOfContHearing':
       return ntcOfContHearingFormRef.value
+    case 'demurrerMotionStrikeAnswer':
+      return demurrerMotionStrikeAnswerFormRef.value
     default:
       return null
   }
@@ -783,6 +812,40 @@ const handleSubmit = async () => {
     }
     if (formData.LetterDate) {
       formData.LetterDate = formatLegalDate(formData.LetterDate)
+    }
+  }
+
+  // 对于 Demurrer and Motion to Strike Answer 表单，需要合并计算字段
+  if (formStore.currentFormType === 'demurrerMotionStrikeAnswer') {
+    const calculations = formStore.demurrerMotionStrikeAnswerCalculations
+
+    // 将计算字段映射为规格表中的字段名并合并到formData中
+    const calculatedFields = {
+      // 执行日期
+      ExecutedDate: calculations.executedDate
+    }
+
+    // 合并输入字段和计算字段
+    formData = { ...formData, ...calculatedFields }
+
+    // 将输入的日期字段也转换为美式格式
+    if (formData.ComplaintFiledDate) {
+      formData.ComplaintFiledDate = formatLegalDate(formData.ComplaintFiledDate)
+    }
+    if (formData.AnswerFiledDate) {
+      formData.AnswerFiledDate = formatLegalDate(formData.AnswerFiledDate)
+    }
+    if (formData.HearingDate) {
+      formData.HearingDate = formatLegalDate(formData.HearingDate)
+    }
+    if (formData.MeetConferDate) {
+      formData.MeetConferDate = formatLegalDate(formData.MeetConferDate)
+    }
+    if (formData.TelephonicMeetDate) {
+      formData.TelephonicMeetDate = formatLegalDate(formData.TelephonicMeetDate)
+    }
+    if (formData.ExecutionDate) {
+      formData.ExecutionDate = formatLegalDate(formData.ExecutionDate)
     }
   }
 

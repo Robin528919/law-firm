@@ -83,6 +83,11 @@ export const FORM_TYPES = [
     value: 'ntcOfContHearing',
     label: 'NTC of Continued Hearing Form',
     description: 'Create notice of continued hearing documents'
+  },
+  {
+    value: 'demurrerMotionStrikeAnswer',
+    label: 'Demurrer and Motion to Strike Answer Form',
+    description: 'Create demurrer and motion to strike answer documents'
   }
 ]
 
@@ -585,6 +590,37 @@ export const DECL_TO_CONT_CMC_TEST_DATA = {
   ServerName: 'Jennifer Ontiveros',
   ServiceInfo: 'LAW OFFICES OF ROGER C. HSU\n175. S. Lake Ave., Ste. 210\nPasadena, CA 91101',
   ExecutedDate: 'March 10, 2020'
+}
+
+// Demurrer and Motion to Strike Answer 表单测试数据
+export const DEMURRER_MOTION_STRIKE_ANSWER_TEST_DATA = {
+  CourtCounty: 'Orange',
+  CourtName: 'Central Justice Center',
+  CaseNumber: '30-2025-01486169-CU-OE-CJC',
+  JudgeName: 'Hon. H. Shania Colover',
+  DeptNumber: 'C34',
+  PlaintiffNames: 'Yintao Fu, Qi Lin',
+  DefendantNames: 'Kexin USA, Inc.',
+  ComplaintFiledDate: '2025-05-29',
+  CausesOfAction: "Plaintiffs' Complaint alleges causes of action for: (1) Failure to Pay Wages; (2) Failure to Provide Meal Periods; (3) Failure to Provide Rest Periods; (4) Failure to Pay Overtime Wages; (5) Failure to Provide Accurate Wage Statements; (6) Unfair Competition (Bus. & Prof. Code §17200); and (7) Failure to Reimburse Business Expenses.",
+  AnswerFiledDate: '2025-08-05',
+  HearingDate: '2026-03-12',
+  HearingTime: '1:30 PM',
+  ReservationID: '74647545',
+  ADAttack: 'AI Generate',
+  TrialDate: 'Not Set',
+  DefenseCounselName: 'Peter S. Deng',
+  DefenseAttorneyFirm: 'Law Offices of Peter S. Deng',
+  DefenseAttorneyAddress: '123 E. Valley Blvd., Suite 107, San Gabriel, CA 91776',
+  DefenseAttorneyPhone: '626-688-7170',
+  DefenseAttorneyEmail: 'peterdenglaw@gmail.com',
+  MeetConferDate: '2025-08-08',
+  TelephonicMeetDate: '2025-08-19',
+  AmendAnswerResponse: 'Defense counsel stated they would file an amended answer by August 22, 2025, but no filing was made.',
+  DeclarantName: 'Qihao Qin',
+  ExecutionDate: '2025-08-29',
+  DemurrerDefenses: 'First through Thirty-First Affirmative Defenses',
+  StrikeDefenses: 'Third, Sixth, Seventh, Eighth, Ninth, Tenth, Eleventh, Fourteenth, Sixteenth, Seventeenth, Eighteenth, Nineteenth, Twenty-Second, Twenty-Third, Twenty-Fifth, and Thirty-First'
 }
 
 // NTC OF CONTINUED HEARING 表单测试数据

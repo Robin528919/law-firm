@@ -355,6 +355,37 @@ export const useFormStore = defineStore('form', () => {
     ExecutedDate: null
   })
 
+  // Demurrer and Motion to Strike Answer 表单数据
+  const demurrerMotionStrikeAnswerForm = ref({
+    CourtCounty: '',
+    CourtName: '',
+    CaseNumber: '',
+    JudgeName: '',
+    DeptNumber: '',
+    PlaintiffNames: '',
+    DefendantNames: '',
+    ComplaintFiledDate: null,
+    CausesOfAction: '',
+    AnswerFiledDate: null,
+    HearingDate: null,
+    HearingTime: '',
+    ReservationID: '',
+    ADAttack: '',
+    TrialDate: 'Not Set',
+    DefenseCounselName: '',
+    DefenseAttorneyFirm: '',
+    DefenseAttorneyAddress: '',
+    DefenseAttorneyPhone: '',
+    DefenseAttorneyEmail: '',
+    MeetConferDate: null,
+    TelephonicMeetDate: null,
+    AmendAnswerResponse: '',
+    DeclarantName: '',
+    ExecutionDate: null,
+    DemurrerDefenses: '',
+    StrikeDefenses: ''
+  })
+
   // 格式化的被告名称（起诉表单）
   const formattedComplaintDefendantName = computed(() => {
     const form = complaintForm.value
@@ -673,6 +704,15 @@ export const useFormStore = defineStore('form', () => {
       
       // 执行日期
       executedDate
+    }
+  })
+
+  // Demurrer and Motion to Strike Answer 表单计算属性
+  const demurrerMotionStrikeAnswerCalculations = computed(() => {
+    const form = demurrerMotionStrikeAnswerForm.value
+    return {
+      // 执行日期（如果未设置，使用当前日期）
+      executedDate: form.ExecutionDate ? formatLegalDate(form.ExecutionDate) : formatLegalDate(new Date())
     }
   })
 
@@ -1058,6 +1098,16 @@ export const useFormStore = defineStore('form', () => {
           ntcOfContHearingForm.value[key] = null
         }
       })
+    } else if (targetType === 'demurrerMotionStrikeAnswer') {
+      Object.keys(demurrerMotionStrikeAnswerForm.value).forEach(key => {
+        if (key === 'TrialDate') {
+          demurrerMotionStrikeAnswerForm.value[key] = 'Not Set'
+        } else if (typeof demurrerMotionStrikeAnswerForm.value[key] === 'string') {
+          demurrerMotionStrikeAnswerForm.value[key] = ''
+        } else {
+          demurrerMotionStrikeAnswerForm.value[key] = null
+        }
+      })
     }
   }
 
@@ -1082,7 +1132,8 @@ export const useFormStore = defineStore('form', () => {
         srogs01Overtime: srogs01OvertimeForm.value,
         declContcOsc: declContcOscForm.value,
         declToContCmc: declToContCmcForm.value,
-        ntcOfContHearing: ntcOfContHearingForm.value
+        ntcOfContHearing: ntcOfContHearingForm.value,
+        demurrerMotionStrikeAnswer: demurrerMotionStrikeAnswerForm.value
       }
     }
 
@@ -1280,6 +1331,7 @@ export const useFormStore = defineStore('form', () => {
     declContcOscForm,
     declToContCmcForm,
     ntcOfContHearingForm,
+    demurrerMotionStrikeAnswerForm,
     formErrors,
     isLoading,
 
@@ -1296,6 +1348,7 @@ export const useFormStore = defineStore('form', () => {
     declContcOscCalculations,
     declToContCmcCalculations,
     ntcOfContHearingCalculations,
+    demurrerMotionStrikeAnswerCalculations,
     formattedComplaintDefendantName,
     formattedAnswerDefendantName,
     formattedSettlementDefendantName,
