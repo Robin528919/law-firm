@@ -91,6 +91,9 @@ const templateIdMap = {
         // Notice of Continued Hearing
         '27f08808079bdd96f58fed56779b6729357a2778d7599ec6cb16b81158a3a90b',
     ],
+    demurrerMotionStrikeAnswer:[
+        'dff282f1306ed3fffd709c4de62acff21b6d7ee8c957c6465e55160b1d071b78'
+    ]
 };
 
 for (let idx = 0; idx < inputItems.length; idx++) {

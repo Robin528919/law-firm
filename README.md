@@ -218,6 +218,59 @@ legal-document-forms/
 - Webhook 集成
 - 成功/错误反馈
 
+## 🔗 n8n 流水线
+
+### 总体说明
+- 本系统通过 n8n Webhook 接收前端提交，调用 Carbone 渲染多个模板，最后以邮件附件形式发送至用户填写的 `submissionEmail`。
+- 前端提交的数据结构见“请求格式”，不同表单类型会触发不同模板集合（在 n8n 的 Code 节点中路由）。
+
+### 生产流水线：sample-management
+- 名称：`sample-management`（n8n 中的生产工作流）。
+- 职责：接收表单数据 → 按 `formType` 分发模板 → 调用 Carbone 生成 PDF → 汇总附件 → 发送邮件给 `submissionEmail`。
+- Webhook：建议通过环境变量配置 `VITE_API_WEBHOOK_URL` 指向生产工作流的 webhook 地址。
+- 备注：若未配置 `VITE_API_WEBHOOK_URL`，将回退到 `src/utils/constants.js` 中的 `ENDPOINTS.WEBHOOK_PROD`。
+
+### 测试流水线：Complaint/Damages
+- 名称：`Complaint/Damages`（示例测试工作流，见仓库 `n8n.json`）。
+- Webhook：默认示例已在 `src/utils/constants.js` 的 `ENDPOINTS.WEBHOOK_TEST` 中配置（`/webhook-test/...`）。
+- 主要节点：
+  - `Webhook`：接收前端 POST。
+  - `Edit/Set Fields + Code`：根据 `formType` 选取模板 ID（参考 `n8n-js-code.js`）。
+  - `HTTP Request`：调用 Carbone Render API 生成文档并下载。
+  - `处理附件`：将多文件作为二进制附件聚合。
+  - `发送邮件`：给 `submissionEmail` 发送所有生成的 PDF。
+
+### 请求格式（前端 → n8n Webhook）
+```json
+{
+  "submissionEmail": "user@example.com",
+  "formType": "complaint", // 对应 `src/utils/constants.js` 中的表单类型值
+  "formData": { /* 当前表单的字段数据，已做必要的日期/计算处理 */ },
+  "timestamp": "2025-07-14T12:34:56.000Z"
+}
+```
+
+### 前端对接与环境配置
+- `VITE_API_WEBHOOK_URL`：优先级最高。配置后前端将直接向该 URL 提交（适合指向生产的 `sample-management`）。
+- 回退地址：未设置时按构建环境选择
+  - 开发/测试：`ENDPOINTS.WEBHOOK_TEST`
+  - 生产：`ENDPOINTS.WEBHOOK_PROD`
+- 代码位置：`src/utils/constants.js` 的 `API_CONFIG.getWebhookUrl()` 与 `ENDPOINTS`。
+
+### 在 n8n 中导入与启用
+- 测试示例：在 n8n 中导入仓库根目录的 `n8n.json`，激活后即可接受请求。
+- 自定义模板路由：可参考 `n8n-js-code.js` 中 `formType → templateIds` 的映射规则。
+- 生产工作流：在 n8n 中创建/维护名为 `sample-management` 的工作流，发布其 webhook，并将地址配置到 `VITE_API_WEBHOOK_URL`。
+
+### 快速验证（可选）
+- 将应用运行在期望环境后，提交任一表单，观察 n8n 执行记录与收件邮箱附件。
+- 也可用 curl 直接验证 Webhook（将 `<WEBHOOK_URL>` 替换为实际地址）：
+```bash
+curl -X POST -H "Content-Type: application/json" \
+  -d '{"submissionEmail":"user@example.com","formType":"complaint","formData":{}}' \
+  <WEBHOOK_URL>
+```
+
 ## 🛠️ IDE 设置
 
 **推荐配置**：[VSCode](https://code.visualstudio.com/) + [Volar](https://marketplace.visualstudio.com/items?itemName=Vue.volar)
