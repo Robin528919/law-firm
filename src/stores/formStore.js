@@ -1262,6 +1262,8 @@ export const useFormStore = defineStore('form', () => {
         return declToContCmcForm.value
       case 'ntcOfContHearing':
         return ntcOfContHearingForm.value
+      case 'demurrerMotionStrikeAnswer':
+        return demurrerMotionStrikeAnswerForm.value
       default:
         return {}
     }
